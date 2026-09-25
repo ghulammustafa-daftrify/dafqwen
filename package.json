@@ -6,7 +6,9 @@
   "scripts": {
     "dev": "npx --yes serve . -l 5173",
     "start": "npx --yes serve . -l 5173",
-    "build": "echo \"No build step. index.html is the deployable artefact.\" && exit 0"
+    "build": "echo \"No build step. Cloudflare Workers deploys index.html plus the Worker backend.\" && exit 0",
+    "deploy": "npx wrangler@latest deploy",
+    "preview": "npx wrangler@latest dev"
   },
   "keywords": [
     "document operations",
