@@ -5,3 +5,8 @@ package.json
 README.md
 .git/
 .github/
+app/
+design-system/
+next.config.js
+tsconfig.json
+setup.sh
