@@ -450,7 +450,7 @@
     </form>
 
     <div class="rv mt-5 liquid-glass rounded-2xl px-5 py-4 flex flex-wrap items-center justify-between gap-3" style="--d:.14s">
-      <p class="text-white/55 text-sm">Prefer email? <a href="mailto:daftrify.services@gmail.com" class="text-white font-medium border-b border-white/25 hover:border-white transition-colors break-all">daftrify.services@gmail.com</a></p>
+      <p class="text-white/55 text-sm">Prefer email? <a href="mailto:contact@daftrify.com" class="text-white font-medium border-b border-white/25 hover:border-white transition-colors break-all">contact@daftrify.com</a></p>
       <i data-lucide="mail" class="text-white/40"></i>
     </div>
   </div>
@@ -632,7 +632,7 @@
         'Documents: ' + d.value.trim(),
         m.value.trim() ? 'What goes wrong: ' + m.value.trim() : ''
       ].filter(function (s) { return s !== ''; }).join('\n');
-      window.location.href = 'mailto:daftrify.services@gmail.com?subject=' + encodeURIComponent('Document set / ' + d.value.trim()) + '&body=' + encodeURIComponent(body);
+      window.location.href = 'mailto:contact@daftrify.com?subject=' + encodeURIComponent('Document set / ' + d.value.trim()) + '&body=' + encodeURIComponent(body);
       var okEl = document.getElementById('ok');
       if (okEl) okEl.classList.remove('hidden');
     });
