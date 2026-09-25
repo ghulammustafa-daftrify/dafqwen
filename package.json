@@ -1,0 +1,21 @@
+{
+  "name": "daftrify-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Daftrify — document operations and pre-submission auditing. Public experience site.",
+  "scripts": {
+    "dev": "npx --yes serve . -l 5173",
+    "start": "npx --yes serve . -l 5173",
+    "build": "echo \"No build step. index.html is the deployable artefact.\" && exit 0"
+  },
+  "keywords": [
+    "document operations",
+    "document reconciliation",
+    "document verification",
+    "document quality assurance",
+    "pre-submission document review",
+    "document workflow"
+  ],
+  "author": "Ghulam Mustafa",
+  "license": "UNLICENSED"
+}

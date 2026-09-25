@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>DAFTRIFY — Documents In. Clarity Out.</title>
+<meta name="description" content="DAFTRIFY is a document operations desk — send document-heavy stacks and get back organized, reconciled, source-verified working files. Faisalabad, Pakistan." />
+<meta name="theme-color" content="#000000" />
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000'/%3E%3Cpath d='M9 6h11l5 5v15H9z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M20 6v5h5' stroke='%23fff' stroke-width='2' fill='none'/%3E%3Cpath d='M12 15h9M12 19h9M12 23h5' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+<script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
+<style>
+  body { font-family: "Inter", sans-serif; }
+
+  /* liquid glass — exact spec */
+  .liquid-glass {
+    position: relative;
+    overflow: hidden;
+    border: none;
+    background: rgba(255, 255, 255, 0.01);
+    background-blend-mode: luminosity;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    transition: background-color 0.35s ease, box-shadow 0.35s ease, transform 0.35s ease;
+  }
+  .liquid-glass:hover { background-color: rgba(255, 255, 255, 0.09); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2); }
+  .liquid-glass:active { transform: scale(0.96); }
+  .liquid-glass::before {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.4px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  /* bottom blur veil — only blur, no gradient darkening */
+  .bottom-blur-mask {
+    -webkit-mask-image: linear-gradient(to top, black 0%, transparent 45%);
+    mask-image: linear-gradient(to top, black 0%, transparent 45%);
+  }
+
+  /* blur-fade-up entrance */
+  @keyframes blurFadeUp {
+    from { opacity: 0; filter: blur(20px); transform: translateY(40px); }
+    to { opacity: 1; filter: blur(0); transform: translateY(0); }
+  }
+  .animate-blur-fade-up { opacity: 0; animation: blurFadeUp 1s ease-out forwards; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .animate-blur-fade-up { animation-duration: 0.01ms; animation-delay: 0ms !important; }
+    .liquid-glass, .liquid-glass:active { transition: none; transform: none; }
+    .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
+  }
+
+  /* hero video grade for the monochrome cinematic look */
+  #bgVideo { filter: grayscale(1) contrast(1.06) brightness(0.62); }
+
+  /* living marquee */
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .marquee-track { animation: marquee 30s linear infinite; }
+
+  /* scroll reveal for sections below the hero */
+  .rv { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; transition-delay: var(--d, 0s); }
+  .rv.in { opacity: 1; transform: none; }
+
+  /* verifier */
+  .vrow { transition: background .35s ease; }
+  .tick { opacity: 0; transform: scale(.4); transition: opacity .35s ease, transform .45s cubic-bezier(.2,1.3,.4,1); }
+  .vrow[data-ok="1"] .tick { opacity: 1; transform: scale(1); }
+  .val { transition: color .35s ease, background .35s ease; }
+  .vrow[data-ok="1"] .val { color: #bff0d3; background: rgba(120,220,160,.12); }
+
+  /* faq */
+  .faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
+  .faq-a > div { overflow: hidden; }
+  .faq.open .faq-a { grid-template-rows: 1fr; }
+  .faq .pm { transition: transform .3s ease; }
+  .faq.open .pm { transform: rotate(180deg); }
+</style>
+</head>
+<body class="bg-black text-white antialiased">
+
+<!-- ══════════════════════ CINEMATIC HERO (Lumière spec, DAFTRIFY theme) ══════════════════════ -->
+<div class="relative flex h-dvh flex-col overflow-hidden bg-black text-white">
+
+  <!-- background video -->
+  <video id="bgVideo" class="absolute inset-0 z-0 h-full w-full object-cover"
+    autoPlay muted loop playsInline preload="auto" tabindex="-1" aria-hidden="true"
+    src="https://videos.pexels.com/video-files/7054942/7054942-uhd_3840_2160_24fps.mp4"></video>
+
+  <!-- bottom blur veil (blur only) -->
+  <div class="bottom-blur-mask pointer-events-none absolute inset-0 z-[1] backdrop-blur-xl" aria-hidden="true"></div>
+
+  <!-- mobile menu dropdown -->
+  <div id="mobile-menu" class="absolute inset-x-0 top-[72px] z-40 border-t border-b border-gray-800 bg-gray-900/95 shadow-2xl backdrop-blur-lg transition-all duration-500 ease-out lg:hidden pointer-events-none -translate-y-4 opacity-0">
+    <nav class="flex flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
+      <a href="#services" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-gray-800/50 -translate-x-4 opacity-0">Services</a>
+      <a href="#process" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-gray-800/50 -translate-x-4 opacity-0">Process</a>
+      <a href="#principles" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-gray-800/50 -translate-x-4 opacity-0">Principles</a>
+      <a href="#about" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-gray-800/50 -translate-x-4 opacity-0">Our Team</a>
+      <a href="#start" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-gray-800/50 -translate-x-4 opacity-0">Open a File</a>
+    </nav>
+    <div class="flex items-center gap-3 border-t border-gray-800 px-4 py-4 sm:hidden">
+      <a href="#start" class="mmob liquid-glass flex items-center gap-2 rounded-full px-4 py-2 text-sm">
+        <i data-lucide="search" style="width:18px;height:18px"></i><span>Find my set</span>
+      </a>
+      <a href="#about" class="mmob liquid-glass flex h-10 w-10 shrink-0 items-center justify-center rounded-full" aria-label="Your profile">
+        <i data-lucide="user" style="width:18px;height:18px"></i>
+      </a>
+    </div>
+  </div>
+
+  <!-- navbar -->
+  <header class="relative z-50 flex items-center justify-between px-4 py-4 sm:px-6 md:px-12 md:py-6">
+    <a href="#top" aria-label="DAFTRIFY — home" class="animate-blur-fade-up flex h-8 items-center md:h-10" style="animation-delay: 0ms">
+      <span class="text-lg font-light leading-none tracking-[0.35em] md:text-xl">DAFTRI<span class="font-semibold">FY</span></span>
+    </a>
+
+    <nav class="hidden items-center gap-8 lg:flex" aria-label="Primary">
+      <a href="#services" class="animate-blur-fade-up text-sm transition-colors hover:text-gray-300" style="animation-delay: 100ms">Services</a>
+      <a href="#process" class="animate-blur-fade-up text-sm transition-colors hover:text-gray-300" style="animation-delay: 150ms">Process</a>
+      <a href="#principles" class="animate-blur-fade-up text-sm transition-colors hover:text-gray-300" style="animation-delay: 200ms">Principles</a>
+      <a href="#about" class="animate-blur-fade-up text-sm transition-colors hover:text-gray-300" style="animation-delay: 250ms">Our Team</a>
+      <a href="#start" class="animate-blur-fade-up text-sm transition-colors hover:text-gray-300" style="animation-delay: 300ms">Open a File</a>
+    </nav>
+
+    <div class="flex items-center gap-3">
+      <a href="#process" class="liquid-glass animate-blur-fade-up hidden items-center gap-2 rounded-full px-4 py-2 text-sm sm:flex md:px-6" style="animation-delay: 350ms">
+        <i data-lucide="search" style="width:18px;height:18px"></i><span>Find my set</span>
+      </a>
+      <a href="#about" class="liquid-glass animate-blur-fade-up hidden h-10 w-10 items-center justify-center rounded-full sm:flex" style="animation-delay: 400ms" aria-label="Your profile">
+        <i data-lucide="user" style="width:18px;height:18px"></i>
+      </a>
+      <button id="menuBtn" type="button" class="liquid-glass animate-blur-fade-up relative flex h-10 w-10 items-center justify-center rounded-full lg:hidden" style="animation-delay: 350ms" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+        <i data-lucide="menu" style="width:18px;height:18px" class="hicon absolute transition-all duration-500 ease-out rotate-0 scale-100 opacity-100"></i>
+        <i data-lucide="x" style="width:18px;height:18px" class="xicon absolute transition-all duration-500 ease-out -rotate-180 scale-50 opacity-0"></i>
+      </button>
+    </div>
+  </header>
+
+  <!-- hero content -->
+  <main class="relative z-10 flex flex-1 flex-col justify-end px-4 pb-8 sm:px-6 md:px-12 md:pb-16">
+    <div class="flex flex-col items-end gap-8 md:flex-row">
+      <div class="w-full flex-1">
+        <div class="animate-blur-fade-up mb-6 flex flex-wrap items-center gap-3 text-xs sm:gap-6 sm:text-sm md:mb-8" style="animation-delay: 300ms">
+          <span class="flex items-center gap-2 font-medium"><i data-lucide="shield-check" style="width:16px;height:16px" class="fill-white sm:h-5 sm:w-5"></i>Source-verified</span>
+          <span class="flex items-center gap-2"><i data-lucide="clock" style="width:16px;height:16px" class="sm:h-5 sm:w-5"></i>&lt;24h reply</span>
+          <span class="flex items-center gap-2"><i data-lucide="calendar" style="width:16px;height:16px" class="sm:h-5 sm:w-5"></i>Est. 2026</span>
+        </div>
+
+        <h1 class="animate-blur-fade-up mb-4 text-3xl font-normal tracking-[-0.04em] sm:text-5xl md:mb-6 md:text-6xl lg:text-7xl" style="animation-delay: 400ms">
+          Documents In. Clarity Out.
+        </h1>
+
+        <p class="animate-blur-fade-up mb-6 max-w-2xl text-base text-gray-400 sm:text-lg md:mb-12 md:text-xl" style="animation-delay: 500ms">
+          A desk that takes document-heavy stacks and returns them organized, reconciled and source-verified — ready to submit.
+        </p>
+
+        <div class="flex flex-wrap gap-3 sm:gap-4">
+          <a href="#start" class="animate-blur-fade-up flex items-center gap-2 rounded-full bg-white px-6 py-2.5 font-medium text-black transition-colors hover:bg-gray-200 sm:px-8 sm:py-3" style="animation-delay: 600ms">
+            <i data-lucide="play" style="width:18px;height:18px" class="fill-black"></i><span>Open a File</span>
+          </a>
+          <a href="#process" class="liquid-glass animate-blur-fade-up rounded-full px-6 py-2.5 font-medium sm:px-8 sm:py-3" style="animation-delay: 700ms">See the Process</a>
+        </div>
+      </div>
+
+      <div class="flex w-full items-center gap-3 sm:gap-4 md:w-auto md:justify-end">
+        <button id="prevBtn" class="liquid-glass animate-blur-fade-up flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm sm:px-6 sm:py-3" style="animation-delay: 800ms">
+          <i data-lucide="chevron-left" style="width:18px;height:18px"></i><span>Previous</span>
+        </button>
+        <button id="nextBtn" class="liquid-glass animate-blur-fade-up flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm sm:px-6 sm:py-3" style="animation-delay: 900ms">
+          <span>Next</span><i data-lucide="chevron-right" style="width:18px;height:18px"></i>
+        </button>
+      </div>
+    </div>
+  </main>
+</div>
+
+<!-- ══════════════════════ TRUST MARQUEE ══════════════════════ -->
+<div class="border-y border-gray-800 bg-black py-4 overflow-hidden" aria-hidden="true">
+  <div class="marquee-track flex w-max items-center gap-12 whitespace-nowrap">
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="file-text" style="width:15px;height:15px"></i>Contracts</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="receipt" style="width:15px;height:15px"></i>Invoices</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="table-2" style="width:15px;height:15px"></i>Ledgers</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="id-card" style="width:15px;height:15px"></i>Identity</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="clipboard-list" style="width:15px;height:15px"></i>Forms</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="mail" style="width:15px;height:15px"></i>Correspondence</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="file-check" style="width:15px;height:15px"></i>Statements</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="archive" style="width:15px;height:15px"></i>Records</span>
+    <!-- duplicate for seamless loop -->
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="file-text" style="width:15px;height:15px"></i>Contracts</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="receipt" style="width:15px;height:15px"></i>Invoices</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="table-2" style="width:15px;height:15px"></i>Ledgers</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="id-card" style="width:15px;height:15px"></i>Identity</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="clipboard-list" style="width:15px;height:15px"></i>Forms</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="mail" style="width:15px;height:15px"></i>Correspondence</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="file-check" style="width:15px;height:15px"></i>Statements</span>
+    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="archive" style="width:15px;height:15px"></i>Records</span>
+  </div>
+</div>
+
+<!-- ══════════════════════ SERVICES (asymmetric, not equal cards) ══════════════════════ -->
+<section id="services" class="bg-black px-6 sm:px-12 py-24 sm:py-32">
+  <div class="max-w-6xl mx-auto">
+    <div class="rv mb-12 flex flex-col gap-3">
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase">Services</p>
+      <h2 class="text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight max-w-2xl">A desk, not a folder. <span class="text-white/50">Five ways it works.</span></h2>
+    </div>
+
+    <div class="grid md:grid-cols-3 gap-4">
+      <div class="rv liquid-glass rounded-2xl p-7 md:col-span-2 md:grid md:grid-cols-2 md:items-center md:gap-8">
+        <div>
+          <p class="text-white/40 text-xs font-medium tracking-[0.18em] uppercase mb-3">Signature service</p>
+          <h3 class="text-white text-xl font-medium tracking-tight mb-3">Full Set Reconciliation</h3>
+          <p class="text-white/55 text-sm leading-relaxed max-w-sm">Every document cross-checked against every other. Names, dates and amounts compared in both directions, each conflict written down. Returned as one organized, indexed file with an exception register at the front.</p>
+        </div>
+        <div class="mt-6 md:mt-0">
+          <div class="rounded-xl bg-white/[0.03] border border-white/10 p-5">
+            <p class="text-white/35 text-[10px] font-medium tracking-[0.16em] uppercase mb-3">Live desk readout &middot; simulated</p>
+            <div class="space-y-2.5 text-sm">
+              <div class="flex justify-between gap-3"><span class="text-white/45">Files in set</span><span class="text-white/85">07</span></div>
+              <div class="flex justify-between gap-3"><span class="text-white/45">Fields compared</span><span class="text-white/85" id="roFields">000</span></div>
+              <div class="flex justify-between gap-3"><span class="text-white/45">Exceptions raised</span><span class="text-white/85" id="roFlags">0</span></div>
+              <div class="flex justify-between gap-3"><span class="text-white/45">Status</span><span class="text-emerald-300/90" id="roStatus">Received</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rv liquid-glass rounded-2xl p-7" style="--d:.06s">
+        <i data-lucide="scan-search" class="text-white/70 mb-4"></i>
+        <h3 class="text-white text-lg font-medium tracking-tight mb-2.5">Document Extraction</h3>
+        <p class="text-white/55 text-sm leading-relaxed">Scans, exports and photos turned into one structured working sheet you can actually read.</p>
+      </div>
+
+      <div class="rv liquid-glass rounded-2xl p-7" style="--d:.06s">
+        <i data-lucide="alert-triangle" class="text-white/70 mb-4"></i>
+        <h3 class="text-white text-lg font-medium tracking-tight mb-2.5">Exception Register</h3>
+        <p class="text-white/55 text-sm leading-relaxed">Every gap and conflict listed at the front of the package, source attached to each item.</p>
+      </div>
+
+      <div class="rv liquid-glass rounded-2xl p-7 md:col-span-2" style="--d:.12s">
+        <div class="flex items-start gap-4">
+          <i data-lucide="user-check" class="text-white/70 mt-0.5 shrink-0"></i>
+          <div>
+            <h3 class="text-white text-lg font-medium tracking-tight mb-2.5">Human Verification Pass</h3>
+            <p class="text-white/55 text-sm leading-relaxed max-w-2xl">Extraction proposes; the record disposes. One reviewer reads each value back against the original document, character by character, before anything is marked verified. Nothing leaves on assumption.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ PROCESS ══════════════════════ -->
+<section id="process" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
+  <div class="max-w-6xl mx-auto">
+    <div class="rv mb-12">
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Process</p>
+      <h2 class="text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight max-w-2xl">Five stations, in order. <span class="text-white/50">No skips, no silence.</span></h2>
+    </div>
+
+    <ol class="grid md:grid-cols-5 gap-4">
+      <li class="rv liquid-glass rounded-2xl p-6">
+        <p class="text-white/35 text-xs font-medium tracking-[0.16em] mb-6">01</p>
+        <i data-lucide="inbox" class="text-white/70 mb-4"></i>
+        <h3 class="text-white text-base font-medium tracking-tight mb-2">Collect</h3>
+        <p class="text-white/55 text-[13px] leading-relaxed">Send the set exactly as it exists. No renaming, no tidying, no cover note.</p>
+      </li>
+      <li class="rv liquid-glass rounded-2xl p-6" style="--d:.06s">
+        <p class="text-white/35 text-xs font-medium tracking-[0.16em] mb-6">02</p>
+        <i data-lucide="table-2" class="text-white/70 mb-4"></i>
+        <h3 class="text-white text-base font-medium tracking-tight mb-2">Extract</h3>
+        <p class="text-white/55 text-[13px] leading-relaxed">Fields, tables and references lifted into one structured working sheet.</p>
+      </li>
+      <li class="rv liquid-glass rounded-2xl p-6" style="--d:.12s">
+        <p class="text-white/35 text-xs font-medium tracking-[0.16em] mb-6">03</p>
+        <i data-lucide="git-compare-arrows" class="text-white/70 mb-4"></i>
+        <h3 class="text-white text-base font-medium tracking-tight mb-2">Reconcile</h3>
+        <p class="text-white/55 text-[13px] leading-relaxed">Shared values cross-checked between documents, in both directions.</p>
+      </li>
+      <li class="rv liquid-glass rounded-2xl p-6" style="--d:.18s">
+        <p class="text-white/35 text-xs font-medium tracking-[0.16em] mb-6">04</p>
+        <i data-lucide="badge-check" class="text-white/70 mb-4"></i>
+        <h3 class="text-white text-base font-medium tracking-tight mb-2">Verify</h3>
+        <p class="text-white/55 text-[13px] leading-relaxed">Each value read back against the original. Character by character.</p>
+      </li>
+      <li class="rv liquid-glass rounded-2xl p-6" style="--d:.24s">
+        <p class="text-white/35 text-xs font-medium tracking-[0.16em] mb-6">05</p>
+        <i data-lucide="archive" class="text-white/70 mb-4"></i>
+        <h3 class="text-white text-base font-medium tracking-tight mb-2">Package</h3>
+        <p class="text-white/55 text-[13px] leading-relaxed">One ordered, indexed file. Open questions at the front, not the back.</p>
+      </li>
+    </ol>
+
+    <!-- interactive verifier -->
+    <div class="rv liquid-glass rounded-2xl mt-10 overflow-hidden" style="--d:.1s">
+      <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-white/10">
+        <p class="text-white/70 text-sm font-medium">Watch a verification pass</p>
+        <span class="text-white/35 text-[10px] font-medium tracking-[0.16em] uppercase">Record 4471-C &middot; simulated</span>
+      </div>
+      <div class="px-6 py-2">
+        <div class="grid grid-cols-[1fr_1fr] gap-4 py-3 border-b border-white/10">
+          <span class="text-white/35 text-[10px] font-medium tracking-[0.16em] uppercase">Source</span>
+          <span class="text-white/35 text-[10px] font-medium tracking-[0.16em] uppercase">Working value</span>
+        </div>
+        <div class="vrow grid grid-cols-[1fr_1fr] gap-4 items-center py-4 border-b border-white/[0.07]" data-ok="0">
+          <p class="text-white/85 text-sm">Muhammad Ahmed</p>
+          <p class="text-sm flex items-center gap-2 justify-between"><span class="val rounded px-1.5 py-0.5 text-red-200/90">Mohammad</span><span class="tick text-emerald-300"><i data-lucide="check" style="width:16px;height:16px"></i></span></p>
+        </div>
+        <div class="vrow grid grid-cols-[1fr_1fr] gap-4 items-center py-4 border-b border-white/[0.07]" data-ok="0">
+          <p class="text-white/85 text-sm">04/09/2026</p>
+          <p class="text-sm flex items-center gap-2 justify-between"><span class="val rounded px-1.5 py-0.5 text-red-200/90">05/09/2026</span><span class="tick text-emerald-300"><i data-lucide="check" style="width:16px;height:16px"></i></span></p>
+        </div>
+        <div class="vrow grid grid-cols-[1fr_1fr] gap-4 items-center py-4 border-b border-white/[0.07]" data-ok="0">
+          <p class="text-white/85 text-sm">12,500</p>
+          <p class="text-sm flex items-center gap-2 justify-between"><span class="val rounded px-1.5 py-0.5 text-red-200/90">12,050</span><span class="tick text-emerald-300"><i data-lucide="check" style="width:16px;height:16px"></i></span></p>
+        </div>
+        <div class="vrow grid grid-cols-[1fr_1fr] gap-4 items-center py-4" data-ok="0">
+          <p class="text-white/85 text-sm">Annex C issued</p>
+          <p class="text-sm flex items-center gap-2 justify-between"><span class="val rounded px-1.5 py-0.5 text-red-200/90">Not attached</span><span class="tick text-emerald-300"><i data-lucide="check" style="width:16px;height:16px"></i></span></p>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center justify-between gap-4 px-6 py-4 border-t border-white/10 bg-white/[0.02]">
+        <p id="deskStat" class="text-[11px] font-medium tracking-[0.16em] uppercase text-red-200/80">4 fields require review</p>
+        <button id="runPass" type="button" class="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-gray-200">Run verification pass</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ PRINCIPLES ══════════════════════ -->
+<section id="principles" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
+  <div class="max-w-4xl mx-auto">
+    <div class="rv mb-12">
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Principles</p>
+      <h2 class="text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">The operating rules, <span class="text-white/50">in plain words.</span></h2>
+    </div>
+    <div class="space-y-3">
+      <div class="rv liquid-glass rounded-2xl px-6 py-5 flex items-start gap-4"><i data-lucide="search-check" class="text-white/60 mt-0.5 shrink-0"></i><p class="text-white/75 text-sm sm:text-[15px] leading-relaxed"><span class="text-white font-medium">Source first.</span> No value enters the working file unless it can be traced to a document you actually hold. If it cannot be traced, it is reported as a gap &mdash; never filled in.</p></div>
+      <div class="rv liquid-glass rounded-2xl px-6 py-5 flex items-start gap-4" style="--d:.06s"><i data-lucide="eye" class="text-white/60 mt-0.5 shrink-0"></i><p class="text-white/75 text-sm sm:text-[15px] leading-relaxed"><span class="text-white font-medium">Exceptions are visible.</span> Problems are listed at the front of the package, source attached to each one. Nothing is buried where nobody reads.</p></div>
+      <div class="rv liquid-glass rounded-2xl px-6 py-5 flex items-start gap-4" style="--d:.12s"><i data-lucide="scroll-text" class="text-white/60 mt-0.5 shrink-0"></i><p class="text-white/75 text-sm sm:text-[15px] leading-relaxed"><span class="text-white font-medium">Verify against the record.</span> A person reads each extracted value back against the original before anything is marked verified.</p></div>
+      <div class="rv liquid-glass rounded-2xl px-6 py-5 flex items-start gap-4" style="--d:.18s"><i data-lucide="shield-off" class="text-white/60 mt-0.5 shrink-0"></i><p class="text-white/75 text-sm sm:text-[15px] leading-relaxed"><span class="text-white font-medium">No invented facts. No fake proof.</span> No fabricated records, no borrowed logos, no numbers we cannot stand behind.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ ABOUT / TEAM + FAQ ══════════════════════ -->
+<section id="about" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
+  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+    <div class="rv">
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Our Team</p>
+      <h2 class="text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight mb-6">One desk. One pair of eyes. <span class="text-white/50">Yours, first.</span></h2>
+      <p class="text-white/55 text-sm leading-relaxed max-w-md mb-8">Daftrify is run by Ghulam Mustafa from Faisalabad, Pakistan. Every file crosses one screen, and one person signs the verification pass &mdash; which is precisely why nothing leaves on assumption.</p>
+
+      <div class="liquid-glass rounded-2xl p-5 flex items-center gap-4 mb-4">
+        <div class="w-14 h-14 rounded-full bg-white/10 border border-white/15 grid place-items-center text-white font-medium text-lg">GM</div>
+        <div>
+          <p class="text-white text-sm font-medium">Ghulam Mustafa</p>
+          <p class="text-white/40 text-xs font-medium tracking-[0.16em] uppercase mt-1">Founder &middot; Reviewer</p>
+        </div>
+        <div class="ml-auto text-right">
+          <p class="text-white/40 text-[10px] font-medium tracking-[0.16em] uppercase">Faisalabad</p>
+          <p class="text-white text-base font-medium mt-1" id="clock">--:--:--</p>
+        </div>
+      </div>
+
+      <div class="liquid-glass rounded-2xl px-5 py-4">
+        <p class="text-white/40 text-[10px] font-medium tracking-[0.16em] uppercase mb-2">Not in scope</p>
+        <p class="text-white/55 text-[13px] leading-relaxed">No legal, financial, medical or immigration advice. No representation before any authority. No outcome claims &mdash; you keep the decisions, we do the document work.</p>
+      </div>
+    </div>
+
+    <div class="rv" style="--d:.08s">
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Common Questions</p>
+      <div class="liquid-glass rounded-2xl divide-y divide-white/10 overflow-hidden">
+        <div class="faq open">
+          <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="true">
+            <span class="text-white text-sm font-medium">What kinds of documents do you handle?</span>
+            <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Anything document-heavy where accuracy matters: professional services files, finance and admin records, real estate and construction documentation, compliance and legal support bundles, healthcare administration, immigration paperwork, education records, procurement sets, and recurring back-office document work.</p></div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
+            <span class="text-white text-sm font-medium">What happens to my documents?</span>
+            <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Your material is used for the engagement and nothing else. It is not resold, published or shared. If you want files removed after delivery, say so when you send the set and it is done &mdash; you keep every original either way.</p></div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
+            <span class="text-white text-sm font-medium">How is pricing decided?</span>
+            <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">By the actual set: volume, the condition of the source material, how many documents must be cross-checked against each other, and urgency. There is no published rate card because a clean twelve-page file and a chaotic four-hundred-page one are not the same job.</p></div></div>
+        </div>
+        <div class="faq">
+          <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
+            <span class="text-white text-sm font-medium">What if the desk is at capacity?</span>
+            <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">You hear it openly in the first reply, with a realistic date instead of a silent queue. A small desk can promise that much.</p></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ START ══════════════════════ -->
+<section id="start" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800 relative overflow-hidden">
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[420px] bg-white/5 rounded-full blur-[130px] pointer-events-none" aria-hidden="true"></div>
+  <div class="max-w-2xl mx-auto relative">
+    <div class="rv text-center mb-10">
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Start</p>
+      <h2 class="text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight mb-4">Put the mess on the table.</h2>
+      <p class="text-white/55 text-sm leading-relaxed max-w-md mx-auto">Describe the documents, the rough volume, and what usually goes wrong. No files needed yet &mdash; an honest read comes back within twenty-four hours.</p>
+    </div>
+
+    <form id="intakeForm" class="rv liquid-glass rounded-2xl p-6 sm:p-7" style="--d:.08s" novalidate>
+      <div class="grid sm:grid-cols-2 gap-5 mb-5">
+        <div>
+          <label for="fn" class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">Name <span class="text-red-200/70">*</span></label>
+          <input id="fn" type="text" autocomplete="name" placeholder="Your name" class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors" />
+          <p class="ferr hidden text-red-200/80 text-[11px] mt-2 tracking-wide">Please add your name.</p>
+        </div>
+        <div>
+          <label for="fe" class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">Email <span class="text-red-200/70">*</span></label>
+          <input id="fe" type="email" autocomplete="email" placeholder="you@work.com" class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors" />
+          <p class="ferr hidden text-red-200/80 text-[11px] mt-2 tracking-wide">That email does not look right.</p>
+        </div>
+      </div>
+      <div class="mb-5">
+        <label for="fd" class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">What are the documents? <span class="text-red-200/70">*</span></label>
+        <input id="fd" type="text" placeholder="Contracts, records, application pack, invoices" class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors" />
+        <p class="ferr hidden text-red-200/80 text-[11px] mt-2 tracking-wide">Tell us what kind of set it is.</p>
+      </div>
+      <div class="mb-6">
+        <label for="fm" class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">What usually goes wrong?</label>
+        <textarea id="fm" rows="4" placeholder="Volume, who uses the set, what breaks, and when it is needed by." class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm leading-relaxed text-white placeholder:text-white/30 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors resize-y"></textarea>
+      </div>
+      <button type="submit" class="w-full rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-colors hover:bg-gray-200">Open a File</button>
+      <p id="ok" role="status" class="hidden text-emerald-300/90 text-[11px] tracking-wide mt-4 text-center leading-relaxed">Draft ready &mdash; your email client should open with the details inside.</p>
+    </form>
+
+    <div class="rv mt-5 liquid-glass rounded-2xl px-5 py-4 flex flex-wrap items-center justify-between gap-3" style="--d:.14s">
+      <p class="text-white/55 text-sm">Prefer email? <a href="mailto:daftrify.services@gmail.com" class="text-white font-medium border-b border-white/25 hover:border-white transition-colors break-all">daftrify.services@gmail.com</a></p>
+      <i data-lucide="mail" class="text-white/40"></i>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ FOOTER ══════════════════════ -->
+<footer class="bg-black px-6 sm:px-12 py-10 border-t border-gray-800">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+    <a href="#top" class="flex items-center gap-2 text-white font-light tracking-[0.3em] text-lg" aria-label="DAFTRIFY home">DAFTRI<span class="font-semibold">FY</span></a>
+    <nav class="flex flex-wrap justify-center gap-6 text-white/50 text-sm" aria-label="Footer">
+      <a href="#services" class="hover:text-white transition-colors">Services</a>
+      <a href="#process" class="hover:text-white transition-colors">Process</a>
+      <a href="#about" class="hover:text-white transition-colors">Our Team</a>
+      <a href="#start" class="hover:text-white transition-colors">Open a File</a>
+    </nav>
+    <p class="text-white/35 text-xs tracking-[0.14em] uppercase">&copy; 2026 Daftrify &middot; Faisalabad, Pakistan</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ── hero Previous / Next: step through major sections ── */
+  var route = ['services', 'process', 'principles', 'about', 'start'];
+  var idx = -1;
+  function goStep(delta) {
+    idx = (idx + delta + route.length) % route.length;
+    var el = document.getElementById(route[idx]);
+    if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  }
+  var prevBtn = document.getElementById('prevBtn'), nextBtn = document.getElementById('nextBtn');
+  if (prevBtn) prevBtn.addEventListener('click', function () { goStep(-1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { goStep(1); });
+
+  /* ── mobile menu with icon crossfade ── */
+  var btn = document.getElementById('menuBtn');
+  var menu = document.getElementById('mobile-menu');
+  var open = false;
+  var hicon = btn ? btn.querySelector('.hicon') : null;
+  var xicon = btn ? btn.querySelector('.xicon') : null;
+  function setMenu(on) {
+    open = on;
+    if (!btn || !menu) return;
+    btn.setAttribute('aria-expanded', on ? 'true' : 'false');
+    btn.setAttribute('aria-label', on ? 'Close menu' : 'Open menu');
+    if (hicon) hicon.className = hicon.className.replace(/(rotate-0 scale-100 opacity-100|rotate-180 scale-50 opacity-0|-rotate-180 scale-50 opacity-0)/g, '') + (on ? ' -rotate-180 scale-50 opacity-0' : ' rotate-0 scale-100 opacity-100');
+    if (xicon) xicon.className = xicon.className.replace(/(rotate-0 scale-100 opacity-100|-rotate-180 scale-50 opacity-0|rotate-180 scale-50 opacity-0)/g, '') + (on ? ' rotate-0 scale-100 opacity-100' : ' -rotate-180 scale-50 opacity-0');
+    menu.classList.toggle('pointer-events-none', !on);
+    menu.classList.toggle('-translate-y-4', !on);
+    menu.classList.toggle('opacity-0', !on);
+    menu.classList.toggle('translate-y-0', on);
+    menu.classList.toggle('opacity-100', on);
+    menu.querySelectorAll('.mmob').forEach(function (a, i) {
+      a.style.transitionDelay = on ? (i * 50) + 'ms' : '0ms';
+      a.classList.toggle('translate-x-0', on);
+      a.classList.toggle('opacity-100', on);
+      a.classList.toggle('-translate-x-4', !on);
+      a.classList.toggle('opacity-0', !on);
+    });
+  }
+  if (btn) btn.addEventListener('click', function () { setMenu(!open); });
+  if (menu) Array.prototype.forEach.call(menu.querySelectorAll('.mmob'), function (a) {
+    a.addEventListener('click', function () { setMenu(false); });
+  });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) setMenu(false); });
+
+  /* ── scroll reveals ── */
+  var rvs = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+  if (reduce || !('IntersectionObserver' in window)) {
+    rvs.forEach(function (el) { el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+    rvs.forEach(function (el) { io.observe(el); });
+  }
+
+  /* ── live desk readout (simulated) ── */
+  var roFields = document.getElementById('roFields'), roFlags = document.getElementById('roFlags'), roStatus = document.getElementById('roStatus');
+  if (roFields) {
+    var seq = [
+      { f: 0, g: 0, s: 'Received' }, { f: 96, g: 0, s: 'Extracting' },
+      { f: 214, g: 0, s: 'Reconciling' }, { f: 214, g: 3, s: '3 exceptions raised' },
+      { f: 214, g: 3, s: 'Human verification' }, { f: 214, g: 0, s: 'Verified · packaged' }
+    ];
+    var i = 0;
+    var cycle = function () {
+      if (document.hidden) { setTimeout(cycle, 900); return; }
+      var s = seq[i % seq.length];
+      var from = parseInt(roFields.textContent, 10) || 0;
+      var t0 = performance.now(), dur = 520;
+      (function tick(now) {
+        var k = Math.min(1, (now - t0) / dur);
+        roFields.textContent = String(Math.round(from + (s.f - from) * k)).padStart(3, '0');
+        if (k < 1) requestAnimationFrame(tick);
+      })(t0);
+      if (roFlags) roFlags.textContent = String(s.g);
+      if (roStatus) roStatus.textContent = s.s;
+      i += 1;
+      setTimeout(cycle, 1500);
+    };
+    if (reduce) { roFields.textContent = '214'; if (roFlags) roFlags.textContent = '3'; if (roStatus) roStatus.textContent = 'Verified · packaged'; }
+    else cycle();
+  }
+
+  /* ── verifier pass ── */
+  var run = document.getElementById('runPass');
+  if (run) {
+    var rows = Array.prototype.slice.call(document.querySelectorAll('.vrow'));
+    var bad = ['Mohammad', '05/09/2026', '12,050', 'Not attached'];
+    var good = ['Muhammad', '04/09/2026', '12,500', 'Requested from holder'];
+    var passed = false, timeouts = [];
+    run.addEventListener('click', function () {
+      timeouts.forEach(clearTimeout); timeouts = [];
+      passed = !passed;
+      rows.forEach(function (row, i) {
+        var mark = function () {
+          row.setAttribute('data-ok', passed ? '1' : '0');
+          var val = row.querySelector('.val');
+          if (val) val.textContent = passed ? good[i] : bad[i];
+        };
+        if (reduce) mark(); else timeouts.push(setTimeout(mark, i * 150));
+      });
+      timeouts.push(setTimeout(function () {
+        var st = document.getElementById('deskStat');
+        st.textContent = passed ? '4 fields verified against source' : '4 fields require review';
+        st.className = 'text-[11px] font-medium tracking-[0.16em] uppercase ' + (passed ? 'text-emerald-300/90' : 'text-red-200/80');
+        run.textContent = passed ? 'Reset comparison' : 'Run verification pass';
+      }, reduce ? 0 : 650));
+    });
+  }
+
+  /* ── faq ── */
+  Array.prototype.slice.call(document.querySelectorAll('.faq')).forEach(function (item) {
+    var q = item.querySelector('.faq-q');
+    q.addEventListener('click', function () {
+      var was = item.classList.contains('open');
+      document.querySelectorAll('.faq.open').forEach(function (o) {
+        o.classList.remove('open');
+        o.querySelector('.faq-q').setAttribute('aria-expanded', 'false');
+      });
+      if (!was) { item.classList.add('open'); q.setAttribute('aria-expanded', 'true'); }
+    });
+  });
+
+  /* ── desk clock ── */
+  var clock = document.getElementById('clock');
+  if (clock) {
+    var tickClock = function () {
+      try { clock.textContent = new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Karachi', hour12: false }); }
+      catch (e) { clock.textContent = new Date().toLocaleTimeString('en-GB', { hour12: false }); }
+    };
+    tickClock(); setInterval(tickClock, 1000);
+  }
+
+  /* ── intake form → mailto draft ── */
+  var form = document.getElementById('intakeForm');
+  if (form) {
+    var check = function (input, valid) {
+      var err = input.closest('div').querySelector('.ferr');
+      input.classList.toggle('border-red-300/60', !valid);
+      if (err) err.classList.toggle('hidden', valid);
+      return valid;
+    };
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var n = document.getElementById('fn'), em = document.getElementById('fe'), d = document.getElementById('fd'), m = document.getElementById('fm');
+      var ok = true;
+      ok = check(n, n.value.trim().length > 1) && ok;
+      ok = check(em, /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em.value.trim())) && ok;
+      ok = check(d, d.value.trim().length > 1) && ok;
+      if (!ok) { var firstBad = form.querySelector('.border-red-300\\/60'); if (firstBad) firstBad.focus(); return; }
+      var body = [
+        'New case / Daftrify intake', '',
+        'Name: ' + n.value.trim(), 'Email: ' + em.value.trim(),
+        'Documents: ' + d.value.trim(),
+        m.value.trim() ? 'What goes wrong: ' + m.value.trim() : ''
+      ].filter(function (s) { return s !== ''; }).join('\n');
+      window.location.href = 'mailto:daftrify.services@gmail.com?subject=' + encodeURIComponent('Document set / ' + d.value.trim()) + '&body=' + encodeURIComponent(body);
+      var okEl = document.getElementById('ok');
+      if (okEl) okEl.classList.remove('hidden');
+    });
+  }
+})();
+</script>
+</body>
+</html>
