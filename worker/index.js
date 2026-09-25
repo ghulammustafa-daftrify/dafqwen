@@ -126,6 +126,14 @@ async function handleIntake(request, env) {
 const INJECTED_FORM_SCRIPT = `
 <script>
 (() => {
+  // Make every visible DAFTRIFY contact email open Gmail compose.
+  const gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=contact%40daftrify.com';
+  document.querySelectorAll('a[href^="mailto:contact@daftrify.com"]').forEach((link) => {
+    link.href = gmailUrl;
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+  });
+
   const form = document.getElementById('intakeForm');
   if (!form) return;
 
@@ -138,6 +146,12 @@ const INJECTED_FORM_SCRIPT = `
   trap.style.cssText = 'position:absolute;left:-10000px;width:1px;height:1px;opacity:0;pointer-events:none';
   form.appendChild(trap);
 
+  const button = form.querySelector('button[type="submit"]');
+  if (button) button.textContent = 'Send';
+
+  const status = document.getElementById('ok');
+  if (status) status.textContent = 'Your details will be sent securely to contact@daftrify.com.';
+
   document.addEventListener('submit', async (event) => {
     if (event.target !== form) return;
     event.preventDefault();
@@ -147,8 +161,6 @@ const INJECTED_FORM_SCRIPT = `
     const email = document.getElementById('fe');
     const documents = document.getElementById('fd');
     const issue = document.getElementById('fm');
-    const button = form.querySelector('button[type="submit"]');
-    const status = document.getElementById('ok');
 
     const valid = name && email && documents &&
       name.value.trim().length > 1 &&
@@ -164,7 +176,7 @@ const INJECTED_FORM_SCRIPT = `
     }
     if (status) {
       status.classList.remove('hidden');
-      status.textContent = 'Sending your intake…';
+      status.textContent = 'Sending…';
       status.className = 'text-white/60 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
     }
 
@@ -185,13 +197,13 @@ const INJECTED_FORM_SCRIPT = `
       if (!response.ok || !data.ok) throw new Error(data.error || 'Unable to send.');
 
       if (status) {
-        status.textContent = 'Sent. We’ll review the details and reply within twenty-four hours.';
+        status.textContent = 'Sent. We’ll review your details and reply within twenty-four hours.';
         status.className = 'text-emerald-300/90 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
       }
       form.reset();
       if (button) {
         button.disabled = false;
-        button.textContent = 'Open a File';
+        button.textContent = 'Send';
         button.classList.remove('opacity-60', 'cursor-not-allowed');
       }
     } catch (error) {
