@@ -142,7 +142,7 @@ Verified in the source, not just claimed:
 - No **Hassan Ali** case anywhere
 - Every demonstration is labelled **SIMULATED DEMONSTRATION**; every sheet in the dossier carries a `Synthetic` tag
 - The final state reads **VERIFIED / READY FOR REVIEW**, never "approved" or "guaranteed"
-- One real contact address: `daftrify.services@gmail.com`
+- One real contact address: `contact@daftrify.com`
 - A scope note states plainly that Daftrify provides document operations, **not** legal, financial, medical, or immigration advice, and makes no claim about the outcome of any submission
 
 ---
