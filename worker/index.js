@@ -4,7 +4,9 @@ const SITE_ORIGINS = new Set([
 ]);
 
 const RECIPIENT = "contact@daftrify.com";
-const SENDER = "contact@daftrify.com";
+// The sender must belong to a domain onboarded for Cloudflare Email Service.
+// The message is delivered to contact@daftrify.com; the visitor remains the Reply-To.
+const SENDER = "contact@daftrify.info";
 const MAX_BODY_BYTES = 32 * 1024;
 
 function json(data, status = 200) {
@@ -76,7 +78,7 @@ async function handleIntake(request, env) {
     timeStyle: "short",
   }).format(new Date());
 
-  const subject = `New document intake / ${documents}`;
+  const subject = `New DAFTRIFY document intake / ${documents}`;
   const text = [
     "NEW DAFTRIFY DOCUMENT INTAKE",
     "",
