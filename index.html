@@ -484,8 +484,12 @@
         <span class="inline-flex items-center gap-1.5"><i data-lucide="trash-2" class="w-3.5 h-3.5 text-white/60"></i> Zero-Retention Post-Delivery</span>
       </div>
 
-      <button type="submit" class="w-full rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-colors hover:bg-gray-200">Open a File</button>
-      <p id="ok" role="status" class="hidden text-emerald-300/90 text-[11px] tracking-wide mt-4 text-center leading-relaxed">Draft ready &mdash; your email client should open with the details inside.</p>
+      <button type="submit" id="submitBtn" class="w-full rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-colors hover:bg-gray-200 cursor-pointer flex items-center justify-center gap-2">
+        <span id="btnText">Open a File</span>
+      </button>
+
+      <!-- Prominent Feedback Area -->
+      <div id="statusBox" class="hidden mt-4"></div>
     </form>
 
     <div class="rv mt-5 grid sm:grid-cols-2 gap-3" style="--d:.14s">
@@ -756,25 +760,25 @@
       ok = check(d, d.value.trim().length > 1) && ok;
       if (!ok) { var firstBad = form.querySelector('.border-red-300\\/60'); if (firstBad) firstBad.focus(); return; }
 
-      var okEl = document.getElementById('ok');
+      var statusBox = document.getElementById('statusBox');
+      var btnText = document.getElementById('btnText');
+
       if (selectedFile && selectedFile.size > 10 * 1024 * 1024) {
-        if (okEl) {
-          okEl.textContent = 'File exceeds 10MB limit. Please share a Google Drive/Dropbox link or send via WhatsApp (+92 318 7668851).';
-          okEl.className = 'text-amber-300 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
-          okEl.classList.remove('hidden');
+        if (statusBox) {
+          statusBox.innerHTML = '<div class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-3.5 text-center text-xs text-amber-200">File exceeds 10MB limit. Please share a Google Drive/Dropbox link or send directly via <a href="https://wa.me/923187668851?text=' + encodeURIComponent('Hi Daftrify, I have a file larger than 10MB for review.') + '" target="_blank" class="underline font-semibold text-white">WhatsApp (+92 318 7668851)</a>.</div>';
+          statusBox.classList.remove('hidden');
         }
         return;
       }
 
       if (btn) {
         btn.disabled = true;
-        btn.textContent = 'Encrypting & Transmitting…';
-        btn.classList.add('opacity-70');
+        if (btnText) btnText.textContent = 'Encrypting & Transmitting…';
+        btn.classList.add('opacity-70', 'cursor-not-allowed');
       }
-      if (okEl) {
-        okEl.textContent = 'Encrypting file & transmitting to desk…';
-        okEl.className = 'text-white/60 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
-        okEl.classList.remove('hidden');
+      if (statusBox) {
+        statusBox.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-center text-xs text-white/70 flex items-center justify-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Encrypting documents &amp; transmitting to desk…</div>';
+        statusBox.classList.remove('hidden');
       }
 
       var attachmentPayload = null;
@@ -808,37 +812,48 @@
         });
         var data = await res.json().catch(function () { return {}; });
         if (res.ok && data.ok) {
-          if (okEl) {
-            okEl.textContent = '✓ Received. Your file has been securely submitted to Daftrify Desk. We will review and reply within 24 hours.';
-            okEl.className = 'text-emerald-300/90 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
-            okEl.classList.remove('hidden');
+          if (statusBox) {
+            statusBox.innerHTML = '<div class="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-4 text-center">' +
+              '<div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center mb-2 font-bold">✓</div>' +
+              '<p class="text-sm font-semibold text-emerald-300">File &amp; Details Transmitted to Desk</p>' +
+              '<p class="text-xs text-white/70 mt-1.5 leading-relaxed">We have received your intake and will audit and reply within twenty-four hours to <span class="text-white font-medium">' + em.value.trim() + '</span>.</p>' +
+              '<p class="text-[11px] text-white/45 mt-2">Need an immediate answer? <a href="https://wa.me/923187668851?text=' + encodeURIComponent('Hi Daftrify, I just submitted an intake for: ' + d.value.trim()) + '" target="_blank" class="text-emerald-400 font-medium underline">Ping Desk on WhatsApp</a></p>' +
+              '</div>';
+            statusBox.classList.remove('hidden');
           }
           form.reset();
           updateFileState(null);
           return;
         }
-        throw new Error(data.error || 'Submission failed');
+        throw new Error(data.error || 'Server intake offline');
       } catch (err) {
-        var body = [
-          'New case / Daftrify intake', '',
-          'Name: ' + n.value.trim(), 'Email: ' + em.value.trim(),
+        var emailBody = [
+          'DAFTRIFY DOCUMENT INTAKE', '',
+          'Name: ' + n.value.trim(),
+          'Email: ' + em.value.trim(),
           'Documents: ' + d.value.trim(),
-          m && m.value.trim() ? 'What goes wrong: ' + m.value.trim() : '',
-          selectedFile ? 'Attachment: ' + selectedFile.name + ' (' + formatSize(selectedFile.size) + ')' : ''
+          m && m.value.trim() ? 'What usually goes wrong: ' + m.value.trim() : '',
+          selectedFile ? 'Attached File: ' + selectedFile.name + ' (' + formatSize(selectedFile.size) + ')' : ''
         ].filter(function (s) { return s !== ''; }).join('\n');
-        try {
-          window.location.href = 'mailto:contact@daftrify.info?subject=' + encodeURIComponent('Document set / ' + d.value.trim()) + '&body=' + encodeURIComponent(body);
-        } catch (e) {}
-        if (okEl) {
-          okEl.textContent = 'Draft ready in email client. Alternatively, message our desk directly on WhatsApp at +92 318 7668851.';
-          okEl.className = 'text-white/70 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
-          okEl.classList.remove('hidden');
+
+        var waText = 'Hi Daftrify Desk, I would like to submit documents for review.%0A%0A*Name:* ' + encodeURIComponent(n.value.trim()) + '%0A*Email:* ' + encodeURIComponent(em.value.trim()) + '%0A*Documents:* ' + encodeURIComponent(d.value.trim()) + (m && m.value.trim() ? '%0A*Details:* ' + encodeURIComponent(m.value.trim()) : '');
+        var gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=contact%40daftrify.info&su=' + encodeURIComponent('Document intake: ' + d.value.trim()) + '&body=' + encodeURIComponent(emailBody);
+
+        if (statusBox) {
+          statusBox.innerHTML = '<div class="rounded-xl border border-white/15 bg-white/[0.05] p-4 text-center">' +
+            '<p class="text-xs text-white/80 font-medium mb-3">Choose how to transmit your file directly to our desk:</p>' +
+            '<div class="flex flex-col sm:flex-row gap-2 justify-center">' +
+            '<a href="https://wa.me/923187668851?text=' + waText + '" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold flex items-center justify-center gap-1.5 transition-colors"><span>Send via WhatsApp</span> &rarr;</a>' +
+            '<a href="' + gmailUrl + '" target="_blank" rel="noopener noreferrer" class="px-4 py-2.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-medium flex items-center justify-center gap-1.5 transition-colors"><span>Send via Gmail Web</span> &rarr;</a>' +
+            '</div>' +
+            '</div>';
+          statusBox.classList.remove('hidden');
         }
       } finally {
         if (btn) {
           btn.disabled = false;
-          btn.textContent = 'Open a File';
-          btn.classList.remove('opacity-70');
+          if (btnText) btnText.textContent = 'Open a File';
+          btn.classList.remove('opacity-70', 'cursor-not-allowed');
         }
       }
     });
