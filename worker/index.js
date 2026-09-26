@@ -4,11 +4,7 @@ const MAX_BODY_BYTES = 14 * 1024 * 1024;
 
 function resolveResendKey(env) {
   if (env && env.RESEND_API_KEY) return env.RESEND_API_KEY;
-  try {
-    return atob("cmVfZHg3RUpSZ2JfOTJaVW40TUhiSHJwb2oyUkR2b3BkU3Fk");
-  } catch {
-    return "";
-  }
+  return "";
 }
 
 function corsHeaders() {

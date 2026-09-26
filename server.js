@@ -52,7 +52,7 @@ app.post('/api/intake', (req, res) => {
       receivedAt: `${receivedAt} PKT`,
     });
 
-    const resendApiKey = process.env.RESEND_API_KEY || Buffer.from("cmVfZHg3RUpSZ2JfOTJaVW40TUhiSHJwb2oyUkR2b3BkU3Fk", "base64").toString("utf-8");
+    const resendApiKey = process.env.RESEND_API_KEY || '';
     
     // Asynchronously dispatch email to daftrify.services@gmail.com
     if (resendApiKey) {

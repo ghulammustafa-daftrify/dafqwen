@@ -866,18 +866,34 @@
         updateFileState(null);
       } else {
         if (statusBox) {
-          var mailtoUrl = 'mailto:contact@daftrify.info?subject=' + encodeURIComponent('DAFTRIFY Intake: ' + d.value.trim()) +
-            '&body=' + encodeURIComponent('Client Name: ' + n.value.trim() + '\nClient Email: ' + em.value.trim() + '\nDocuments: ' + d.value.trim() + '\nIssues: ' + (m ? m.value.trim() : 'None') + '\n\n(Please attach your file to this email)');
+          var mailSubject = 'DAFTRIFY Document Intake — ' + d.value.trim();
+          var mailBody = 'DAFTRIFY INTAKE DESK\n' +
+            '----------------------------------------\n' +
+            'Client Name : ' + n.value.trim() + '\n' +
+            'Client Email: ' + em.value.trim() + '\n' +
+            'Documents   : ' + d.value.trim() + '\n' +
+            'Issues / Notes: ' + (m && m.value.trim() ? m.value.trim() : 'None') + '\n' +
+            (selectedFile ? 'Attached File: ' + selectedFile.name + '\n' : '') +
+            '----------------------------------------\n' +
+            'Please find my document set attached.';
 
-          statusBox.innerHTML = '<div class="rounded-xl border border-red-500/30 bg-red-500/10 p-5 text-center">' +
-            '<p class="text-xs text-red-200 font-medium mb-1.5">Network or server connection was interrupted.</p>' +
-            '<p class="text-[11px] text-white/70 mb-3.5">No worries &mdash; send your stack directly to our desk right now:</p>' +
+          var mailtoUrl = 'mailto:contact@daftrify.info?subject=' + encodeURIComponent(mailSubject) +
+            '&body=' + encodeURIComponent(mailBody);
+
+          statusBox.innerHTML = '<div class="rounded-xl border border-white/20 bg-white/5 backdrop-blur-md p-5 text-center shadow-lg">' +
+            '<div class="w-9 h-9 rounded-full bg-white/10 text-white mx-auto flex items-center justify-center mb-2.5 text-base font-semibold">✉️</div>' +
+            '<p class="text-sm text-white font-semibold mb-1">Direct Intake Routed to contact@daftrify.info</p>' +
+            '<p class="text-xs text-white/70 mb-4 leading-relaxed">Your intake details are prepared. Send directly to our desk via Email or ping us directly on WhatsApp:</p>' +
             '<div class="flex flex-col sm:flex-row items-center justify-center gap-2.5">' +
-            '<a href="' + mailtoUrl + '" class="w-full sm:w-auto inline-flex px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold items-center justify-center gap-1.5 border border-white/20 transition-all">Send to contact@daftrify.info &rarr;</a>' +
-            '<a href="https://wa.me/923187668851?text=' + encodeURIComponent('Hi Daftrify Desk, I have a document stack for intake.\nName: ' + n.value.trim() + '\nDocs: ' + d.value.trim()) + '" target="_blank" class="w-full sm:w-auto inline-flex px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold items-center justify-center gap-1.5 transition-all">Direct WhatsApp (+92 318 7668851) &rarr;</a>' +
+            '<a href="' + mailtoUrl + '" class="w-full sm:w-auto inline-flex px-4 py-2.5 rounded-xl bg-white text-black hover:bg-white/90 text-xs font-semibold items-center justify-center gap-1.5 shadow transition-all">Send Email to contact@daftrify.info &rarr;</a>' +
+            '<a href="https://wa.me/923187668851?text=' + encodeURIComponent('Hi Daftrify Desk, I have a document stack for intake.\nName: ' + n.value.trim() + '\nEmail: ' + em.value.trim() + '\nDocs: ' + d.value.trim() + '\nNotes: ' + (m ? m.value.trim() : 'None')) + '" target="_blank" class="w-full sm:w-auto inline-flex px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold items-center justify-center gap-1.5 transition-all">Direct WhatsApp (+92 318 7668851) &rarr;</a>' +
             '</div>' +
             '</div>';
           statusBox.classList.remove('hidden');
+
+          try {
+            window.location.href = mailtoUrl;
+          } catch (navErr) {}
         }
       }
 
