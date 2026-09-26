@@ -838,10 +838,16 @@
         updateFileState(null);
       } else {
         if (statusBox) {
-          statusBox.innerHTML = '<div class="rounded-xl border border-red-500/30 bg-red-500/10 p-4 text-center">' +
-            '<p class="text-xs text-red-200 font-medium mb-2">Network interrupted during transmission.</p>' +
-            '<p class="text-[11px] text-white/70 mb-3">Please send your file directly to our desk via WhatsApp:</p>' +
-            '<a href="https://wa.me/923187668851?text=' + encodeURIComponent('Hi Daftrify, my name is ' + n.value.trim() + '. Documents: ' + d.value.trim()) + '" target="_blank" class="inline-flex px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold items-center justify-center gap-1.5">Direct WhatsApp (+92 318 7668851) &rarr;</a>' +
+          var mailtoUrl = 'mailto:contact@daftrify.info?subject=' + encodeURIComponent('DAFTRIFY Intake: ' + d.value.trim()) +
+            '&body=' + encodeURIComponent('Client Name: ' + n.value.trim() + '\nClient Email: ' + em.value.trim() + '\nDocuments: ' + d.value.trim() + '\nIssues: ' + (m ? m.value.trim() : 'None') + '\n\n(Please attach your file to this email)');
+
+          statusBox.innerHTML = '<div class="rounded-xl border border-red-500/30 bg-red-500/10 p-5 text-center">' +
+            '<p class="text-xs text-red-200 font-medium mb-1.5">Network or server connection was interrupted.</p>' +
+            '<p class="text-[11px] text-white/70 mb-3.5">No worries &mdash; send your stack directly to our desk right now:</p>' +
+            '<div class="flex flex-col sm:flex-row items-center justify-center gap-2.5">' +
+            '<a href="' + mailtoUrl + '" class="w-full sm:w-auto inline-flex px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold items-center justify-center gap-1.5 border border-white/20 transition-all">Send to contact@daftrify.info &rarr;</a>' +
+            '<a href="https://wa.me/923187668851?text=' + encodeURIComponent('Hi Daftrify Desk, I have a document stack for intake.\nName: ' + n.value.trim() + '\nDocs: ' + d.value.trim()) + '" target="_blank" class="w-full sm:w-auto inline-flex px-4 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold items-center justify-center gap-1.5 transition-all">Direct WhatsApp (+92 318 7668851) &rarr;</a>' +
+            '</div>' +
             '</div>';
           statusBox.classList.remove('hidden');
         }
