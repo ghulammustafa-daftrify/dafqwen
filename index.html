@@ -822,7 +822,7 @@
         console.warn('Primary intake endpoint unavailable, activating direct desk route...', e);
       }
 
-      // 2. Direct Desk Pipe Fallback (Guaranteed delivery to daftrify.services@gmail.com)
+      // 2. Direct Desk Pipe Fallback (Guaranteed delivery to contact@daftrify.info)
       if (!sentSuccessfully) {
         try {
           var fd = new FormData();
@@ -838,7 +838,7 @@
             fd.append('attachment', selectedFile);
           }
 
-          var fsRes = await fetch('https://formsubmit.co/ajax/daftrify.services@gmail.com', {
+          var fsRes = await fetch('https://formsubmit.co/ajax/contact@daftrify.info', {
             method: 'POST',
             headers: { 'Accept': 'application/json' },
             body: fd

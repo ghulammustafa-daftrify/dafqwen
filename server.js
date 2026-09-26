@@ -48,13 +48,13 @@ app.post('/api/intake', (req, res) => {
       documents: cleanDocs,
       issue: cleanIssue,
       attachedFile: attachment ? `${attachment.name} (${Math.round((attachment.size || 0) / 1024)} KB)` : 'None',
-      destination: 'daftrify.services@gmail.com',
+      destination: 'contact@daftrify.info',
       receivedAt: `${receivedAt} PKT`,
     });
 
     const resendApiKey = process.env.RESEND_API_KEY || '';
     
-    // Asynchronously dispatch email to daftrify.services@gmail.com
+    // Asynchronously dispatch email to contact@daftrify.info
     if (resendApiKey) {
       const emailAttachments = [];
       if (attachment && attachment.data && attachment.name) {
@@ -73,7 +73,7 @@ app.post('/api/intake', (req, res) => {
         },
         body: JSON.stringify({
           from: 'DAFTRIFY Intake Desk <onboarding@resend.dev>',
-          to: ['daftrify.services@gmail.com'],
+          to: ['contact@daftrify.info'],
           reply_to: cleanEmail,
           subject: `New DAFTRIFY Document Intake / ${cleanDocs}`,
           html: `<div style="font-family: Arial, sans-serif; padding: 20px; color: #111;">

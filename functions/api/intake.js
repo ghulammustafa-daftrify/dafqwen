@@ -1,4 +1,4 @@
-const RECIPIENT = "daftrify.services@gmail.com";
+const RECIPIENT = "contact@daftrify.info";
 const MAX_BODY_BYTES = 14 * 1024 * 1024;
 
 // Secure resolver prevents GitHub Secret Scanning push protection false-positives
@@ -215,6 +215,6 @@ export async function onRequestPost(context) {
 
   return json({
     ok: false,
-    error: "Intake delivery is momentarily queued. Please contact WhatsApp (+92 318 7668851) or email daftrify.services@gmail.com directly.",
+    error: "Intake delivery is momentarily queued. Please contact WhatsApp (+92 318 7668851) or email contact@daftrify.info directly.",
   }, 502);
 }
