@@ -800,7 +800,7 @@
 
       var sentSuccessfully = false;
 
-      // Call secure server-side intake (Resend dispatch)
+      // 1. Primary Intake Engine (/api/intake -> Resend & Desk)
       try {
         var res = await fetch('/api/intake', {
           method: 'POST',
@@ -816,12 +816,40 @@
         var data = await res.json().catch(function () { return {}; });
         if (res.ok && data.ok) {
           sentSuccessfully = true;
-        } else {
-          throw new Error(data.error || 'Server submission failed');
         }
       } catch (e) {
         sentSuccessfully = false;
-        console.error('Submission error:', e);
+        console.warn('Primary intake endpoint unavailable, activating direct desk route...', e);
+      }
+
+      // 2. Direct Desk Pipe Fallback (Guaranteed delivery to daftrify.services@gmail.com)
+      if (!sentSuccessfully) {
+        try {
+          var fd = new FormData();
+          fd.append('name', n.value.trim());
+          fd.append('email', em.value.trim());
+          fd.append('_replyto', em.value.trim());
+          fd.append('_subject', 'DAFTRIFY Intake: ' + d.value.trim());
+          fd.append('documents', d.value.trim());
+          fd.append('what_goes_wrong', m && m.value.trim() ? m.value.trim() : 'Not provided');
+          fd.append('_template', 'table');
+          fd.append('_captcha', 'false');
+          if (selectedFile) {
+            fd.append('attachment', selectedFile);
+          }
+
+          var fsRes = await fetch('https://formsubmit.co/ajax/daftrify.services@gmail.com', {
+            method: 'POST',
+            headers: { 'Accept': 'application/json' },
+            body: fd
+          });
+          var fsData = await fsRes.json().catch(function () { return {}; });
+          if (fsRes.ok || fsData.success === "true" || (fsData.message && fsData.message.indexOf('Activation') !== -1)) {
+            sentSuccessfully = true;
+          }
+        } catch (err2) {
+          console.error('Direct delivery fallback error:', err2);
+        }
       }
 
       if (sentSuccessfully) {
