@@ -88,32 +88,34 @@
 </head>
 <body class="bg-black text-white antialiased">
 
-<!-- ══════════════════════ CINEMATIC HERO (Lumière spec, DAFTRIFY theme) ══════════════════════ -->
-<div class="relative flex h-dvh flex-col overflow-hidden bg-black text-white">
+<!-- ══════════════════════ CINEMATIC HERO (Taste-Grade Desk Architecture) ══════════════════════ -->
+<div class="relative flex min-h-dvh flex-col justify-between overflow-hidden bg-black text-white">
 
-  <!-- background video -->
-  <video id="bgVideo" class="absolute inset-0 z-0 h-full w-full object-cover"
+  <!-- background video with subtle cinematic gradient overlay -->
+  <video id="bgVideo" class="absolute inset-0 z-0 h-full w-full object-cover opacity-80"
     autoPlay muted loop playsInline preload="auto" tabindex="-1" aria-hidden="true"
     src="https://videos.pexels.com/video-files/7054942/7054942-uhd_3840_2160_24fps.mp4"></video>
 
-  <!-- bottom blur veil (blur only) -->
-  <div class="bottom-blur-mask pointer-events-none absolute inset-0 z-[1] backdrop-blur-xl" aria-hidden="true"></div>
+  <!-- multi-layer cinematic gradient veil -->
+  <div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black via-black/60 to-black/30 backdrop-blur-[2px]" aria-hidden="true"></div>
+  <div class="bottom-blur-mask pointer-events-none absolute inset-x-0 bottom-0 h-48 z-[2] backdrop-blur-xl" aria-hidden="true"></div>
 
   <!-- mobile menu dropdown -->
-  <div id="mobile-menu" class="absolute inset-x-0 top-[72px] z-40 border-t border-b border-gray-800 bg-gray-900/95 shadow-2xl backdrop-blur-lg transition-all duration-500 ease-out lg:hidden pointer-events-none -translate-y-4 opacity-0">
+  <div id="mobile-menu" class="absolute inset-x-0 top-[72px] z-40 border-t border-b border-white/10 bg-black/95 shadow-2xl backdrop-blur-xl transition-all duration-500 ease-out lg:hidden pointer-events-none -translate-y-4 opacity-0">
     <nav class="flex flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
-      <a href="#services" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-gray-800/50 -translate-x-4 opacity-0">Services</a>
-      <a href="#process" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-gray-800/50 -translate-x-4 opacity-0">Process</a>
-      <a href="#principles" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-gray-800/50 -translate-x-4 opacity-0">Principles</a>
-      <a href="#about" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-gray-800/50 -translate-x-4 opacity-0">Our Team</a>
-      <a href="#start" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-gray-800/50 -translate-x-4 opacity-0">Open a File</a>
+      <a href="#services" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Services</a>
+      <a href="#pipeline" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Tool Stack</a>
+      <a href="#process" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Process</a>
+      <a href="#principles" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Principles</a>
+      <a href="#about" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Our Team</a>
+      <a href="#start" class="mmob rounded-lg px-3 py-3 text-sm font-semibold text-emerald-400 transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Open a File</a>
     </nav>
-    <div class="flex items-center gap-3 border-t border-gray-800 px-4 py-4 sm:hidden">
+    <div class="flex items-center gap-3 border-t border-white/10 px-4 py-4 sm:hidden">
       <a href="#start" class="mmob liquid-glass flex items-center gap-2 rounded-full px-4 py-2 text-sm">
-        <i data-lucide="search" style="width:18px;height:18px"></i><span>Find my set</span>
+        <i data-lucide="folder-up" style="width:16px;height:16px"></i><span>Send Stack</span>
       </a>
-      <a href="#about" class="mmob liquid-glass flex h-10 w-10 shrink-0 items-center justify-center rounded-full" aria-label="Your profile">
-        <i data-lucide="user" style="width:18px;height:18px"></i>
+      <a href="#about" class="mmob liquid-glass flex h-10 w-10 shrink-0 items-center justify-center rounded-full" aria-label="Our Team">
+        <i data-lucide="user" style="width:16px;height:16px"></i>
       </a>
     </div>
   </div>
@@ -125,18 +127,20 @@
     </a>
 
     <nav class="hidden items-center gap-8 lg:flex" aria-label="Primary">
-      <a href="#services" class="animate-blur-fade-up text-sm transition-colors hover:text-gray-300" style="animation-delay: 100ms">Services</a>
-      <a href="#process" class="animate-blur-fade-up text-sm transition-colors hover:text-gray-300" style="animation-delay: 150ms">Process</a>
-      <a href="#principles" class="animate-blur-fade-up text-sm transition-colors hover:text-gray-300" style="animation-delay: 200ms">Principles</a>
-      <a href="#about" class="animate-blur-fade-up text-sm transition-colors hover:text-gray-300" style="animation-delay: 250ms">Our Team</a>
-      <a href="#start" class="animate-blur-fade-up text-sm transition-colors hover:text-gray-300" style="animation-delay: 300ms">Open a File</a>
+      <a href="#services" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 100ms">Services</a>
+      <a href="#pipeline" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 150ms">Tool Stack</a>
+      <a href="#process" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 200ms">Process</a>
+      <a href="#principles" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 250ms">Principles</a>
+      <a href="#about" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 300ms">Our Team</a>
+      <a href="#start" class="animate-blur-fade-up text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300" style="animation-delay: 350ms">Open a File &rarr;</a>
     </nav>
 
     <div class="flex items-center gap-3">
-      <a href="#process" class="liquid-glass animate-blur-fade-up hidden items-center gap-2 rounded-full px-4 py-2 text-sm sm:flex md:px-6" style="animation-delay: 350ms">
-        <i data-lucide="search" style="width:18px;height:18px"></i><span>Find my set</span>
+      <a href="#start" class="liquid-glass animate-blur-fade-up hidden items-center gap-2 rounded-full px-4 py-2 text-xs font-mono tracking-tight sm:flex md:px-5" style="animation-delay: 350ms">
+        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span>DESK LIVE</span>
       </a>
-      <a href="#about" class="liquid-glass animate-blur-fade-up hidden h-10 w-10 items-center justify-center rounded-full sm:flex" style="animation-delay: 400ms" aria-label="Your profile">
+      <a href="#about" class="liquid-glass animate-blur-fade-up hidden h-10 w-10 items-center justify-center rounded-full sm:flex" style="animation-delay: 400ms" aria-label="Desk Team">
         <i data-lucide="user" style="width:18px;height:18px"></i>
       </a>
       <button id="menuBtn" type="button" class="liquid-glass animate-blur-fade-up relative flex h-10 w-10 items-center justify-center rounded-full lg:hidden" style="animation-delay: 350ms" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
@@ -146,42 +150,237 @@
     </div>
   </header>
 
-  <!-- hero content -->
-  <main class="relative z-10 flex flex-1 flex-col justify-end px-4 pb-8 sm:px-6 md:px-12 md:pb-16">
-    <div class="flex flex-col items-end gap-8 md:flex-row">
-      <div class="w-full flex-1">
-        <div class="animate-blur-fade-up mb-6 flex flex-wrap items-center gap-3 text-xs sm:gap-6 sm:text-sm md:mb-8" style="animation-delay: 300ms">
-          <span class="flex items-center gap-2 font-medium"><i data-lucide="shield-check" style="width:16px;height:16px" class="fill-white sm:h-5 sm:w-5"></i>Source-verified</span>
-          <span class="flex items-center gap-2"><i data-lucide="clock" style="width:16px;height:16px" class="sm:h-5 sm:w-5"></i>&lt;24h reply</span>
-          <span class="flex items-center gap-2"><i data-lucide="calendar" style="width:16px;height:16px" class="sm:h-5 sm:w-5"></i>Est. 2026</span>
+  <!-- hero main content (2-column balanced layout) -->
+  <main class="relative z-10 flex flex-1 flex-col justify-center px-4 py-8 sm:px-6 md:px-12 md:py-12">
+    <div class="mx-auto w-full max-w-7xl grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+      
+      <!-- Left Column: Primary Copy & Actions -->
+      <div class="lg:col-span-7 flex flex-col justify-center">
+        <!-- Live status badges -->
+        <div class="animate-blur-fade-up mb-5 flex flex-wrap items-center gap-2.5 text-xs" style="animation-delay: 200ms">
+          <div class="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/40 px-3 py-1 font-mono text-emerald-300 backdrop-blur-md">
+            <span class="relative flex h-2 w-2">
+              <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+              <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
+            </span>
+            <span class="tracking-wider uppercase font-semibold text-[11px]">Desk Active &middot; Accepting Stacks</span>
+          </div>
+          <div class="inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-white/70 text-[11px] backdrop-blur-md">
+            <i data-lucide="shield-check" style="width:13px;height:13px" class="text-emerald-400"></i>
+            <span>Source-Verified</span>
+          </div>
+          <div class="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-white/10 bg-white/[0.04] px-3 py-1 font-mono text-white/70 text-[11px] backdrop-blur-md">
+            <i data-lucide="clock" style="width:13px;height:13px" class="text-emerald-400"></i>
+            <span>&lt;24h Turnaround</span>
+          </div>
         </div>
 
-        <h1 class="animate-blur-fade-up mb-4 text-3xl font-normal tracking-[-0.04em] sm:text-5xl md:mb-6 md:text-6xl lg:text-7xl" style="animation-delay: 400ms">
-          Documents In. Clarity Out.
+        <h1 class="animate-blur-fade-up mb-4 text-4xl font-light tracking-[-0.04em] sm:text-6xl md:text-7xl lg:text-[4.75rem] leading-[1.02]" style="animation-delay: 300ms">
+          Documents In.<br />
+          <span class="font-normal bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent drop-shadow-sm">Clarity Out.</span>
         </h1>
 
-        <p class="animate-blur-fade-up mb-6 max-w-2xl text-base text-gray-400 sm:text-lg md:mb-12 md:text-xl" style="animation-delay: 500ms">
-          A desk that takes document-heavy stacks and returns them organized, reconciled and source-verified — ready to submit.
+        <p class="animate-blur-fade-up mb-8 max-w-xl text-base text-zinc-300 sm:text-lg leading-relaxed font-normal" style="animation-delay: 400ms">
+          A specialized production desk that intakes complex document stacks &mdash; multi-page PDFs, technical drawings, and dense financial ledgers &mdash; returning them structured, reconciled, and ready to submit.
         </p>
 
-        <div class="flex flex-wrap gap-3 sm:gap-4">
-          <a href="#start" class="animate-blur-fade-up flex items-center gap-2 rounded-full bg-white px-6 py-2.5 font-medium text-black transition-colors hover:bg-gray-200 sm:px-8 sm:py-3" style="animation-delay: 600ms">
-            <i data-lucide="play" style="width:18px;height:18px" class="fill-black"></i><span>Open a File</span>
+        <div class="flex flex-wrap items-center gap-3 sm:gap-4">
+          <a href="#start" class="animate-blur-fade-up inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-black transition-all hover:bg-zinc-200 hover:shadow-xl hover:shadow-white/10 active:scale-[0.98]" style="animation-delay: 500ms">
+            <i data-lucide="folder-up" style="width:17px;height:17px" class="text-black"></i>
+            <span>Open a File</span>
           </a>
-          <a href="#process" class="liquid-glass animate-blur-fade-up rounded-full px-6 py-2.5 font-medium sm:px-8 sm:py-3" style="animation-delay: 700ms">See the Process</a>
+          <a href="#pipeline" class="liquid-glass animate-blur-fade-up inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-medium text-white transition-all hover:bg-white/10 active:scale-[0.98]" style="animation-delay: 550ms">
+            <i data-lucide="cpu" style="width:16px;height:16px" class="text-white/70"></i>
+            <span>Inspect Engine Stack</span>
+          </a>
+        </div>
+
+        <!-- Strict anti-slop trust assurance -->
+        <div class="animate-blur-fade-up mt-6 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] font-mono text-white/50 tracking-tight" style="animation-delay: 600ms">
+          <span class="flex items-center gap-1.5">
+            <i data-lucide="lock" style="width:13px;height:13px" class="text-emerald-400"></i>
+            Zero login required
+          </span>
+          <span class="text-white/20">&bull;</span>
+          <span>Strict mutual NDA &amp; confidentiality</span>
+          <span class="text-white/20">&bull;</span>
+          <span>Direct partner review</span>
         </div>
       </div>
 
-      <div class="flex w-full items-center gap-3 sm:gap-4 md:w-auto md:justify-end">
-        <button id="prevBtn" class="liquid-glass animate-blur-fade-up flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm sm:px-6 sm:py-3" style="animation-delay: 800ms">
-          <i data-lucide="chevron-left" style="width:18px;height:18px"></i><span>Previous</span>
-        </button>
-        <button id="nextBtn" class="liquid-glass animate-blur-fade-up flex items-center gap-1.5 rounded-full px-4 py-2.5 text-sm sm:px-6 sm:py-3" style="animation-delay: 900ms">
-          <span>Next</span><i data-lucide="chevron-right" style="width:18px;height:18px"></i>
-        </button>
+      <!-- Right Column: Interactive Live Desk Console & Pipeline Readout -->
+      <div class="lg:col-span-5 w-full">
+        <div class="animate-blur-fade-up rounded-2xl border border-white/15 bg-[#090b0e]/90 p-5 sm:p-6 shadow-2xl backdrop-blur-2xl" style="animation-delay: 450ms">
+          
+          <!-- Console Top Bar -->
+          <div class="flex items-center justify-between border-b border-white/10 pb-3.5 mb-4">
+            <div class="flex items-center gap-2.5">
+              <div class="flex gap-1.5">
+                <span class="h-2.5 w-2.5 rounded-full bg-red-500/80"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-amber-500/80"></span>
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-500/80"></span>
+              </div>
+              <span class="font-mono text-[11px] font-semibold tracking-wider text-white/60">DESK_CONSOLE // PIPELINE</span>
+            </div>
+            <div class="flex items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-2.5 py-0.5 font-mono text-[10px] text-emerald-300">
+              <span class="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>LIVE FEED</span>
+            </div>
+          </div>
+
+          <!-- Production Tool Stack Badges (Requested by User) -->
+          <div class="mb-4">
+            <p class="font-mono text-[10px] uppercase tracking-wider text-white/40 mb-2">Active Processing Engines:</p>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              
+              <!-- Gemini -->
+              <div id="toolGemini" class="tool-chip flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-2 transition-all hover:border-blue-500/40 hover:bg-blue-500/10 cursor-pointer">
+                <svg class="h-4 w-4 shrink-0" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" fill="#4E82EE"/>
+                </svg>
+                <div class="min-w-0">
+                  <p class="text-[11px] font-medium leading-none text-white truncate">Gemini</p>
+                  <p class="text-[9px] font-mono text-white/40 leading-tight">Vision OCR</p>
+                </div>
+              </div>
+
+              <!-- Alteryx -->
+              <div id="toolAlteryx" class="tool-chip flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-2 transition-all hover:border-sky-500/40 hover:bg-sky-500/10 cursor-pointer">
+                <svg class="h-4 w-4 shrink-0" role="img" viewBox="0 0 24 24" fill="#0084FF" xmlns="http://www.w3.org/2000/svg">
+                  <path d="m2.312 13.2-.014.01-.014.008a1.796 1.796 0 0 1-.943.293C.886 13.5.72 13.34.71 12.9c.01-.504.178-.66.747-.695l.785-.037.035-.002h.034V13.2zm1.429.248a.185.185 0 0 0-.182-.137.37.37 0 0 0-.072.009c-.121.03-.189.038-.282.045-.178.008-.21-.061-.22-.26v-2.732a.24.24 0 0 0-.088-.164l-.017-.012c-.006-.004-.012-.01-.02-.014-.148-.087-.394-.157-.604-.21l-.015-.005a3.437 3.437 0 0 0-1.158-.072c-.12.012-.442.065-.55.102-.032.01-.133.059-.137.155.002.05.058.21.058.21.037.111.076.138.146.153.057.006.18-.02.261-.033a2.726 2.726 0 0 1 .922-.032c.357.055.494.165.494.165v1.06l-.031.001-.762.02c-1.02.032-1.49.436-1.484 1.25-.001.37.115.667.335.858.205.18.506.276.868.276h.001a1.73 1.73 0 0 0 1.122-.404l.033-.026.017.038a.611.611 0 0 0 .423.355 1.172 1.172 0 0 0 .412.031c.117-.016.271-.037.443-.118.095-.045.162-.1.157-.2a2.037 2.037 0 0 0-.07-.309zm11.261.614h-.37a.177.177 0 0 1-.135-.051c-.03-.035-.043-.082-.043-.146v-3.51c-.003-.066.014-.114.048-.146.03-.03.073-.043.132-.043h.335c.063 0 .105.013.138.04.033.028.051.075.05.13l.004.094.003.079.053-.058a1.103 1.103 0 0 1 1.048-.347c.07.013.096.083.09.12 0 .019 0 .033-.002.046l-.056.354a.116.116 0 0 1-.107.107.618.618 0 0 1-.095-.01c-.04-.006-.085-.014-.165-.014-.26 0-.549.171-.742.438l-.006.008v2.712c0 .06-.015.108-.045.142a.174.174 0 0 1-.135.055zm-2.287-2.375h-1.702c.024-.858.351-1.21.89-1.21.524 0 .82.288.82.961 0 .053 0 .187-.008.25zm-.796-1.756c-.953 0-1.67.663-1.67 2.17 0 1.382.647 2.06 1.865 2.06.193 0 .422-.022.64-.067.035-.006.07-.015.105-.023a2.45 2.45 0 0 0 .33-.12c.076-.029.135-.088.139-.161a3.34 3.34 0 0 0-.08-.33c-.03-.073-.096-.119-.163-.115-.023 0-.35.071-.37.077a2.406 2.406 0 0 1-.586.077c-.866 0-1.124-.414-1.124-1.266v-.062h2.27a.143.143 0 0 0 .128-.125l.002-.03c.008-.148.013-.305.013-.43 0-1.047-.508-1.655-1.5-1.655zm5.371 5.712h-.025c-.134 0-.244-.01-.352-.031-.067-.012-.092-.099-.078-.217 0 0 .008-.126.027-.215.017-.09.06-.132.108-.132h.014l.037.002c.021.001.052.005.081.008.066.007.133.014.186.014.442-.005.681-.167.85-.577l.204-.498.02-.053.007-.022-.007-.023-1.363-3.604a.133.133 0 0 1-.008-.047.09.09 0 0 1 .02-.06.09.09 0 0 1 .065-.027h.517c.075 0 .13.04.147.098l.898 2.58.06.174.061-.173.927-2.562a.152.152 0 0 1 .146-.118h.004l.014.001h.428c.035 0 .06.007.078.021a.07.07 0 0 1 .024.055.186.186 0 0 1-.013.066l-1.525 4.09c-.332.911-.752 1.25-1.552 1.25z"/>
+                </svg>
+                <div class="min-w-0">
+                  <p class="text-[11px] font-medium leading-none text-white truncate">Alteryx</p>
+                  <p class="text-[9px] font-mono text-white/40 leading-tight">Data ETL</p>
+                </div>
+              </div>
+
+              <!-- Bluebeam Revu -->
+              <div id="toolBluebeam" class="tool-chip flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-2 transition-all hover:border-cyan-500/40 hover:bg-cyan-500/10 cursor-pointer">
+                <svg class="h-4 w-4 shrink-0 rounded" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <rect width="48" height="48" rx="8" fill="#0072CE"/>
+                  <path d="M14 12H27C31.4 12 34 14.2 34 17.5C34 19.8 32.5 21.6 30 22.4C33.2 23.2 35 25.4 35 28.5C35 32.4 31.8 35 27 35H14V12ZM20 21.5H26.2C28.2 21.5 29.5 20.4 29.5 18.7C29.5 17 28.2 15.9 26.2 15.9H20V21.5ZM20 31.1H26.8C29 31.1 30.5 29.8 30.5 27.9C30.5 26 29 24.7 26.8 24.7H20V31.1Z" fill="white"/>
+                </svg>
+                <div class="min-w-0">
+                  <p class="text-[11px] font-medium leading-none text-white truncate">Bluebeam</p>
+                  <p class="text-[9px] font-mono text-white/40 leading-tight">PDF Markups</p>
+                </div>
+              </div>
+
+              <!-- Zapier & n8n -->
+              <div id="toolAutomation" class="tool-chip flex items-center gap-2 rounded-lg border border-white/10 bg-white/[0.03] p-2 transition-all hover:border-orange-500/40 hover:bg-orange-500/10 cursor-pointer">
+                <svg class="h-4 w-4 shrink-0" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path fill="#FF4A00" d="M128.08 0c7.231.013 14.343.624 21.256 1.78V76.3l52.831-52.696a128.425 128.425 0 0 1 16.34 13.789a128.468 128.468 0 0 1 13.84 16.312L179.513 106.4h74.715A127.58 127.58 0 0 1 256 127.587v.173c0 7.226-.613 14.306-1.772 21.2H179.5l52.847 52.682a129.615 129.615 0 0 1-13.824 16.312h-.015a128.254 128.254 0 0 1-16.326 13.789l-52.846-52.696v74.52a130.321 130.321 0 0 1-21.243 1.781h-.186a130.26 130.26 0 0 1-21.23-1.78v-74.52l-52.831 52.695a128.401 128.401 0 0 1-30.18-30.1L76.5 148.96H1.785A126.984 126.984 0 0 1 0 127.72v-.371c.012-1.875.135-4.166.311-6.536l.055-.713c.522-6.671 1.419-13.7 1.419-13.7H76.5L23.666 53.705a126.265 126.265 0 0 1 13.81-16.286l.026-.026a127.746 127.746 0 0 1 16.344-13.789L106.677 76.3V1.78A130.278 130.278 0 0 1 127.933 0h.147Zm-.013 95.76h-.122a76.718 76.718 0 0 0-27.034 4.902a76.662 76.662 0 0 0-4.915 26.952v.12a76.383 76.383 0 0 0 4.927 26.951a76.608 76.608 0 0 0 27.022 4.902h.122c9.51 0 18.617-1.74 27.022-4.902a76.146 76.146 0 0 0 4.915-26.952v-.12c0-9.484-1.747-18.57-4.915-26.951a76.614 76.614 0 0 0-27.022-4.902Z"/>
+                </svg>
+                <div class="min-w-0">
+                  <p class="text-[11px] font-medium leading-none text-white truncate">Zapier/n8n</p>
+                  <p class="text-[9px] font-mono text-white/40 leading-tight">Pipelines</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Dynamic Stage Card -->
+          <div class="rounded-xl border border-white/10 bg-black/60 p-4 mb-4">
+            <div class="flex items-center justify-between mb-2">
+              <span id="stageBadge" class="font-mono text-[10px] uppercase font-bold tracking-wider text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">STAGE 01 &bull; INTAKE</span>
+              <span id="stageEngine" class="font-mono text-[10px] text-white/50">ENGINE: MULTI_TRIAGE</span>
+            </div>
+            
+            <h4 id="stageTitle" class="text-sm font-semibold text-white mb-1">Multi-Source File Ingestion</h4>
+            <p id="stageDesc" class="text-xs text-white/60 leading-relaxed min-h-[38px]">Receiving client raw stacks: scanned PDFs, contractor invoices, Excel tables, and architectural drawings.</p>
+
+            <div class="mt-3 pt-3 border-t border-white/5 grid grid-cols-3 gap-2 text-[10px] font-mono">
+              <div>
+                <p class="text-white/40">STACK SIZE</p>
+                <p id="metricFiles" class="font-semibold text-white/90">07 Items</p>
+              </div>
+              <div>
+                <p class="text-white/40">CHECKS</p>
+                <p id="metricFields" class="font-semibold text-white/90">1,420 Pts</p>
+              </div>
+              <div>
+                <p class="text-white/40">ACCURACY</p>
+                <p id="metricResult" class="font-semibold text-emerald-400">100% Match</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Console Stage Navigation -->
+          <div class="flex items-center justify-between gap-3 pt-1">
+            <div class="flex items-center gap-1.5">
+              <button id="prevBtn" type="button" class="liquid-glass inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 text-xs text-white/80 transition-all hover:text-white hover:bg-white/10 active:scale-95" title="Previous Pipeline Stage">
+                <i data-lucide="chevron-left" style="width:14px;height:14px"></i><span>Prev</span>
+              </button>
+              <button id="nextBtn" type="button" class="liquid-glass inline-flex items-center gap-1 rounded-full px-3.5 py-1.5 text-xs text-white/80 transition-all hover:text-white hover:bg-white/10 active:scale-95" title="Next Pipeline Stage">
+                <span>Next</span><i data-lucide="chevron-right" style="width:14px;height:14px"></i>
+              </button>
+            </div>
+            <a href="#process" class="text-xs font-mono text-emerald-400/90 hover:text-emerald-300 transition-colors flex items-center gap-1">
+              <span>Inspect Full Pipeline</span> &rarr;
+            </a>
+          </div>
+
+        </div>
       </div>
+
     </div>
   </main>
+
+  <!-- ══════════════════════ PRODUCTION STACK LOGO RIBBON ══════════════════════ -->
+  <div id="pipeline" class="relative z-20 border-t border-b border-white/10 bg-black/90 py-5 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
+      <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-white/40 shrink-0">
+        <i data-lucide="layers" style="width:14px;height:14px" class="text-emerald-400"></i>
+        <span>Enterprise Processing Stack:</span>
+      </div>
+      
+      <div class="flex flex-wrap items-center justify-center md:justify-end gap-6 sm:gap-8">
+        
+        <!-- Alteryx Logo with Label -->
+        <div class="flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
+          <svg class="h-5 w-5" role="img" viewBox="0 0 24 24" fill="#0084FF" xmlns="http://www.w3.org/2000/svg">
+            <path d="m2.312 13.2-.014.01-.014.008a1.796 1.796 0 0 1-.943.293C.886 13.5.72 13.34.71 12.9c.01-.504.178-.66.747-.695l.785-.037.035-.002h.034V13.2zm1.429.248a.185.185 0 0 0-.182-.137.37.37 0 0 0-.072.009c-.121.03-.189.038-.282.045-.178.008-.21-.061-.22-.26v-2.732a.24.24 0 0 0-.088-.164l-.017-.012c-.006-.004-.012-.01-.02-.014-.148-.087-.394-.157-.604-.21l-.015-.005a3.437 3.437 0 0 0-1.158-.072c-.12.012-.442.065-.55.102-.032.01-.133.059-.137.155.002.05.058.21.058.21.037.111.076.138.146.153.057.006.18-.02.261-.033a2.726 2.726 0 0 1 .922-.032c.357.055.494.165.494.165v1.06l-.031.001-.762.02c-1.02.032-1.49.436-1.484 1.25-.001.37.115.667.335.858.205.18.506.276.868.276h.001a1.73 1.73 0 0 0 1.122-.404l.033-.026.017.038a.611.611 0 0 0 .423.355 1.172 1.172 0 0 0 .412.031c.117-.016.271-.037.443-.118.095-.045.162-.1.157-.2a2.037 2.037 0 0 0-.07-.309zm11.261.614h-.37a.177.177 0 0 1-.135-.051c-.03-.035-.043-.082-.043-.146v-3.51c-.003-.066.014-.114.048-.146.03-.03.073-.043.132-.043h.335c.063 0 .105.013.138.04.033.028.051.075.05.13l.004.094.003.079.053-.058a1.103 1.103 0 0 1 1.048-.347c.07.013.096.083.09.12 0 .019 0 .033-.002.046l-.056.354a.116.116 0 0 1-.107.107.618.618 0 0 1-.095-.01c-.04-.006-.085-.014-.165-.014-.26 0-.549.171-.742.438l-.006.008v2.712c0 .06-.015.108-.045.142a.174.174 0 0 1-.135.055zm-2.287-2.375h-1.702c.024-.858.351-1.21.89-1.21.524 0 .82.288.82.961 0 .053 0 .187-.008.25zm-.796-1.756c-.953 0-1.67.663-1.67 2.17 0 1.382.647 2.06 1.865 2.06.193 0 .422-.022.64-.067.035-.006.07-.015.105-.023a2.45 2.45 0 0 0 .33-.12c.076-.029.135-.088.139-.161a3.34 3.34 0 0 0-.08-.33c-.03-.073-.096-.119-.163-.115-.023 0-.35.071-.37.077a2.406 2.406 0 0 1-.586.077c-.866 0-1.124-.414-1.124-1.266v-.062h2.27a.143.143 0 0 0 .128-.125l.002-.03c.008-.148.013-.305.013-.43 0-1.047-.508-1.655-1.5-1.655zm5.371 5.712h-.025c-.134 0-.244-.01-.352-.031-.067-.012-.092-.099-.078-.217 0 0 .008-.126.027-.215.017-.09.06-.132.108-.132h.014l.037.002c.021.001.052.005.081.008.066.007.133.014.186.014.442-.005.681-.167.85-.577l.204-.498.02-.053.007-.022-.007-.023-1.363-3.604a.133.133 0 0 1-.008-.047.09.09 0 0 1 .02-.06.09.09 0 0 1 .065-.027h.517c.075 0 .13.04.147.098l.898 2.58.06.174.061-.173.927-2.562a.152.152 0 0 1 .146-.118h.004l.014.001h.428c.035 0 .06.007.078.021a.07.07 0 0 1 .024.055.186.186 0 0 1-.013.066l-1.525 4.09c-.332.911-.752 1.25-1.552 1.25z"/>
+          </svg>
+          <span class="text-xs font-medium text-white/90">Alteryx</span>
+        </div>
+
+        <!-- Bluebeam Logo with Label -->
+        <div class="flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
+          <svg class="h-5 w-5 rounded" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect width="48" height="48" rx="8" fill="#0072CE"/>
+            <path d="M14 12H27C31.4 12 34 14.2 34 17.5C34 19.8 32.5 21.6 30 22.4C33.2 23.2 35 25.4 35 28.5C35 32.4 31.8 35 27 35H14V12ZM20 21.5H26.2C28.2 21.5 29.5 20.4 29.5 18.7C29.5 17 28.2 15.9 26.2 15.9H20V21.5ZM20 31.1H26.8C29 31.1 30.5 29.8 30.5 27.9C30.5 26 29 24.7 26.8 24.7H20V31.1Z" fill="white"/>
+          </svg>
+          <span class="text-xs font-medium text-white/90">Bluebeam Revu</span>
+        </div>
+
+        <!-- Google Gemini with Label -->
+        <div class="flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" fill="#4E82EE"/>
+          </svg>
+          <span class="text-xs font-medium text-white/90">Google Gemini</span>
+        </div>
+
+        <!-- Zapier with Label -->
+        <div class="flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
+          <svg class="h-4 w-4" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path fill="#FF4A00" d="M128.08 0c7.231.013 14.343.624 21.256 1.78V76.3l52.831-52.696a128.425 128.425 0 0 1 16.34 13.789a128.468 128.468 0 0 1 13.84 16.312L179.513 106.4h74.715A127.58 127.58 0 0 1 256 127.587v.173c0 7.226-.613 14.306-1.772 21.2H179.5l52.847 52.682a129.615 129.615 0 0 1-13.824 16.312h-.015a128.254 128.254 0 0 1-16.326 13.789l-52.846-52.696v74.52a130.321 130.321 0 0 1-21.243 1.781h-.186a130.26 130.26 0 0 1-21.23-1.78v-74.52l-52.831 52.695a128.401 128.401 0 0 1-30.18-30.1L76.5 148.96H1.785A126.984 126.984 0 0 1 0 127.72v-.371c.012-1.875.135-4.166.311-6.536l.055-.713c.522-6.671 1.419-13.7 1.419-13.7H76.5L23.666 53.705a126.265 126.265 0 0 1 13.81-16.286l.026-.026a127.746 127.746 0 0 1 16.344-13.789L106.677 76.3V1.78A130.278 130.278 0 0 1 127.933 0h.147Zm-.013 95.76h-.122a76.718 76.718 0 0 0-27.034 4.902a76.662 76.662 0 0 0-4.915 26.952v.12a76.383 76.383 0 0 0 4.927 26.951a76.608 76.608 0 0 0 27.022 4.902h.122c9.51 0 18.617-1.74 27.022-4.902a76.146 76.146 0 0 0 4.915-26.952v-.12c0-9.484-1.747-18.57-4.915-26.951a76.614 76.614 0 0 0-27.022-4.902Z"/>
+          </svg>
+          <span class="text-xs font-medium text-white/90">Zapier</span>
+        </div>
+
+        <!-- n8n with Label -->
+        <div class="flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
+          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="#EA4B71" xmlns="http://www.w3.org/2000/svg">
+            <path d="M21.4737 5.6842c-1.1772 0-2.1663.8051-2.4468 1.8947h-2.8955c-1.235 0-2.289.893-2.492 2.111l-.1038.623a1.263 1.263 0 0 1-1.246 1.0555H11.289c-.2805-1.0896-1.2696-1.8947-2.4468-1.8947s-2.1663.8051-2.4467 1.8947H4.973c-.2805-1.0896-1.2696-1.8947-2.4468-1.8947C1.1311 9.4737 0 10.6047 0 12s1.131 2.5263 2.5263 2.5263c1.1772 0 2.1663-.8051 2.4468-1.8947h1.4223c.2804 1.0896 1.2696 1.8947 2.4467 1.8947 1.1772 0 2.1663-.8051 2.4468-1.8947h1.0008a1.263 1.263 0 0 1 1.2459 1.0555l.1038.623c.203 1.218 1.257 2.111 2.492 2.111h.3692c.2804 1.0895 1.2696 1.8947 2.4468 1.8947 1.3952 0 2.5263-1.131 2.5263-2.5263s-1.131-2.5263-2.5263-2.5263c-1.1772 0-2.1664.805-2.4468 1.8947h-.3692a1.263 1.263 0 0 1-1.246-1.0555l-.1037-.623A2.52 2.52 0 0 0 13.9607 12a2.52 2.52 0 0 0 .821-1.4794l.1038-.623a1.263 1.263 0 0 1 1.2459-1.0555h2.8955c.2805 1.0896 1.2696 1.8947 2.4468 1.8947 1.3952 0 2.5263-1.131 2.5263-2.5263s-1.131-2.5263-2.5263-2.5263m0 1.2632a1.263 1.263 0 0 1 1.2631 1.2631 1.263 1.263 0 0 1-1.2631 1.2632 1.263 1.263 0 0 1-1.2632-1.2632 1.263 1.263 0 0 1 1.2632-1.2631M2.5263 10.7368A1.263 1.263 0 0 1 3.7895 12a1.263 1.263 0 0 1-1.2632 1.2632A1.263 1.263 0 0 1 1.2632 12a1.263 1.263 0 0 1 1.2631-1.2632m6.3158 0A1.263 1.263 0 0 1 10.1053 12a1.263 1.263 0 0 1-1.2632 1.2632A1.263 1.263 0 0 1 7.579 12a1.263 1.263 0 0 1 1.2632-1.2632m10.1053 3.7895a1.263 1.263 0 0 1 1.2631 1.2632 1.263 1.263 0 0 1-1.2631 1.2631 1.263 1.263 0 0 1-1.2632-1.2631 1.263 1.263 0 0 1 1.2632-1.2632"/>
+          </svg>
+          <span class="text-xs font-medium text-white/90">n8n nodes</span>
+        </div>
+
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- ══════════════════════ TRUST MARQUEE ══════════════════════ -->
@@ -551,17 +750,82 @@
   if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ── hero Previous / Next: step through major sections ── */
-  var route = ['services', 'process', 'principles', 'about', 'start'];
-  var idx = -1;
-  function goStep(delta) {
-    idx = (idx + delta + route.length) % route.length;
-    var el = document.getElementById(route[idx]);
-    if (el) el.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+  /* ── Interactive Live Desk Console & Engine Pipeline Controller ── */
+  var stages = [
+    {
+      badge: 'STAGE 01 • INTAKE',
+      engine: 'ENGINE: MULTI_TRIAGE',
+      title: 'Multi-Source File Ingestion',
+      desc: 'Receiving client raw stacks: scanned PDFs, contractor invoices, Excel tables, and architectural drawings.',
+      files: '07 Items',
+      fields: '1,420 Pts',
+      result: '100% Match'
+    },
+    {
+      badge: 'STAGE 02 • EXTRACTION',
+      engine: 'ENGINE: GEMINI_VISION_AI',
+      title: 'Multimodal Handwriting & Table OCR',
+      desc: 'Gemini multimodal parsing extracts unstructured handwritten notes, faint stamps, and chaotic layouts into clean data models.',
+      files: '07 Files',
+      fields: '3,180 Fields',
+      result: '99.8% Parsed'
+    },
+    {
+      badge: 'STAGE 03 • RECONCILIATION',
+      engine: 'ENGINE: ALTERYX_RELATIONAL_ETL',
+      title: 'Bi-directional Ledger & Cross-Check',
+      desc: 'Alteryx fuzzy matching engines cross-reference every invoice against bank ledgers, purchase orders, and tax IDs.',
+      files: '48 Pages',
+      fields: '8,940 Matches',
+      result: '0 Exceptions'
+    },
+    {
+      badge: 'STAGE 04 • MARKUP & AUDIT',
+      engine: 'ENGINE: BLUEBEAM_REVU_DESK',
+      title: 'Vector PDF Stamping & Verification',
+      desc: 'Bluebeam Revu applies standardized QA markups, vector drawing callouts, and compiles the final audit-ready package.',
+      files: '1 Clean Set',
+      fields: 'Full Audit',
+      result: 'Signed Off ✓'
+    }
+  ];
+
+  var currentStage = 0;
+  var stageBadge = document.getElementById('stageBadge');
+  var stageEngine = document.getElementById('stageEngine');
+  var stageTitle = document.getElementById('stageTitle');
+  var stageDesc = document.getElementById('stageDesc');
+  var metricFiles = document.getElementById('metricFiles');
+  var metricFields = document.getElementById('metricFields');
+  var metricResult = document.getElementById('metricResult');
+
+  function renderStage(idx) {
+    currentStage = (idx + stages.length) % stages.length;
+    var s = stages[currentStage];
+    if (stageBadge) stageBadge.textContent = s.badge;
+    if (stageEngine) stageEngine.textContent = s.engine;
+    if (stageTitle) stageTitle.textContent = s.title;
+    if (stageDesc) stageDesc.textContent = s.desc;
+    if (metricFiles) metricFiles.textContent = s.files;
+    if (metricFields) metricFields.textContent = s.fields;
+    if (metricResult) metricResult.textContent = s.result;
   }
-  var prevBtn = document.getElementById('prevBtn'), nextBtn = document.getElementById('nextBtn');
-  if (prevBtn) prevBtn.addEventListener('click', function () { goStep(-1); });
-  if (nextBtn) nextBtn.addEventListener('click', function () { goStep(1); });
+
+  var prevBtn = document.getElementById('prevBtn');
+  var nextBtn = document.getElementById('nextBtn');
+  if (prevBtn) prevBtn.addEventListener('click', function () { renderStage(currentStage - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { renderStage(currentStage + 1); });
+
+  // Tool Chips Quick Inspection
+  var toolGemini = document.getElementById('toolGemini');
+  var toolAlteryx = document.getElementById('toolAlteryx');
+  var toolBluebeam = document.getElementById('toolBluebeam');
+  var toolAutomation = document.getElementById('toolAutomation');
+
+  if (toolGemini) toolGemini.addEventListener('click', function () { renderStage(1); });
+  if (toolAlteryx) toolAlteryx.addEventListener('click', function () { renderStage(2); });
+  if (toolBluebeam) toolBluebeam.addEventListener('click', function () { renderStage(3); });
+  if (toolAutomation) toolAutomation.addEventListener('click', function () { renderStage(0); });
 
   /* ── mobile menu with icon crossfade ── */
   var btn = document.getElementById('menuBtn');
