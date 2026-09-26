@@ -1,0 +1,7 @@
+{
+  "name": "Daftrify",
+  "description": "Document operations and pre-submission auditing desk — send document-heavy stacks and get back organized, reconciled, source-verified working files.",
+  "capabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

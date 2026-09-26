@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>DAFTRIFY — Documents In. Clarity Out.</title>
 <meta name="description" content="DAFTRIFY is a document operations desk — send document-heavy stacks and get back organized, reconciled, source-verified working files. Faisalabad, Pakistan." />
+<meta property="og:title" content="DAFTRIFY — Documents In. Clarity Out." />
+<meta property="og:description" content="DAFTRIFY is a document operations desk — send document-heavy stacks and get back organized, reconciled, source-verified working files. Faisalabad, Pakistan." />
 <meta name="theme-color" content="#000000" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000'/%3E%3Cpath d='M9 6h11l5 5v15H9z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M20 6v5h5' stroke='%23fff' stroke-width='2' fill='none'/%3E%3Cpath d='M12 15h9M12 19h9M12 23h5' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -441,20 +443,89 @@
         <input id="fd" type="text" placeholder="Contracts, records, application pack, invoices" class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors" />
         <p class="ferr hidden text-red-200/80 text-[11px] mt-2 tracking-wide">Tell us what kind of set it is.</p>
       </div>
-      <div class="mb-6">
+      <div class="mb-5">
         <label for="fm" class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">What usually goes wrong?</label>
-        <textarea id="fm" rows="4" placeholder="Volume, who uses the set, what breaks, and when it is needed by." class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm leading-relaxed text-white placeholder:text-white/30 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors resize-y"></textarea>
+        <textarea id="fm" rows="3" placeholder="Volume, who uses the set, what breaks, and when it is needed by." class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm leading-relaxed text-white placeholder:text-white/30 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors resize-y"></textarea>
       </div>
+
+      <!-- File Attachment Upload Box -->
+      <div class="mb-6">
+        <label class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">
+          Attach sample document or stack <span class="text-white/35 lowercase">(optional · max 10MB)</span>
+        </label>
+        <div id="dropZone" class="group relative rounded-xl border border-dashed border-white/20 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/40 transition-all p-5 text-center cursor-pointer">
+          <input id="fattach" type="file" class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.png,.jpg,.jpeg" />
+          <div id="uploadPrompt" class="flex flex-col items-center justify-center gap-2">
+            <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-105 transition-transform text-white/70">
+              <i data-lucide="upload-cloud" class="w-5 h-5"></i>
+            </div>
+            <p class="text-xs text-white/80 font-medium"><span class="text-white underline underline-offset-2">Click to browse</span> or drag &amp; drop document</p>
+            <p class="text-[11px] text-white/40">PDF, DOCX, ZIP, XLSX or Scans up to 10MB</p>
+          </div>
+          <div id="filePreview" class="hidden flex items-center justify-between bg-white/[0.06] border border-white/10 rounded-lg p-3 text-left">
+            <div class="flex items-center gap-3 overflow-hidden">
+              <i data-lucide="file-check" class="w-5 h-5 text-emerald-400 shrink-0"></i>
+              <div class="min-w-0">
+                <p id="fileName" class="text-xs text-white font-medium truncate max-w-[200px] sm:max-w-[320px]"></p>
+                <p id="fileSize" class="text-[10px] text-white/40"></p>
+              </div>
+            </div>
+            <button type="button" id="removeFile" class="text-white/40 hover:text-white p-1 transition-colors" title="Remove file">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Trust & Security Signals -->
+      <div class="mb-6 flex flex-wrap items-center justify-center sm:justify-start gap-4 text-[11px] text-white/45 border-t border-white/10 pt-4">
+        <span class="inline-flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i> Strict NDA Protocol</span>
+        <span class="inline-flex items-center gap-1.5"><i data-lucide="lock" class="w-3.5 h-3.5 text-white/60"></i> 256-Bit TLS Encryption</span>
+        <span class="inline-flex items-center gap-1.5"><i data-lucide="trash-2" class="w-3.5 h-3.5 text-white/60"></i> Zero-Retention Post-Delivery</span>
+      </div>
+
       <button type="submit" class="w-full rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-colors hover:bg-gray-200">Open a File</button>
       <p id="ok" role="status" class="hidden text-emerald-300/90 text-[11px] tracking-wide mt-4 text-center leading-relaxed">Draft ready &mdash; your email client should open with the details inside.</p>
     </form>
 
-    <div class="rv mt-5 liquid-glass rounded-2xl px-5 py-4 flex flex-wrap items-center justify-between gap-3" style="--d:.14s">
-      <p class="text-white/55 text-sm">Prefer email? <a href="mailto:contact@daftrify.com" class="text-white font-medium border-b border-white/25 hover:border-white transition-colors break-all">contact@daftrify.com</a></p>
-      <i data-lucide="mail" class="text-white/40"></i>
+    <div class="rv mt-5 grid sm:grid-cols-2 gap-3" style="--d:.14s">
+      <a href="https://wa.me/923187668851?text=Hi%20Daftrify%2C%20I%20have%20documents%20that%20need%20pre-submission%20auditing%20and%20verification." target="_blank" rel="noopener noreferrer" class="liquid-glass rounded-2xl px-5 py-4 flex items-center justify-between gap-3 group hover:border-emerald-500/30 transition-all">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+            <i data-lucide="message-square" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <p class="text-[11px] text-white/40 uppercase tracking-wider font-semibold">Direct Desk WhatsApp</p>
+            <p class="text-white text-sm font-medium group-hover:text-emerald-300 transition-colors">+92 318 7668851</p>
+          </div>
+        </div>
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-white/40 group-hover:text-white transition-colors"></i>
+      </a>
+
+      <a href="mailto:contact@daftrify.info" class="liquid-glass rounded-2xl px-5 py-4 flex items-center justify-between gap-3 group transition-all">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-full bg-white/10 text-white/80 flex items-center justify-center">
+            <i data-lucide="mail" class="w-4 h-4"></i>
+          </div>
+          <div>
+            <p class="text-[11px] text-white/40 uppercase tracking-wider font-semibold">Direct Desk Email</p>
+            <p class="text-white text-sm font-medium group-hover:underline transition-colors break-all">contact@daftrify.info</p>
+          </div>
+        </div>
+        <i data-lucide="arrow-up-right" class="w-4 h-4 text-white/40 group-hover:text-white transition-colors"></i>
+      </a>
     </div>
   </div>
 </section>
+
+<!-- Floating Desk Connect Badge -->
+<a href="https://wa.me/923187668851?text=Hi%20Daftrify%2C%20I%20have%20documents%20that%20need%20pre-submission%20auditing%20and%20verification." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-40 liquid-glass rounded-full px-4 py-2.5 flex items-center gap-2.5 shadow-2xl border border-white/20 hover:border-emerald-400/50 bg-black/80 backdrop-blur-md transition-all hover:scale-105 active:scale-95 group" aria-label="Chat with Daftrify Desk on WhatsApp">
+  <span class="relative flex h-2.5 w-2.5">
+    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
+  </span>
+  <span class="text-xs font-medium text-white/90 group-hover:text-white tracking-wide">Desk WhatsApp</span>
+</a>
 
 <!-- ══════════════════════ FOOTER ══════════════════════ -->
 <footer class="bg-black px-6 sm:px-12 py-10 border-t border-gray-800">
@@ -609,7 +680,64 @@
     tickClock(); setInterval(tickClock, 1000);
   }
 
-  /* ── intake form → mailto draft ── */
+  /* ── intake form & file dropzone ── */
+  var dropZone = document.getElementById('dropZone');
+  var fattach = document.getElementById('fattach');
+  var uploadPrompt = document.getElementById('uploadPrompt');
+  var filePreview = document.getElementById('filePreview');
+  var fileNameEl = document.getElementById('fileName');
+  var fileSizeEl = document.getElementById('fileSize');
+  var removeFileBtn = document.getElementById('removeFile');
+  var selectedFile = null;
+
+  var formatSize = function (bytes) {
+    if (bytes >= 1048576) return (bytes / 1048576).toFixed(1) + ' MB';
+    return Math.max(1, Math.round(bytes / 1024)) + ' KB';
+  };
+
+  var updateFileState = function (file) {
+    selectedFile = file;
+    if (file) {
+      if (fileNameEl) fileNameEl.textContent = file.name;
+      if (fileSizeEl) fileSizeEl.textContent = formatSize(file.size);
+      if (uploadPrompt) uploadPrompt.classList.add('hidden');
+      if (filePreview) filePreview.classList.remove('hidden');
+      if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
+    } else {
+      if (fattach) fattach.value = '';
+      if (uploadPrompt) uploadPrompt.classList.remove('hidden');
+      if (filePreview) filePreview.classList.add('hidden');
+    }
+  };
+
+  if (dropZone && fattach) {
+    dropZone.addEventListener('click', function (e) {
+      if (e.target.closest('#removeFile')) return;
+      fattach.click();
+    });
+    fattach.addEventListener('change', function () {
+      if (fattach.files && fattach.files[0]) updateFileState(fattach.files[0]);
+    });
+    ['dragenter', 'dragover'].forEach(function (ev) {
+      dropZone.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); dropZone.classList.add('border-white/60', 'bg-white/[0.08]'); });
+    });
+    ['dragleave', 'drop'].forEach(function (ev) {
+      dropZone.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('border-white/60', 'bg-white/[0.08]'); });
+    });
+    dropZone.addEventListener('drop', function (e) {
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
+        updateFileState(e.dataTransfer.files[0]);
+      }
+    });
+    if (removeFileBtn) {
+      removeFileBtn.addEventListener('click', function (e) {
+        e.stopPropagation();
+        updateFileState(null);
+      });
+    }
+  }
+
+  /* ── intake form → API or mailto fallback ── */
   var form = document.getElementById('intakeForm');
   if (form) {
     var check = function (input, valid) {
@@ -618,23 +746,101 @@
       if (err) err.classList.toggle('hidden', valid);
       return valid;
     };
-    form.addEventListener('submit', function (e) {
+    form.addEventListener('submit', async function (e) {
       e.preventDefault();
       var n = document.getElementById('fn'), em = document.getElementById('fe'), d = document.getElementById('fd'), m = document.getElementById('fm');
+      var btn = form.querySelector('button[type="submit"]');
       var ok = true;
       ok = check(n, n.value.trim().length > 1) && ok;
       ok = check(em, /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em.value.trim())) && ok;
       ok = check(d, d.value.trim().length > 1) && ok;
       if (!ok) { var firstBad = form.querySelector('.border-red-300\\/60'); if (firstBad) firstBad.focus(); return; }
-      var body = [
-        'New case / Daftrify intake', '',
-        'Name: ' + n.value.trim(), 'Email: ' + em.value.trim(),
-        'Documents: ' + d.value.trim(),
-        m.value.trim() ? 'What goes wrong: ' + m.value.trim() : ''
-      ].filter(function (s) { return s !== ''; }).join('\n');
-      window.location.href = 'mailto:contact@daftrify.com?subject=' + encodeURIComponent('Document set / ' + d.value.trim()) + '&body=' + encodeURIComponent(body);
+
       var okEl = document.getElementById('ok');
-      if (okEl) okEl.classList.remove('hidden');
+      if (selectedFile && selectedFile.size > 10 * 1024 * 1024) {
+        if (okEl) {
+          okEl.textContent = 'File exceeds 10MB limit. Please share a Google Drive/Dropbox link or send via WhatsApp (+92 318 7668851).';
+          okEl.className = 'text-amber-300 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
+          okEl.classList.remove('hidden');
+        }
+        return;
+      }
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = 'Encrypting & Transmitting…';
+        btn.classList.add('opacity-70');
+      }
+      if (okEl) {
+        okEl.textContent = 'Encrypting file & transmitting to desk…';
+        okEl.className = 'text-white/60 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
+        okEl.classList.remove('hidden');
+      }
+
+      var attachmentPayload = null;
+      if (selectedFile) {
+        attachmentPayload = await new Promise(function (resolve) {
+          var reader = new FileReader();
+          reader.onload = function () {
+            resolve({
+              name: selectedFile.name,
+              type: selectedFile.type || 'application/octet-stream',
+              size: selectedFile.size,
+              data: reader.result
+            });
+          };
+          reader.onerror = function () { resolve(null); };
+          reader.readAsDataURL(selectedFile);
+        });
+      }
+
+      try {
+        var res = await fetch('/api/intake', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            name: n.value.trim(),
+            email: em.value.trim(),
+            documents: d.value.trim(),
+            issue: m ? m.value.trim() : '',
+            attachment: attachmentPayload
+          })
+        });
+        var data = await res.json().catch(function () { return {}; });
+        if (res.ok && data.ok) {
+          if (okEl) {
+            okEl.textContent = '✓ Received. Your file has been securely submitted to Daftrify Desk. We will review and reply within 24 hours.';
+            okEl.className = 'text-emerald-300/90 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
+            okEl.classList.remove('hidden');
+          }
+          form.reset();
+          updateFileState(null);
+          return;
+        }
+        throw new Error(data.error || 'Submission failed');
+      } catch (err) {
+        var body = [
+          'New case / Daftrify intake', '',
+          'Name: ' + n.value.trim(), 'Email: ' + em.value.trim(),
+          'Documents: ' + d.value.trim(),
+          m && m.value.trim() ? 'What goes wrong: ' + m.value.trim() : '',
+          selectedFile ? 'Attachment: ' + selectedFile.name + ' (' + formatSize(selectedFile.size) + ')' : ''
+        ].filter(function (s) { return s !== ''; }).join('\n');
+        try {
+          window.location.href = 'mailto:contact@daftrify.info?subject=' + encodeURIComponent('Document set / ' + d.value.trim()) + '&body=' + encodeURIComponent(body);
+        } catch (e) {}
+        if (okEl) {
+          okEl.textContent = 'Draft ready in email client. Alternatively, message our desk directly on WhatsApp at +92 318 7668851.';
+          okEl.className = 'text-white/70 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
+          okEl.classList.remove('hidden');
+        }
+      } finally {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = 'Open a File';
+          btn.classList.remove('opacity-70');
+        }
+      }
     });
   }
 })();

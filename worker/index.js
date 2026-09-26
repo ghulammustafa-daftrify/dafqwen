@@ -3,11 +3,11 @@ const SITE_ORIGINS = new Set([
   "https://www.daftrify.info",
 ]);
 
-const RECIPIENT = "contact@daftrify.com";
+const RECIPIENT = "daftrify.services@gmail.com";
 // The sender must belong to a domain onboarded for Cloudflare Email Service.
-// The message is delivered to contact@daftrify.com; the visitor remains the Reply-To.
+// The message is delivered to daftrify.services@gmail.com; the visitor remains the Reply-To.
 const SENDER = "contact@daftrify.info";
-const MAX_BODY_BYTES = 32 * 1024;
+const MAX_BODY_BYTES = 14 * 1024 * 1024;
 
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
@@ -78,6 +78,30 @@ async function handleIntake(request, env) {
     timeStyle: "short",
   }).format(new Date());
 
+  const attachment = payload.attachment;
+  let fileText = "Attached file: None";
+  let fileHtml = "";
+  const emailAttachments = [];
+
+  if (attachment && typeof attachment === "object" && attachment.data && attachment.name) {
+    const fileName = clean(attachment.name, 120);
+    const fileType = clean(attachment.type, 80) || "application/octet-stream";
+    const fileSize = Number(attachment.size) || 0;
+    const sizeDisplay = fileSize > 1048576
+      ? (fileSize / (1024 * 1024)).toFixed(1) + " MB"
+      : Math.max(1, Math.round(fileSize / 1024)) + " KB";
+
+    fileText = `Attached file: ${fileName} (${sizeDisplay})`;
+    fileHtml = `<tr><td style="font-weight:700;border-bottom:1px solid #ddd">Attached File</td><td style="border-bottom:1px solid #ddd;color:#059669;font-weight:600">${escapeHtml(fileName)} (${escapeHtml(sizeDisplay)})</td></tr>`;
+
+    const rawBase64 = attachment.data.includes(",") ? attachment.data.split(",")[1] : attachment.data;
+    emailAttachments.push({
+      name: fileName,
+      type: fileType,
+      data: rawBase64,
+    });
+  }
+
   const subject = `New DAFTRIFY document intake / ${documents}`;
   const text = [
     "NEW DAFTRIFY DOCUMENT INTAKE",
@@ -86,6 +110,7 @@ async function handleIntake(request, env) {
     `Email: ${email}`,
     `Documents: ${documents}`,
     issue ? `What usually goes wrong: ${issue}` : "What usually goes wrong: Not provided",
+    fileText,
     `Received: ${receivedAt} PKT`,
     "",
     "Reply directly to this email to contact the requester.",
@@ -98,13 +123,14 @@ async function handleIntake(request, env) {
 <tr><td style="font-weight:700;border-bottom:1px solid #ddd">Name</td><td style="border-bottom:1px solid #ddd">${escapeHtml(name)}</td></tr>
 <tr><td style="font-weight:700;border-bottom:1px solid #ddd">Email</td><td style="border-bottom:1px solid #ddd">${escapeHtml(email)}</td></tr>
 <tr><td style="font-weight:700;border-bottom:1px solid #ddd">Documents</td><td style="border-bottom:1px solid #ddd">${escapeHtml(documents)}</td></tr>
-<tr><td style="font-weight:700;vertical-align:top">What usually goes wrong</td><td>${escapeHtml(issue || "Not provided").replaceAll("\n", "<br>")}</td></tr>
+<tr><td style="font-weight:700;vertical-align:top;border-bottom:1px solid #ddd">What usually goes wrong</td><td style="border-bottom:1px solid #ddd">${escapeHtml(issue || "Not provided").replaceAll("\n", "<br>")}</td></tr>
+${fileHtml}
 </table>
 <p style="color:#666;font-size:13px;margin-top:24px">Received ${escapeHtml(receivedAt)} PKT. Reply directly to this email to contact the requester.</p>
 </body></html>`;
 
   try {
-    const result = await env.EMAIL.send({
+    const sendConfig = {
       to: RECIPIENT,
       from: SENDER,
       replyTo: email,
@@ -114,12 +140,18 @@ async function handleIntake(request, env) {
       headers: {
         "X-Daftrify-Form": "website-intake",
       },
-    });
+    };
+
+    if (emailAttachments.length > 0) {
+      sendConfig.attachments = emailAttachments;
+    }
+
+    const result = await env.EMAIL.send(sendConfig);
 
     return json({ ok: true, messageId: result.messageId });
   } catch (error) {
     console.error("Daftrify intake email failed", error);
-    return json({ ok: false, error: "We could not send the intake right now. Please email contact@daftrify.com directly." }, 502);
+    return json({ ok: false, error: "We could not send the intake right now. Please email contact@daftrify.info or WhatsApp +92 318 7668851." }, 502);
   }
 }
 
@@ -127,8 +159,8 @@ const INJECTED_FORM_SCRIPT = `
 <script>
 (() => {
   // Make every visible DAFTRIFY contact email open Gmail compose.
-  const gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=contact%40daftrify.com';
-  document.querySelectorAll('a[href^="mailto:contact@daftrify.com"]').forEach((link) => {
+  const gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=contact%40daftrify.info';
+  document.querySelectorAll('a[href^="mailto:contact@daftrify.info"], a[href^="mailto:contact@daftrify.com"]').forEach((link) => {
     link.href = gmailUrl;
     link.target = '_blank';
     link.rel = 'noopener noreferrer';
@@ -147,10 +179,10 @@ const INJECTED_FORM_SCRIPT = `
   form.appendChild(trap);
 
   const button = form.querySelector('button[type="submit"]');
-  if (button) button.textContent = 'Send';
+  if (button) button.textContent = 'Open a File';
 
   const status = document.getElementById('ok');
-  if (status) status.textContent = 'Your details will be sent securely to contact@daftrify.com.';
+  if (status) status.textContent = 'Your details and files are transmitted with 256-bit TLS encryption.';
 
   document.addEventListener('submit', async (event) => {
     if (event.target !== form) return;
@@ -161,6 +193,7 @@ const INJECTED_FORM_SCRIPT = `
     const email = document.getElementById('fe');
     const documents = document.getElementById('fd');
     const issue = document.getElementById('fm');
+    const fileInput = document.getElementById('fattach');
 
     const valid = name && email && documents &&
       name.value.trim().length > 1 &&
@@ -171,13 +204,41 @@ const INJECTED_FORM_SCRIPT = `
 
     if (button) {
       button.disabled = true;
-      button.textContent = 'Sending…';
+      button.textContent = 'Encrypting & Sending…';
       button.classList.add('opacity-60', 'cursor-not-allowed');
     }
     if (status) {
       status.classList.remove('hidden');
-      status.textContent = 'Sending…';
+      status.textContent = 'Encrypting & Transmitting to Desk…';
       status.className = 'text-white/60 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
+    }
+
+    let attachmentData = null;
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      const f = fileInput.files[0];
+      if (f.size > 10 * 1024 * 1024) {
+        if (status) {
+          status.textContent = 'File is larger than 10MB. Please use Google Drive/Dropbox or send via WhatsApp (+92 318 7668851).';
+          status.className = 'text-amber-300 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
+        }
+        if (button) {
+          button.disabled = false;
+          button.textContent = 'Open a File';
+          button.classList.remove('opacity-60', 'cursor-not-allowed');
+        }
+        return;
+      }
+      attachmentData = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve({
+          name: f.name,
+          type: f.type || 'application/octet-stream',
+          size: f.size,
+          data: reader.result
+        });
+        reader.onerror = () => resolve(null);
+        reader.readAsDataURL(f);
+      });
     }
 
     try {
@@ -189,7 +250,8 @@ const INJECTED_FORM_SCRIPT = `
           email: email.value,
           documents: documents.value,
           issue: issue ? issue.value : '',
-          website: trap.value
+          website: trap.value,
+          attachment: attachmentData
         })
       });
 
@@ -197,18 +259,20 @@ const INJECTED_FORM_SCRIPT = `
       if (!response.ok || !data.ok) throw new Error(data.error || 'Unable to send.');
 
       if (status) {
-        status.textContent = 'Sent. We’ll review your details and reply within twenty-four hours.';
+        status.textContent = '✓ Intake file received. We will review your details and respond within twenty-four hours.';
         status.className = 'text-emerald-300/90 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
       }
       form.reset();
+      const filePreview = document.getElementById('filePreview');
+      if (filePreview) filePreview.classList.add('hidden');
       if (button) {
         button.disabled = false;
-        button.textContent = 'Send';
+        button.textContent = 'Open a File';
         button.classList.remove('opacity-60', 'cursor-not-allowed');
       }
     } catch (error) {
       if (status) {
-        status.textContent = error && error.message ? error.message : 'Something went wrong. Please email contact@daftrify.com directly.';
+        status.textContent = error && error.message ? error.message : 'Something went wrong. Please email contact@daftrify.info or message WhatsApp (+92 318 7668851).';
         status.className = 'text-red-200/90 text-[11px] tracking-wide mt-4 text-center leading-relaxed';
       }
       if (button) {
@@ -224,6 +288,12 @@ const INJECTED_FORM_SCRIPT = `
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    // If accessed via www, permanently redirect (301) to canonical apex domain
+    if (url.hostname === "www.daftrify.info") {
+      url.hostname = "daftrify.info";
+      return Response.redirect(url.toString(), 301);
+    }
 
     if (url.pathname === "/api/intake") {
       return handleIntake(request, env);

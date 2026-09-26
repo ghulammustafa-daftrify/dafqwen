@@ -12,7 +12,7 @@
     {
       "name": "EMAIL",
       "remote": true,
-      "destination_address": "contact@daftrify.com",
+      "destination_address": "daftrify.services@gmail.com",
       "allowed_sender_addresses": [
         "contact@daftrify.info"
       ]
