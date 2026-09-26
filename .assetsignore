@@ -10,3 +10,10 @@ design-system/
 next.config.js
 tsconfig.json
 setup.sh
+_redirects
+_headers
+.env*
+server.js
+BACKEND_SETUP.md
+bun.lock
+
