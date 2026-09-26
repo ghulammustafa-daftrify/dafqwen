@@ -175,9 +175,9 @@
           </div>
         </div>
 
-        <h1 class="animate-blur-fade-up mb-4 text-4xl font-light tracking-[-0.04em] sm:text-6xl md:text-7xl lg:text-[4.75rem] leading-[1.02]" style="animation-delay: 300ms">
-          Documents In.<br />
-          <span class="font-normal bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent drop-shadow-sm">Clarity Out.</span>
+        <h1 id="heroHeadline" class="animate-blur-fade-up mb-4 text-4xl font-light tracking-[-0.04em] sm:text-6xl md:text-7xl lg:text-[4.75rem] leading-[1.02]" style="animation-delay: 300ms" aria-label="Documents In. Clarity Out.">
+          <span id="typeLine1" class="inline"></span><br class="hidden sm:inline" />
+          <span id="typeLine2" class="font-normal bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent drop-shadow-sm inline"></span><span id="typeCursor" class="inline-block w-[3px] h-[0.82em] bg-emerald-400 ml-1.5 align-middle animate-pulse"></span>
         </h1>
 
         <p class="animate-blur-fade-up mb-8 max-w-xl text-base text-zinc-300 sm:text-lg leading-relaxed font-normal" style="animation-delay: 400ms">
@@ -750,6 +750,46 @@
   if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  /* ── Hero Headline Typing Animation (50ms delay per character) ── */
+  var textLine1 = "Documents In.";
+  var textLine2 = "Clarity Out.";
+  var el1 = document.getElementById('typeLine1');
+  var el2 = document.getElementById('typeLine2');
+  var cursor = document.getElementById('typeCursor');
+
+  if (el1 && el2) {
+    if (reduce) {
+      el1.textContent = textLine1;
+      el2.textContent = textLine2;
+    } else {
+      var i = 0;
+      var j = 0;
+      setTimeout(function () {
+        var timer1 = setInterval(function () {
+          if (i < textLine1.length) {
+            el1.textContent += textLine1.charAt(i);
+            i++;
+          } else {
+            clearInterval(timer1);
+            setTimeout(function () {
+              var timer2 = setInterval(function () {
+                if (j < textLine2.length) {
+                  el2.textContent += textLine2.charAt(j);
+                  j++;
+                } else {
+                  clearInterval(timer2);
+                  if (cursor) {
+                    cursor.classList.add('opacity-80');
+                  }
+                }
+              }, 50); // 50ms per character as requested
+            }, 100);
+          }
+        }, 50); // 50ms per character as requested
+      }, 150);
+    }
+  }
+
   /* ── Interactive Live Desk Console & Engine Pipeline Controller ── */
   var stages = [
     {
@@ -798,23 +838,47 @@
   var metricFiles = document.getElementById('metricFiles');
   var metricFields = document.getElementById('metricFields');
   var metricResult = document.getElementById('metricResult');
+  var stageTypeTimer = null;
 
-  function renderStage(idx) {
+  function typeConsoleDesc(element, fullText, speed) {
+    if (!element) return;
+    if (stageTypeTimer) clearInterval(stageTypeTimer);
+    if (reduce) {
+      element.textContent = fullText;
+      return;
+    }
+    element.textContent = '';
+    var charIdx = 0;
+    stageTypeTimer = setInterval(function () {
+      if (charIdx < fullText.length) {
+        element.textContent += fullText.charAt(charIdx);
+        charIdx++;
+      } else {
+        clearInterval(stageTypeTimer);
+      }
+    }, speed || 15);
+  }
+
+  function renderStage(idx, shouldType) {
     currentStage = (idx + stages.length) % stages.length;
     var s = stages[currentStage];
     if (stageBadge) stageBadge.textContent = s.badge;
     if (stageEngine) stageEngine.textContent = s.engine;
     if (stageTitle) stageTitle.textContent = s.title;
-    if (stageDesc) stageDesc.textContent = s.desc;
     if (metricFiles) metricFiles.textContent = s.files;
     if (metricFields) metricFields.textContent = s.fields;
     if (metricResult) metricResult.textContent = s.result;
+    if (shouldType && stageDesc) {
+      typeConsoleDesc(stageDesc, s.desc, 14);
+    } else if (stageDesc) {
+      stageDesc.textContent = s.desc;
+    }
   }
 
   var prevBtn = document.getElementById('prevBtn');
   var nextBtn = document.getElementById('nextBtn');
-  if (prevBtn) prevBtn.addEventListener('click', function () { renderStage(currentStage - 1); });
-  if (nextBtn) nextBtn.addEventListener('click', function () { renderStage(currentStage + 1); });
+  if (prevBtn) prevBtn.addEventListener('click', function () { renderStage(currentStage - 1, true); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { renderStage(currentStage + 1, true); });
 
   // Tool Chips Quick Inspection
   var toolGemini = document.getElementById('toolGemini');
@@ -822,10 +886,10 @@
   var toolBluebeam = document.getElementById('toolBluebeam');
   var toolAutomation = document.getElementById('toolAutomation');
 
-  if (toolGemini) toolGemini.addEventListener('click', function () { renderStage(1); });
-  if (toolAlteryx) toolAlteryx.addEventListener('click', function () { renderStage(2); });
-  if (toolBluebeam) toolBluebeam.addEventListener('click', function () { renderStage(3); });
-  if (toolAutomation) toolAutomation.addEventListener('click', function () { renderStage(0); });
+  if (toolGemini) toolGemini.addEventListener('click', function () { renderStage(1, true); });
+  if (toolAlteryx) toolAlteryx.addEventListener('click', function () { renderStage(2, true); });
+  if (toolBluebeam) toolBluebeam.addEventListener('click', function () { renderStage(3, true); });
+  if (toolAutomation) toolAutomation.addEventListener('click', function () { renderStage(0, true); });
 
   /* ── mobile menu with icon crossfade ── */
   var btn = document.getElementById('menuBtn');
