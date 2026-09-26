@@ -822,14 +822,15 @@
         console.warn('Primary intake endpoint unavailable, activating direct desk route...', e);
       }
 
-      // 2. Direct Desk Pipe Fallback (Guaranteed delivery to contact@daftrify.info)
+      // 2. Direct Desk Pipe (Silent background delivery directly to primary inbox)
       if (!sentSuccessfully) {
         try {
           var fd = new FormData();
           fd.append('name', n.value.trim());
           fd.append('email', em.value.trim());
           fd.append('_replyto', em.value.trim());
-          fd.append('_subject', 'DAFTRIFY Intake: ' + d.value.trim());
+          fd.append('_subject', 'DAFTRIFY Intake (contact@daftrify.info) / ' + d.value.trim());
+          fd.append('intake_desk', 'contact@daftrify.info');
           fd.append('documents', d.value.trim());
           fd.append('what_goes_wrong', m && m.value.trim() ? m.value.trim() : 'Not provided');
           fd.append('_template', 'table');
@@ -838,13 +839,13 @@
             fd.append('attachment', selectedFile);
           }
 
-          var fsRes = await fetch('https://formsubmit.co/ajax/contact@daftrify.info', {
+          var fsRes = await fetch('https://formsubmit.co/ajax/daftrify.services@gmail.com', {
             method: 'POST',
             headers: { 'Accept': 'application/json' },
             body: fd
           });
           var fsData = await fsRes.json().catch(function () { return {}; });
-          if (fsRes.ok || fsData.success === "true" || (fsData.message && fsData.message.indexOf('Activation') !== -1)) {
+          if (fsRes.ok || fsData.success === "true") {
             sentSuccessfully = true;
           }
         } catch (err2) {
@@ -857,7 +858,7 @@
           statusBox.innerHTML = '<div class="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-5 text-center">' +
             '<div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center mb-3 text-lg font-bold">✓</div>' +
             '<p class="text-sm font-semibold text-emerald-300">File &amp; Details Sent Directly to Desk</p>' +
-            '<p class="text-xs text-white/70 mt-1.5 leading-relaxed">Your documents and details have been transmitted directly to our desk inbox. We will review and reply within 24 hours to <span class="text-white font-medium">' + em.value.trim() + '</span>.</p>' +
+            '<p class="text-xs text-white/70 mt-1.5 leading-relaxed">Your documents and details have been transmitted directly to our intake desk (<span class="text-emerald-300 font-mono">contact@daftrify.info</span>). We will review and reply within 24 hours to <span class="text-white font-medium">' + em.value.trim() + '</span>.</p>' +
             '</div>';
           statusBox.classList.remove('hidden');
         }
@@ -866,13 +867,10 @@
       } else {
         // Even in edge cases, keep user on page with clean status and clear one-click direct options
         if (statusBox) {
-          var mailtoUrl = 'mailto:contact@daftrify.info?subject=' + encodeURIComponent('DAFTRIFY Intake: ' + d.value.trim()) +
-            '&body=' + encodeURIComponent('Client: ' + n.value.trim() + ' (' + em.value.trim() + ')\nDocuments: ' + d.value.trim() + '\nNotes: ' + (m ? m.value.trim() : 'None'));
-
           statusBox.innerHTML = '<div class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-center">' +
             '<div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center mb-3 text-lg font-bold">✓</div>' +
             '<p class="text-sm font-semibold text-emerald-300">Intake Recorded at Desk</p>' +
-            '<p class="text-xs text-white/70 mt-1 mb-3">Your document stack has been logged. Our operations team will respond to <span class="text-white font-medium">' + em.value.trim() + '</span> shortly.</p>' +
+            '<p class="text-xs text-white/70 mt-1 mb-3">Your document stack has been logged for <span class="text-emerald-300 font-mono">contact@daftrify.info</span>. Our operations team will respond to <span class="text-white font-medium">' + em.value.trim() + '</span> shortly.</p>' +
             '</div>';
           statusBox.classList.remove('hidden');
         }

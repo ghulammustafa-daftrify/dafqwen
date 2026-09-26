@@ -1,4 +1,5 @@
-const RECIPIENT = "contact@daftrify.info";
+const RECIPIENT = "daftrify.services@gmail.com";
+const DESK_EMAIL = "contact@daftrify.info";
 const MAX_BODY_BYTES = 14 * 1024 * 1024;
 
 // Secure resolver prevents GitHub Secret Scanning push protection false-positives
