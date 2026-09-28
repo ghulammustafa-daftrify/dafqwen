@@ -107,6 +107,11 @@
     .rv { opacity: 1 !important; transform: none !important; transition: none !important; filter: none !important; }
   }
 
+  /* buttery anchor glides (respects reduced motion) */
+  @media (prefers-reduced-motion: no-preference) {
+    html { scroll-behavior: smooth; scroll-padding-top: 16px; }
+  }
+
   /* hero video grade for the monochrome cinematic look with smooth motion */
   @keyframes heroVideoAmbient {
     0%, 100% { transform: scale(1.05) translate3d(0, 0, 0); }
@@ -1413,6 +1418,73 @@
         btn.classList.remove('opacity-70', 'cursor-not-allowed');
       }
     });
+  }
+
+  /* ── Motion+ : magnetic actions, 3D card tilt, hero drift (vanilla spring physics) ── */
+  if (!reduce) {
+    var finePointer = window.matchMedia('(pointer: fine)').matches;
+
+    if (finePointer) {
+      /* magnetic pull on key actions */
+      var magnets = document.querySelectorAll('main a[href="#start"], #submitBtn, a[aria-label="Chat with Daftrify Desk on WhatsApp"]');
+      Array.prototype.forEach.call(magnets, function (el) {
+        var x = 0, y = 0, tx = 0, ty = 0, raf = null;
+        var render = function () {
+          x += (tx - x) * 0.25;
+          y += (ty - y) * 0.25;
+          if (Math.abs(tx - x) < 0.05) x = tx;
+          if (Math.abs(ty - y) < 0.05) y = ty;
+          el.style.translate = x.toFixed(1) + 'px ' + y.toFixed(1) + 'px';
+          raf = (x !== tx || y !== ty) ? requestAnimationFrame(render) : null;
+        };
+        var kick = function () { if (!raf) raf = requestAnimationFrame(render); };
+        el.addEventListener('pointermove', function (e) {
+          var r = el.getBoundingClientRect();
+          tx = Math.max(-12, Math.min(12, (e.clientX - (r.left + r.width / 2)) * 0.28));
+          ty = Math.max(-10, Math.min(10, (e.clientY - (r.top + r.height / 2)) * 0.28));
+          kick();
+        });
+        el.addEventListener('pointerleave', function () { tx = 0; ty = 0; kick(); });
+      });
+
+      /* subtle 3D tilt on service + process cards */
+      var tiltCards = document.querySelectorAll('#services .liquid-glass, #process .liquid-glass');
+      Array.prototype.forEach.call(tiltCards, function (card) {
+        var armed = false;
+        card.addEventListener('pointermove', function (e) {
+          if (!card.classList.contains('in')) return;
+          if (window.getComputedStyle(card).opacity !== '1') return;
+          if (!armed) { card.style.transition = 'transform .12s linear'; armed = true; }
+          var r = card.getBoundingClientRect();
+          var px = (e.clientX - r.left) / r.width - 0.5;
+          var py = (e.clientY - r.top) / r.height - 0.5;
+          card.style.transform = 'perspective(900px) rotateX(' + (-py * 7).toFixed(2) + 'deg) rotateY(' + (px * 7).toFixed(2) + 'deg) translateY(-3px)';
+        });
+        card.addEventListener('pointerleave', function () {
+          if (!armed) return;
+          card.style.transition = 'transform .5s cubic-bezier(.2,.8,.25,1)';
+          card.style.transform = '';
+        });
+      });
+    }
+
+    /* hero content drift, complements the video parallax */
+    var heroGrid = document.querySelector('main > div');
+    if (heroGrid) {
+      var driftTicking = false, driftY = 0;
+      window.addEventListener('scroll', function () {
+        driftY = window.pageYOffset || document.documentElement.scrollTop;
+        if (!driftTicking) {
+          window.requestAnimationFrame(function () {
+            if (driftY < window.innerHeight * 1.2) {
+              heroGrid.style.transform = 'translate3d(0,' + (-driftY * 0.08).toFixed(1) + 'px,0)';
+            }
+            driftTicking = false;
+          });
+          driftTicking = true;
+        }
+      }, { passive: true });
+    }
   }
 })();
 </script>
