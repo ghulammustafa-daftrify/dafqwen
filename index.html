@@ -21,6 +21,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000'/%3E%3Cpath d='M9 6h11l5 5v15H9z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M20 6v5h5' stroke='%23fff' stroke-width='2' fill='none'/%3E%3Cpath d='M12 15h9M12 19h9M12 23h5' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
@@ -95,6 +96,8 @@
     transform: translateY(0%);
   }
 
+  /* hero video fades in only when it can actually play — no late pop-in */
+  #bgVideo { transition: opacity 1.4s ease; }
   @media (prefers-reduced-motion: reduce) {
     .animate-blur-fade-up { animation-duration: 0.01ms; animation-delay: 0ms !important; }
     .cinematic-char, #heroHeadline .cinematic-char, .cinematic-heading .cinematic-char {
@@ -295,23 +298,23 @@
     </a>
 
     <nav class="hidden items-center gap-8 lg:flex" aria-label="Primary">
-      <a href="#services" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 100ms">Services</a>
-      <a href="#pipeline" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 150ms">Tool Stack</a>
-      <a href="#process" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 200ms">Process</a>
-      <a href="#principles" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 250ms">Principles</a>
-      <a href="#about" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 300ms">Our Team</a>
-      <a href="#start" class="animate-blur-fade-up text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300" style="animation-delay: 350ms">Open a File &rarr;</a>
+      <a href="#services" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Services</a>
+      <a href="#pipeline" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Tool Stack</a>
+      <a href="#process" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Process</a>
+      <a href="#principles" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Principles</a>
+      <a href="#about" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Our Team</a>
+      <a href="#start" class="animate-blur-fade-up text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300" style="animation-delay: 0ms">Open a File &rarr;</a>
     </nav>
 
     <div class="flex items-center gap-3">
-      <a href="#start" class="liquid-glass animate-blur-fade-up hidden items-center gap-2 rounded-full px-4 py-2 text-xs font-mono tracking-tight sm:flex md:px-5" style="animation-delay: 350ms">
+      <a href="#start" class="liquid-glass animate-blur-fade-up hidden items-center gap-2 rounded-full px-4 py-2 text-xs font-mono tracking-tight sm:flex md:px-5" style="animation-delay: 0ms">
         <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
         <span>DESK LIVE</span>
       </a>
-      <a href="#about" class="liquid-glass animate-blur-fade-up hidden h-10 w-10 items-center justify-center rounded-full sm:flex" style="animation-delay: 400ms" aria-label="Desk Team">
+      <a href="#about" class="liquid-glass animate-blur-fade-up hidden h-10 w-10 items-center justify-center rounded-full sm:flex" style="animation-delay: 0ms" aria-label="Desk Team">
         <i data-lucide="user" style="width:18px;height:18px"></i>
       </a>
-      <button id="menuBtn" type="button" class="liquid-glass animate-blur-fade-up relative flex h-10 w-10 items-center justify-center rounded-full lg:hidden" style="animation-delay: 350ms" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
+      <button id="menuBtn" type="button" class="liquid-glass animate-blur-fade-up relative flex h-10 w-10 items-center justify-center rounded-full lg:hidden" style="animation-delay: 0ms" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
         <i data-lucide="menu" style="width:18px;height:18px" class="hicon absolute transition-all duration-500 ease-out rotate-0 scale-100 opacity-100"></i>
         <i data-lucide="x" style="width:18px;height:18px" class="xicon absolute transition-all duration-500 ease-out -rotate-180 scale-50 opacity-0"></i>
       </button>
@@ -325,7 +328,7 @@
       <!-- Left Column: Primary Copy & Actions -->
       <div class="lg:col-span-7 flex flex-col justify-center">
         <!-- Live status badges -->
-        <div class="animate-blur-fade-up mb-5 flex flex-wrap items-center gap-2.5 text-xs" style="animation-delay: 200ms">
+        <div class="animate-blur-fade-up mb-5 flex flex-wrap items-center gap-2.5 text-xs" style="animation-delay: 120ms">
           <div class="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/40 px-3 py-1 font-mono text-emerald-300 backdrop-blur-md">
             <span class="relative flex h-2 w-2">
               <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
@@ -348,28 +351,28 @@
           <span class="block font-normal text-zinc-100 drop-shadow-sm" aria-hidden="true"><span data-type="Clarity Out."></span></span>
         </h1>
 
-        <p class="animate-blur-fade-up mb-5 max-w-xl text-base text-zinc-300 sm:text-lg leading-relaxed font-normal" style="animation-delay: 400ms">
+        <p class="animate-blur-fade-up mb-5 max-w-xl text-base text-zinc-300 sm:text-lg leading-relaxed font-normal" style="animation-delay: 120ms">
           A specialized production desk that intakes complex document stacks &mdash; multi-page PDFs, technical drawings, and dense financial ledgers &mdash; returning them structured, reconciled, and ready to submit.
         </p>
 
-        <p class="animate-blur-fade-up mb-8 font-mono text-sm sm:text-[15px] text-white/70" style="animation-delay: 460ms" aria-hidden="true">
+        <p class="animate-blur-fade-up mb-8 font-mono text-sm sm:text-[15px] text-white/70" style="animation-delay: 120ms" aria-hidden="true">
           <span>We turn&nbsp;</span><span class="rolo" id="rolo"><span class="rolo-word on text-emerald-300 font-semibold">chaos</span><span class="rolo-word pre text-emerald-300 font-semibold">paper piles</span><span class="rolo-word pre text-emerald-300 font-semibold">messy scans</span><span class="rolo-word pre text-emerald-300 font-semibold">dense ledgers</span></span><span>&nbsp;into order.</span>
         </p>
         <span class="sr-only">We turn chaos, paper piles, messy scans and dense ledgers into order.</span>
 
         <div class="flex flex-wrap items-center gap-3 sm:gap-4">
-          <a href="#start" class="animate-blur-fade-up inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-black transition-all hover:bg-zinc-200 hover:shadow-xl hover:shadow-white/10 active:scale-[0.98]" style="animation-delay: 500ms">
+          <a href="#start" class="animate-blur-fade-up inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-black transition-all hover:bg-zinc-200 hover:shadow-xl hover:shadow-white/10 active:scale-[0.98]" style="animation-delay: 120ms">
             <i data-lucide="folder-up" style="width:17px;height:17px" class="text-black"></i>
             <span>Open a File</span>
           </a>
-          <a href="#pipeline" class="liquid-glass animate-blur-fade-up inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-medium text-white transition-all hover:bg-white/10 active:scale-[0.98]" style="animation-delay: 550ms">
+          <a href="#pipeline" class="liquid-glass animate-blur-fade-up inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-medium text-white transition-all hover:bg-white/10 active:scale-[0.98]" style="animation-delay: 120ms">
             <i data-lucide="cpu" style="width:16px;height:16px" class="text-white/70"></i>
             <span>Inspect Engine Stack</span>
           </a>
         </div>
 
         <!-- Strict anti-slop trust assurance -->
-        <div class="animate-blur-fade-up mt-6 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] font-mono text-white/50 tracking-tight" style="animation-delay: 600ms">
+        <div class="animate-blur-fade-up mt-6 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-[11px] font-mono text-white/50 tracking-tight" style="animation-delay: 120ms">
           <span class="flex items-center gap-1.5">
             <i data-lucide="lock" style="width:13px;height:13px" class="text-emerald-400"></i>
             Zero login required
@@ -383,7 +386,7 @@
 
       <!-- Right Column: pipeline walkthrough -->
       <div class="lg:col-span-5 w-full">
-        <div class="animate-blur-fade-up rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 backdrop-blur-xl" style="animation-delay: 450ms">
+        <div class="animate-blur-fade-up rounded-2xl border border-white/10 bg-white/[0.03] p-6 sm:p-8 backdrop-blur-xl" style="animation-delay: 120ms">
 
           <div class="flex items-center justify-between mb-8">
             <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-white/40">How it works</p>
@@ -997,7 +1000,7 @@
           setTimeout(step, 380);
         }
       }
-      setTimeout(step, 650);
+      setTimeout(step, 350);
     }
 
     /* typewriter instant-fill for reduced motion (the block above is skipped) */
@@ -1098,6 +1101,19 @@
       }, 2600);
     })();
   }
+
+  /* hero video: hold invisible until first frame is ready, then soft fade */
+  (function () {
+    var v = document.getElementById('bgVideo');
+    if (!v) return;
+    v.style.opacity = '0';
+    var show = function () { v.style.opacity = '0.8'; };
+    if (v.readyState >= 3) show();
+    else {
+      v.addEventListener('canplay', show, { once: true });
+      setTimeout(function () { if (v.style.opacity === '0') show(); }, 6000); /* safety: never stay black */
+    }
+  })();
 
   /* ── Pipeline walkthrough: 4 honest stages, no fake-live chrome ── */
   var stages = [
