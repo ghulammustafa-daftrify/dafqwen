@@ -136,6 +136,22 @@
   .marquee-track { animation: marquee 30s linear infinite; }
   .marquee-track > span { margin-right: 3rem; } /* margin (not container gap) => exact -50% loop, no seam jump */
 
+  /* ── Stack ribbon: the train — infinite logo marquee with brand glows ── */
+  @keyframes stackRide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  .stack-track { display: flex; width: max-content; animation: stackRide 34s linear infinite; will-change: transform; }
+  .stack-set { display: flex; align-items: center; gap: 3.5rem; padding-right: 3.5rem; }
+  #pipeline:hover .stack-track { animation-play-state: paused; }
+  .stack-marquee {
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
+  }
+  .stack-logo { opacity: .7; filter: grayscale(.3); transition: opacity .35s ease, filter .35s ease, transform .35s ease; }
+  .stack-logo:hover { opacity: 1; filter: grayscale(0) drop-shadow(0 0 14px var(--glow, rgba(52,211,153,.45))); transform: translateY(-2px); }
+  @media (prefers-reduced-motion: reduce) {
+    .stack-track { animation: none; }
+    .stack-marquee { overflow-x: auto; }
+  }
+
   /* floating WhatsApp hides while the contact section (with its own WhatsApp card) is on screen */
   #waFloat { transition: opacity .4s ease, transform .4s ease; }
   #waFloat.wa-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; }
@@ -507,17 +523,22 @@
   </main>
 
   <!-- ══════════════════════ PRODUCTION STACK LOGO RIBBON ══════════════════════ -->
-  <div id="pipeline" class="relative z-20 border-t border-b border-white/10 bg-black/90 py-5 backdrop-blur-md">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 md:px-12 flex flex-col md:flex-row items-center justify-between gap-4">
+  <div id="pipeline" class="relative z-20 border-t border-b border-white/10 bg-black/90 py-5 backdrop-blur-md overflow-hidden">
+    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+      <div class="absolute left-1/2 top-1/2 h-[110px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/[0.07] blur-[70px]"></div>
+    </div>
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-12 flex flex-col lg:flex-row items-center gap-4 lg:gap-10">
       <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-white/40 shrink-0">
         <i data-lucide="layers" style="width:14px;height:14px" class="text-emerald-400"></i>
         <span>Enterprise Processing Stack:</span>
       </div>
       
-      <div class="flex flex-wrap items-center justify-center md:justify-end gap-6 sm:gap-8">
+      <div class="stack-marquee relative w-full flex-1 overflow-hidden">
+        <div class="stack-track">
+          <div class="stack-set">
         
         <!-- Alteryx Logo with Label -->
-        <div class="flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
+        <div class="stack-logo flex items-center gap-2.5" style="--glow: rgba(0,132,255,.55)">
           <svg class="h-5 w-5" role="img" viewBox="0 0 24 24" fill="#0084FF" xmlns="http://www.w3.org/2000/svg">
             <path d="m2.312 13.2-.014.01-.014.008a1.796 1.796 0 0 1-.943.293C.886 13.5.72 13.34.71 12.9c.01-.504.178-.66.747-.695l.785-.037.035-.002h.034V13.2zm1.429.248a.185.185 0 0 0-.182-.137.37.37 0 0 0-.072.009c-.121.03-.189.038-.282.045-.178.008-.21-.061-.22-.26v-2.732a.24.24 0 0 0-.088-.164l-.017-.012c-.006-.004-.012-.01-.02-.014-.148-.087-.394-.157-.604-.21l-.015-.005a3.437 3.437 0 0 0-1.158-.072c-.12.012-.442.065-.55.102-.032.01-.133.059-.137.155.002.05.058.21.058.21.037.111.076.138.146.153.057.006.18-.02.261-.033a2.726 2.726 0 0 1 .922-.032c.357.055.494.165.494.165v1.06l-.031.001-.762.02c-1.02.032-1.49.436-1.484 1.25-.001.37.115.667.335.858.205.18.506.276.868.276h.001a1.73 1.73 0 0 0 1.122-.404l.033-.026.017.038a.611.611 0 0 0 .423.355 1.172 1.172 0 0 0 .412.031c.117-.016.271-.037.443-.118.095-.045.162-.1.157-.2a2.037 2.037 0 0 0-.07-.309zm11.261.614h-.37a.177.177 0 0 1-.135-.051c-.03-.035-.043-.082-.043-.146v-3.51c-.003-.066.014-.114.048-.146.03-.03.073-.043.132-.043h.335c.063 0 .105.013.138.04.033.028.051.075.05.13l.004.094.003.079.053-.058a1.103 1.103 0 0 1 1.048-.347c.07.013.096.083.09.12 0 .019 0 .033-.002.046l-.056.354a.116.116 0 0 1-.107.107.618.618 0 0 1-.095-.01c-.04-.006-.085-.014-.165-.014-.26 0-.549.171-.742.438l-.006.008v2.712c0 .06-.015.108-.045.142a.174.174 0 0 1-.135.055zm-2.287-2.375h-1.702c.024-.858.351-1.21.89-1.21.524 0 .82.288.82.961 0 .053 0 .187-.008.25zm-.796-1.756c-.953 0-1.67.663-1.67 2.17 0 1.382.647 2.06 1.865 2.06.193 0 .422-.022.64-.067.035-.006.07-.015.105-.023a2.45 2.45 0 0 0 .33-.12c.076-.029.135-.088.139-.161a3.34 3.34 0 0 0-.08-.33c-.03-.073-.096-.119-.163-.115-.023 0-.35.071-.37.077a2.406 2.406 0 0 1-.586.077c-.866 0-1.124-.414-1.124-1.266v-.062h2.27a.143.143 0 0 0 .128-.125l.002-.03c.008-.148.013-.305.013-.43 0-1.047-.508-1.655-1.5-1.655zm5.371 5.712h-.025c-.134 0-.244-.01-.352-.031-.067-.012-.092-.099-.078-.217 0 0 .008-.126.027-.215.017-.09.06-.132.108-.132h.014l.037.002c.021.001.052.005.081.008.066.007.133.014.186.014.442-.005.681-.167.85-.577l.204-.498.02-.053.007-.022-.007-.023-1.363-3.604a.133.133 0 0 1-.008-.047.09.09 0 0 1 .02-.06.09.09 0 0 1 .065-.027h.517c.075 0 .13.04.147.098l.898 2.58.06.174.061-.173.927-2.562a.152.152 0 0 1 .146-.118h.004l.014.001h.428c.035 0 .06.007.078.021a.07.07 0 0 1 .024.055.186.186 0 0 1-.013.066l-1.525 4.09c-.332.911-.752 1.25-1.552 1.25z"/>
           </svg>
@@ -525,7 +546,7 @@
         </div>
 
         <!-- Adobe Acrobat Logo with Label -->
-        <div class="flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
+        <div class="stack-logo flex items-center gap-2.5" style="--glow: rgba(255,45,45,.5)">
           <svg class="h-5 w-5 rounded" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect width="24" height="24" rx="4" fill="#FF0000"/>
             <path d="M7 17.5C7.8 17.5 8.9 16.8 9.8 15.3C11.3 14.8 13.5 14.3 15.2 14.2C16.4 15 17.3 15.2 18 15.2C18.6 15.2 19 14.9 19 14.4C19 13.7 18 13.2 16.5 13.2C15.8 13.2 15 13.3 14.1 13.5C13.6 12.7 12.8 11.4 12.3 9.8C12.5 8.8 12.6 7.9 12.6 7.2C12.6 6.3 12.3 5.8 11.7 5.8C11.3 5.8 11 6.1 10.9 6.6C10.7 7.7 11 9.4 11.7 11.3C10.6 12.9 9.3 14.5 8.2 15.4C7.5 16 7 16.7 7 17.5Z" fill="white"/>
@@ -534,7 +555,7 @@
         </div>
 
         <!-- Google Gemini with Label -->
-        <div class="flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
+        <div class="stack-logo flex items-center gap-2.5" style="--glow: rgba(78,130,238,.55)">
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" fill="#4E82EE"/>
           </svg>
@@ -542,7 +563,7 @@
         </div>
 
         <!-- Zapier with Label -->
-        <div class="flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
+        <div class="stack-logo flex items-center gap-2.5" style="--glow: rgba(255,74,0,.55)">
           <svg class="h-4 w-4" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path fill="#FF4A00" d="M128.08 0c7.231.013 14.343.624 21.256 1.78V76.3l52.831-52.696a128.425 128.425 0 0 1 16.34 13.789a128.468 128.468 0 0 1 13.84 16.312L179.513 106.4h74.715A127.58 127.58 0 0 1 256 127.587v.173c0 7.226-.613 14.306-1.772 21.2H179.5l52.847 52.682a129.615 129.615 0 0 1-13.824 16.312h-.015a128.254 128.254 0 0 1-16.326 13.789l-52.846-52.696v74.52a130.321 130.321 0 0 1-21.243 1.781h-.186a130.26 130.26 0 0 1-21.23-1.78v-74.52l-52.831 52.695a128.401 128.401 0 0 1-30.18-30.1L76.5 148.96H1.785A126.984 126.984 0 0 1 0 127.72v-.371c.012-1.875.135-4.166.311-6.536l.055-.713c.522-6.671 1.419-13.7 1.419-13.7H76.5L23.666 53.705a126.265 126.265 0 0 1 13.81-16.286l.026-.026a127.746 127.746 0 0 1 16.344-13.789L106.677 76.3V1.78A130.278 130.278 0 0 1 127.933 0h.147Zm-.013 95.76h-.122a76.718 76.718 0 0 0-27.034 4.902a76.662 76.662 0 0 0-4.915 26.952v.12a76.383 76.383 0 0 0 4.927 26.951a76.608 76.608 0 0 0 27.022 4.902h.122c9.51 0 18.617-1.74 27.022-4.902a76.146 76.146 0 0 0 4.915-26.952v-.12c0-9.484-1.747-18.57-4.915-26.951a76.614 76.614 0 0 0-27.022-4.902Z"/>
           </svg>
@@ -550,13 +571,14 @@
         </div>
 
         <!-- n8n with Label -->
-        <div class="flex items-center gap-2 group opacity-75 hover:opacity-100 transition-opacity">
+        <div class="stack-logo flex items-center gap-2.5" style="--glow: rgba(234,75,113,.55)">
           <svg class="h-5 w-5" viewBox="0 0 24 24" fill="#EA4B71" xmlns="http://www.w3.org/2000/svg">
             <path d="M21.4737 5.6842c-1.1772 0-2.1663.8051-2.4468 1.8947h-2.8955c-1.235 0-2.289.893-2.492 2.111l-.1038.623a1.263 1.263 0 0 1-1.246 1.0555H11.289c-.2805-1.0896-1.2696-1.8947-2.4468-1.8947s-2.1663.8051-2.4467 1.8947H4.973c-.2805-1.0896-1.2696-1.8947-2.4468-1.8947C1.1311 9.4737 0 10.6047 0 12s1.131 2.5263 2.5263 2.5263c1.1772 0 2.1663-.8051 2.4468-1.8947h1.4223c.2804 1.0896 1.2696 1.8947 2.4467 1.8947 1.1772 0 2.1663-.8051 2.4468-1.8947h1.0008a1.263 1.263 0 0 1 1.2459 1.0555l.1038.623c.203 1.218 1.257 2.111 2.492 2.111h.3692c.2804 1.0895 1.2696 1.8947 2.4468 1.8947 1.3952 0 2.5263-1.131 2.5263-2.5263s-1.131-2.5263-2.5263-2.5263c-1.1772 0-2.1664.805-2.4468 1.8947h-.3692a1.263 1.263 0 0 1-1.246-1.0555l-.1037-.623A2.52 2.52 0 0 0 13.9607 12a2.52 2.52 0 0 0 .821-1.4794l.1038-.623a1.263 1.263 0 0 1 1.2459-1.0555h2.8955c.2805 1.0896 1.2696 1.8947 2.4468 1.8947 1.3952 0 2.5263-1.131 2.5263-2.5263s-1.131-2.5263-2.5263-2.5263m0 1.2632a1.263 1.263 0 0 1 1.2631 1.2631 1.263 1.263 0 0 1-1.2631 1.2632 1.263 1.263 0 0 1-1.2632-1.2632 1.263 1.263 0 0 1 1.2632-1.2631M2.5263 10.7368A1.263 1.263 0 0 1 3.7895 12a1.263 1.263 0 0 1-1.2632 1.2632A1.263 1.263 0 0 1 1.2632 12a1.263 1.263 0 0 1 1.2631-1.2632m6.3158 0A1.263 1.263 0 0 1 10.1053 12a1.263 1.263 0 0 1-1.2632 1.2632A1.263 1.263 0 0 1 7.579 12a1.263 1.263 0 0 1 1.2632-1.2632m10.1053 3.7895a1.263 1.263 0 0 1 1.2631 1.2632 1.263 1.263 0 0 1-1.2631 1.2631 1.263 1.263 0 0 1-1.2632-1.2631 1.263 1.263 0 0 1 1.2632-1.2632"/>
           </svg>
           <span class="text-xs font-medium text-white/90">n8n nodes</span>
         </div>
-
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -1448,6 +1470,15 @@
       }, 2600);
     })();
   }
+
+  /* stack train: duplicate the logo set for a seamless -50% loop */
+  (function () {
+    var track = document.querySelector('#pipeline .stack-track');
+    if (!track || track.children.length !== 1) return;
+    var clone = track.children[0].cloneNode(true);
+    clone.setAttribute('aria-hidden', 'true');
+    track.appendChild(clone);
+  })();
 
   /* hero video: hold invisible until first frame is ready, then soft fade */
   (function () {
