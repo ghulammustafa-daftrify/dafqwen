@@ -1,172 +1,109 @@
-# Daftrify — Document Operations & Pre-Submission Auditing
+# Daftrify — Documents In. Clarity Out.
 
-The public experience site for **Daftrify**, an outsourced document-operations desk operated by **Ghulam Mustafa** from **Faisalabad, Pakistan**.
+The public website for **Daftrify**, a document-operations desk run by **Ghulam Mustafa** from **Faisalabad, Pakistan**.
 
-The site does not describe the service in the abstract. It performs it. The centrepiece is the **Exploded Forensic Dossier**: a scroll-driven sequence that walks a synthetic document set through all seven states of the desk, from a sealed intake to a packaged, source-verified file.
+Live: **https://www.daftrify.info**
+
+Daftrify intakes complex document stacks — multi-page PDFs, technical drawings, dense financial ledgers — and returns them structured, reconciled, and ready to submit.
 
 ---
 
-## Run it
+## Tech stack
 
-There is **no build step**. `index.html` is the deployable artefact.
+| Choice | Reason |
+|---|---|
+| Single `index.html` | No build step. Edit and deploy. |
+| Tailwind CSS (CDN) | Utility styling without a toolchain |
+| Vanilla JS + CSS | All animation is hand-rolled spring/magnetic/tilt physics — no animation library |
+| Lucide icons (CDN) | Consistent icon set |
+| Cloudflare Pages | Hosting + auto-deploy from `main` |
+| Cloudflare Pages Functions | `functions/api/intake.js` receives the contact form |
+| Resend | Transactional email for intake submissions |
+
+There is **no framework, no bundler, no `node_modules` required** to view or deploy the site. `express` in `package.json` exists only for the optional local dev server.
+
+---
+
+## Project structure
+
+```
+index.html              the entire site — markup, styles, behaviour
+public/
+  og-image.png          social preview card (1200×630)
+  logo.svg              Daftrify wordmark
+  logos/                partner tool logos (Alteryx, Bluebeam, Gemini, n8n, Zapier)
+  instagram.svg / linkedin.svg / tiktok.svg   brand assets (reserved)
+functions/
+  api/intake.js         contact-form endpoint (Cloudflare Pages Function)
+server.js               optional local dev server (mirrors /api/intake)
+design-system/          reference notes from the design phase
+BACKEND_SETUP.md        intake email backend setup guide
+.env.example            documented environment variables (copy to .env, never commit)
+```
+
+The favicon is an inline SVG data-URI in `index.html` — no separate file needed.
+
+---
+
+## Run it locally
 
 ```bash
-# open directly
-open index.html
-
-# or serve it locally (any static server works)
-npm run dev          # → http://localhost:5173
-# or
+# fastest — any static server (form posts to /api/intake won't work, the rest will)
 python3 -m http.server 5173
 npx serve .
+
+# full local stack — serves the site AND a working /api/intake (logs + optional Resend)
+npm install
+npm run dev            # → http://localhost:3000
 ```
 
-```bash
-npm run build        # no-op, prints a note and exits 0
-```
+---
 
 ## Deploy
 
-Drag the folder onto any static host. No server, no environment variables, no runtime.
+Push to `main` — Cloudflare Pages builds and deploys automatically.
 
-| Platform | Setting |
-|---|---|
-| **Netlify** | Build command: *(empty)* · Publish directory: `.` |
-| **Vercel** | Framework preset: **Other** · Build command: *(empty)* · Output directory: `.` |
-| **Cloudflare Pages** | Build command: *(empty)* · Build output directory: `/` |
-| **GitHub Pages** | Push to `main`, serve from root |
+- Build command: `exit 0` (nothing to build)
+- The `functions/` directory is picked up automatically as Pages Functions
+- Custom domain `www.daftrify.info` is attached in the Cloudflare dashboard (do not touch unless you know what you're doing)
 
-```bash
-npx netlify deploy --prod --dir .
-npx vercel --prod
-npx wrangler pages deploy .
+---
+
+## Contact form — how intake works
+
+```
+Browser form → POST /api/intake → Resend → desk inbox
 ```
 
----
+1. **Primary:** `functions/api/intake.js` validates the submission (honeypot, field
+   validation, HTML-escaping, 14 MB body cap) and sends it via the **Resend API**
+   using the `RESEND_API_KEY` environment variable.
+2. **Fallback:** if the Pages Function is unreachable, the form tries **FormSubmit**
+   (AJAX) as a second channel.
+3. **Honest failure:** if both channels fail, the visitor sees a clear error with
+   direct **WhatsApp** and **email** options — never a fake success message.
 
-## Why no framework
+Details: [`BACKEND_SETUP.md`](BACKEND_SETUP.md)
 
-The stated development machine is an **HP EliteBook 840 G3, Core i5 6th generation, 8 GB RAM**. Every technical decision follows from that constraint.
+### Environment variables
 
-| Decision | Reason |
-|---|---|
-| **CSS 3D, not WebGL** | The dossier reaches the same depth for a fraction of the cost, and it degrades to a static storyboard for free. No Three.js, no shader compilation, no GPU context. |
-| **No smooth-scroll library** | Lenis and friends run a permanent `requestAnimationFrame` loop even when the page is idle. Native scroll plus scrubbed ScrollTrigger means **nothing runs when nothing is happening**. |
-| **No bundler, no `node_modules`** | Nothing to install, nothing to compile, nothing to keep patched. Edit and refresh. |
-| **Two CDN scripts, both `defer`** | GSAP + ScrollTrigger. That is the entire dependency list. |
-| **Transform and opacity only** | Nothing animates layout, so there is no reflow thrash. |
-| **`IntersectionObserver` for everything cheap** | Reveals, the sticky header, and the scrollspy cost nothing per frame. |
-
----
-
-## Macrostructure
-
-Nine sections, **nine different geometries**. No section repeats another section's shape, which is the anti-slop discipline applied structurally rather than cosmetically.
-
-| # | Section | Shape |
+| Variable | Where | Purpose |
 |---|---|---|
-| 01 | Arrival | Asymmetric editorial grid; a pointer-reactive paper stack participates in the hero |
-| 02 | The condition | Pinned specimen board of scattered document fragments |
-| 03 | The dossier | Full-bleed pinned 7-state scroll scene, inverted to ink |
-| 04 | Capabilities | Ledger rows, not cards |
-| 05 | Verification | Two-column source/extracted comparison the visitor operates |
-| 06 | Demonstrations | Tabbed exhibit file with three structurally different interiors |
-| 07 | Principles | Inverted typographic broadside, alternating indentation |
-| 08 | Where it fits | Two-column index list with a scope note |
-| 09 | Contact | Perforated intake slip |
-
-There is deliberately **no** hero → features → testimonials → CTA sequence, no repeated card grid, no pill soup, no decorative gradient, no glass.
+| `RESEND_API_KEY` | Cloudflare Pages → Settings → Environment variables | Sends intake emails via Resend |
+| `PORT` | local only | `server.js` listen port (default `3000`) |
+| `INTAKE_RECIPIENT` | local only | overrides the dev inbox (default `daftrify.services@gmail.com`) |
 
 ---
 
-## The signature: Exploded Forensic Dossier
+## Conventions
 
-A 620vh pinned scene driving one scrubbed timeline through seven states.
-
-| State | What happens |
-|---|---|
-| **01 Received** | Closed folder, metadata reads `07 FILES / RECEIVED` |
-| **02 Open** | The folder swings on its spine, seven sheets rise out |
-| **03 Explosion** | Sheets move into separate spatial layers with depth and rotation |
-| **04 Discrepancy** | Redlines draw across three sheets; exception flags land one beat apart |
-| **05 Reconcile** | Connectors trace between related fields; the `SOURCE → COMPARE → REVIEW → RECONCILE` key advances |
-| **06 Human verify** | The stack recedes and the verification card takes the screen: `EXTRACTED` against `SOURCE`, then `VERIFIED AGAINST SOURCE` |
-| **07 Package** | Sheets restack into one ordered file, each earns a verified chip, the file lands, the mark stamps |
-
-A live rail, a metadata readout (`fields read / exceptions / resolved`), and a caption track the state throughout. The stack also leans with the pointer, like a real pile of paper.
-
-**Reduced motion** replaces the entire scene with an eight-cell storyboard that teaches the identical seven states in text. Nothing is lost.
+- **Motion:** every animation respects `prefers-reduced-motion`; touch devices skip
+  pointer-only effects (magnetic buttons, card tilt).
+- **No fake proof:** no invented testimonials, client logos, statistics, or outcome
+  claims anywhere on the site. Demos are labelled simulated.
+- **Commits:** small, conventional (`feat:`, `fix:`, `docs:` …), one concern per commit.
+- **Never commit** `.env`, API keys, or tokens. See [`.gitignore`](.gitignore).
 
 ---
 
-## Design system
-
-```
-Paper              #F9F8F5
-Secondary paper    #F4F1EA
-Sheet              #FDFCFA
-Ink                #171717
-Muted slate        #66707A
-Verification green #315C4A
-Verification red   #9B2F2F
-```
-
-Green and red are **status colours only**. Red means discrepancy, exception, review required. Green means verified, reconciled, resolved. The majority of the visual field stays restrained paper and ink.
-
-**Three typographic roles, three families:**
-
-| Role | Family | Used for |
-|---|---|---|
-| Editorial serif | Instrument Serif | Display headlines, key statements, section titles |
-| Technical sans | Inter | Body, navigation, buttons, interface |
-| Monospace | JetBrains Mono | Document IDs, dates, amounts, status, metadata, audit information |
-
-Body text is 16px minimum. Tabular figures are on globally so numerical comparison lines up.
-
----
-
-## Interaction that proves the business
-
-The verification section is not a description. **Press "Run verification pass"** and four extracted fields resolve against their source records one at a time, the status pill flips from `4 fields require review` to `4 fields verified against source`, and the highlight colour moves from red to green. Press it again to reset.
-
-That interaction is the product argument: extraction proposes, the record disposes.
-
----
-
-## Content integrity
-
-Verified in the source, not just claimed:
-
-- The word **"AI" appears nowhere** in public copy, headings, labels, metadata, or accessibility text
-- **No invented clients, testimonials, logos, statistics, approval rates, awards, certifications, or partnerships**
-- No **Hassan Ali** case anywhere
-- Every demonstration is labelled **SIMULATED DEMONSTRATION**; every sheet in the dossier carries a `Synthetic` tag
-- The final state reads **VERIFIED / READY FOR REVIEW**, never "approved" or "guaranteed"
-- One real contact address: `contact@daftrify.com`
-- A scope note states plainly that Daftrify provides document operations, **not** legal, financial, medical, or immigration advice, and makes no claim about the outcome of any submission
-
----
-
-## Accessibility
-
-- Semantic landmarks, one `h1`, sequential heading levels
-- Skip link, visible focus rings on every interactive element
-- Keyboard-operable tablist with arrow, Home, and End keys
-- Escape closes the overlay index
-- Decorative scenes marked `aria-hidden`; the storyboard carries the meaning without motion
-- Full `prefers-reduced-motion` path: the pin unpins, the scene is replaced, all transitions are disabled
-- 44px minimum touch targets, no hover-only information
-
----
-
-## Files
-
-```
-index.html      the entire site, inline CSS and one deferred script
-package.json    convenience scripts only, no dependencies
-README.md       this file
-```
-
----
-
-© 2026 Daftrify · Document operations, not regulated advice · All case values on this site are simulated
+© 2026 Daftrify · Document operations, not legal/financial/medical/immigration advice

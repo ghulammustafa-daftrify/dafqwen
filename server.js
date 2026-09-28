@@ -2,7 +2,11 @@ const express = require('express');
 const path = require('path');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
+
+// Inbox for intake emails. Matches the production Pages Function default
+// (functions/api/intake.js). Override with INTAKE_RECIPIENT if needed.
+const INTAKE_RECIPIENT = process.env.INTAKE_RECIPIENT || 'daftrify.services@gmail.com';
 
 app.use(express.json({ limit: '15mb' }));
 
@@ -48,13 +52,13 @@ app.post('/api/intake', (req, res) => {
       documents: cleanDocs,
       issue: cleanIssue,
       attachedFile: attachment ? `${attachment.name} (${Math.round((attachment.size || 0) / 1024)} KB)` : 'None',
-      destination: 'contact@daftrify.info',
+      destination: INTAKE_RECIPIENT,
       receivedAt: `${receivedAt} PKT`,
     });
 
     const resendApiKey = process.env.RESEND_API_KEY || '';
-    
-    // Asynchronously dispatch email to contact@daftrify.info
+
+    // Asynchronously dispatch email to the desk inbox
     if (resendApiKey) {
       const emailAttachments = [];
       if (attachment && attachment.data && attachment.name) {
@@ -73,7 +77,7 @@ app.post('/api/intake', (req, res) => {
         },
         body: JSON.stringify({
           from: 'DAFTRIFY Intake Desk <onboarding@resend.dev>',
-          to: ['contact@daftrify.info'],
+          to: [INTAKE_RECIPIENT],
           reply_to: cleanEmail,
           subject: `New DAFTRIFY Document Intake / ${cleanDocs}`,
           html: `<div style="font-family: Arial, sans-serif; padding: 20px; color: #111;">
