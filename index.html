@@ -63,7 +63,8 @@
     from { opacity: 0; filter: blur(20px); transform: translateY(40px); }
     to { opacity: 1; filter: blur(0); transform: translateY(0); }
   }
-  .animate-blur-fade-up { opacity: 0; animation: blurFadeUp 1s ease-out forwards; }
+  .animate-blur-fade-up { opacity: 0; }
+  body.is-ready .animate-blur-fade-up { animation: blurFadeUp 1s ease-out forwards; }
 
   /* ── Invisible mask + Power4.out ease + 5px blur character reveal (Bi-directional) ── */
   .mask-word {
@@ -159,6 +160,17 @@
 
   /* ── 2026 feel: serif-italic display line (sans + serif pairing) ── */
   .serif-line { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.015em; }
+
+  /* ── Orchestrated intro loader: everything reveals as one moment ── */
+  #introLoader { position: fixed; inset: 0; z-index: 200; background: #060607;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem;
+    transition: opacity .6s ease; animation: introFailsafe .6s ease 4.5s forwards; }
+  #introLoader.done { opacity: 0; pointer-events: none; }
+  @keyframes introFailsafe { to { opacity: 0; visibility: hidden; } }
+  .intro-mark { font-size: 13px; font-weight: 600; letter-spacing: .5em; text-indent: .5em; color: rgba(255,255,255,.85); }
+  .intro-line { width: 120px; height: 1px; background: rgba(255,255,255,.12); overflow: hidden; }
+  .intro-line span { display: block; height: 100%; width: 40%; background: #fff; animation: introSlide 1.1s ease-in-out infinite; }
+  @keyframes introSlide { 0% { transform: translateX(-110%); } 100% { transform: translateX(310%); } }
 
   /* scroll reveal for sections below the hero (one-shot: stays revealed) */
   .rv {
@@ -310,8 +322,16 @@
   }
 }
 </script>
+<noscript><style>#introLoader{display:none!important}.animate-blur-fade-up{opacity:1!important}</style></noscript>
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"ProfessionalService","name":"Daftrify","url":"https://www.daftrify.info/","email":"contact@daftrify.info","address":{"@type":"PostalAddress","addressLocality":"Faisalabad","addressCountry":"PK"},"description":"Document intake and verification desk. Complex document stacks returned structured, reconciled, and ready to submit."}
+</script>
 </head>
 <body class="bg-black text-white antialiased">
+<div id="introLoader" aria-hidden="true">
+  <div class="intro-mark">DAFTRIFY</div>
+  <div class="intro-line"><span></span></div>
+</div>
 <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[100] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-black">Skip to content</a>
 
 <!-- film grain: the 2026 premium-dark finish -->
@@ -343,6 +363,7 @@
       <a href="#process" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Process</a>
       <a href="#principles" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Principles</a>
       <a href="#about" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Our Team</a>
+      <a href="#faq" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">FAQ</a>
       <a href="#start" class="mmob rounded-lg px-3 py-3 text-sm font-semibold text-emerald-400 transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Open a File</a>
     </nav>
     <div class="flex items-center gap-3 border-t border-white/10 px-4 py-4 sm:hidden">
@@ -367,6 +388,7 @@
       <a href="#process" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Process</a>
       <a href="#principles" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Principles</a>
       <a href="#about" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Our Team</a>
+      <a href="#faq" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">FAQ</a>
       <a href="#start" class="animate-blur-fade-up text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300" style="animation-delay: 0ms">Open a File &rarr;</a>
     </nav>
 
@@ -411,8 +433,8 @@
         </div>
 
         <h1 id="heroHeadline" class="mb-4 text-4xl font-light tracking-[-0.04em] sm:text-6xl md:text-7xl lg:text-[5.25rem] leading-[1.02]" aria-label="Documents In. Clarity Out.">
-          <span class="block text-white" aria-hidden="true"><span data-type="Documents In."></span><span class="type-cursor" data-cursor></span></span>
-          <span class="block serif-line text-zinc-100 drop-shadow-sm" aria-hidden="true"><span data-type="Clarity Out."></span></span>
+          <span class="block text-white" aria-hidden="true"><span data-type="Documents In.">Documents In.</span><span class="type-cursor" data-cursor></span></span>
+          <span class="block serif-line text-zinc-100 drop-shadow-sm" aria-hidden="true"><span data-type="Clarity Out.">Clarity Out.</span></span>
         </h1>
 
         <p class="animate-blur-fade-up mb-5 max-w-xl text-base text-zinc-300 sm:text-lg leading-relaxed font-normal" style="animation-delay: 120ms">
@@ -541,7 +563,8 @@
 </div>
 
 <!-- ══════════════════════ TRUST MARQUEE ══════════════════════ -->
-<div class="border-y border-gray-800 bg-black py-4 overflow-hidden" aria-hidden="true">
+<p class="bg-black border-t border-gray-800 text-center text-white/35 text-[11px] tracking-[0.25em] uppercase pt-10">Stacks we take off your desk</p>
+<div class="border-b border-gray-800 bg-black py-4 overflow-hidden" aria-hidden="true">
   <div class="marquee-track flex w-max items-center whitespace-nowrap">
     <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="file-text" style="width:15px;height:15px"></i>Contracts</span>
     <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="receipt" style="width:15px;height:15px"></i>Invoices</span>
@@ -562,6 +585,36 @@
     <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="archive" style="width:15px;height:15px"></i>Records</span>
   </div>
 </div>
+
+<!-- ══════════════════════ CHAPTERS — chaos in, clarity out ══════════════════════ -->
+<section id="chapters" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
+  <div class="max-w-6xl mx-auto">
+    <div class="rv mb-14 sm:mb-20">
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">How it works</p>
+      <h2 class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05] max-w-3xl">Chaos in. Clarity out.<br><span class="text-white/45">Three moves.</span></h2>
+    </div>
+    <div class="grid md:grid-cols-3 gap-4 sm:gap-5">
+      <article class="rv liquid-glass rounded-2xl p-7 sm:p-8">
+        <p class="font-mono text-xs text-emerald-300 tracking-[0.2em] mb-6">FIG. 01</p>
+        <i data-lucide="inbox" class="text-white/70 mb-5" style="width:22px;height:22px"></i>
+        <h3 class="text-white text-xl font-medium tracking-tight mb-3">Submit</h3>
+        <p class="text-white/55 text-sm leading-relaxed">Send the raw stack &mdash; scans, PDFs, ledgers &mdash; exactly as they exist. No sorting, no renaming, no prep work on your side.</p>
+      </article>
+      <article class="rv liquid-glass rounded-2xl p-7 sm:p-8" style="--d:120ms">
+        <p class="font-mono text-xs text-emerald-300 tracking-[0.2em] mb-6">FIG. 02</p>
+        <i data-lucide="scan-search" class="text-white/70 mb-5" style="width:22px;height:22px"></i>
+        <h3 class="text-white text-xl font-medium tracking-tight mb-3">Verify</h3>
+        <p class="text-white/55 text-sm leading-relaxed">Fields extracted, conflicts flagged, and every value read back against the source &mdash; by a human, character by character.</p>
+      </article>
+      <article class="rv liquid-glass rounded-2xl p-7 sm:p-8" style="--d:240ms">
+        <p class="font-mono text-xs text-emerald-300 tracking-[0.2em] mb-6">FIG. 03</p>
+        <i data-lucide="package-check" class="text-white/70 mb-5" style="width:22px;height:22px"></i>
+        <h3 class="text-white text-xl font-medium tracking-tight mb-3">Receive</h3>
+        <p class="text-white/55 text-sm leading-relaxed">One indexed dossier lands in your inbox. Open questions at the front, everything traceable &mdash; ready to submit.</p>
+      </article>
+    </div>
+  </div>
+</section>
 
 <!-- ══════════════════════ SERVICES (asymmetric, not equal cards) ══════════════════════ -->
 <section id="services" class="bg-black px-6 sm:px-12 py-24 sm:py-32">
@@ -735,6 +788,39 @@
 </section>
 
 <!-- ══════════════════════ PRINCIPLES ══════════════════════ -->
+<!-- ══════════════════════ TRUST — verification, not vibes ══════════════════════ -->
+<section id="trust" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
+  <div class="max-w-6xl mx-auto">
+    <div class="rv mb-14 sm:mb-20">
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Auditability</p>
+      <h2 class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05] max-w-3xl">Every number<br><span class="text-white/45">earns its place.</span></h2>
+      <p class="text-white/55 text-sm sm:text-base leading-relaxed max-w-xl mt-6">A dossier you can defend. Nothing in your file is taken on faith &mdash; each figure carries its proof.</p>
+    </div>
+    <div class="grid sm:grid-cols-2 gap-4 sm:gap-5">
+      <div class="rv rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-8">
+        <i data-lucide="book-open-check" class="text-emerald-300 mb-5" style="width:22px;height:22px"></i>
+        <h3 class="text-white text-lg font-medium tracking-tight mb-2">Read back by hand</h3>
+        <p class="text-white/55 text-sm leading-relaxed">Each extracted value is checked against the source document &mdash; character by character, not sampled.</p>
+      </div>
+      <div class="rv rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-8" style="--d:120ms">
+        <i data-lucide="flag" class="text-emerald-300 mb-5" style="width:22px;height:22px"></i>
+        <h3 class="text-white text-lg font-medium tracking-tight mb-2">Exception log up front</h3>
+        <p class="text-white/55 text-sm leading-relaxed">Mismatches, blurs and missing pages are listed at the front of the dossier &mdash; never buried in an appendix.</p>
+      </div>
+      <div class="rv rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-8" style="--d:200ms">
+        <i data-lucide="list-ordered" class="text-emerald-300 mb-5" style="width:22px;height:22px"></i>
+        <h3 class="text-white text-lg font-medium tracking-tight mb-2">Indexed and traceable</h3>
+        <p class="text-white/55 text-sm leading-relaxed">Every page numbered, every field traceable to its source page. Ask &ldquo;where did this come from?&rdquo; and get an answer in seconds.</p>
+      </div>
+      <div class="rv rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-8" style="--d:280ms">
+        <i data-lucide="user-check" class="text-emerald-300 mb-5" style="width:22px;height:22px"></i>
+        <h3 class="text-white text-lg font-medium tracking-tight mb-2">One desk, one owner</h3>
+        <p class="text-white/55 text-sm leading-relaxed">Your file is handled directly &mdash; no hand-offs, no ticket queues, no strangers. You always know whose eyes were on it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section id="principles" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
   <div class="max-w-4xl mx-auto">
     <div class="rv mb-12">
@@ -829,6 +915,42 @@
 </section>
 
 <!-- ══════════════════════ START ══════════════════════ -->
+<!-- ══════════════════════ FAQ ══════════════════════ -->
+<section id="faq" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
+  <div class="max-w-3xl mx-auto">
+    <div class="rv mb-12 sm:mb-16">
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">FAQ</p>
+      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">Asked, answered.</h2>
+    </div>
+    <div class="rv divide-y divide-white/10 border-y border-white/10">
+      <details class="group py-6">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">What kinds of documents do you handle?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
+        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Multi-page PDFs, scanned contracts, invoices, financial ledgers, Excel tables, technical drawings, forms and correspondence. If it lives on paper or on a drive, we can work with it.</p>
+      </details>
+      <details class="group py-6">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">How fast is the turnaround?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
+        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Most stacks are returned within 24 hours. Larger or unusually tangled sets get a firm time estimate before we begin &mdash; agreed up front, not discovered later.</p>
+      </details>
+      <details class="group py-6">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">How do I send my files?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
+        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Through the intake form below, by email at contact@daftrify.info, or over WhatsApp. No account, no login, no portal to learn.</p>
+      </details>
+      <details class="group py-6">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">How is pricing decided?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
+        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Every stack is different, so pricing is per project. Send your files and you get one fixed quote before anything starts &mdash; no hourly meters, no surprises.</p>
+      </details>
+      <details class="group py-6">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">Is my information kept confidential?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
+        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Yes. Every file is handled under strict mutual confidentiality and reviewed directly at the desk &mdash; never resold, never shared, never used for anything but your file.</p>
+      </details>
+      <details class="group py-6">
+        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">Do you use AI to process documents?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
+        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Software assists with extraction, but every value is read back against the source by a human. Nothing leaves the desk unverified.</p>
+      </details>
+    </div>
+  </div>
+</section>
+
 <section id="start" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800 relative overflow-hidden">
   <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[420px] bg-white/5 rounded-full blur-[130px] pointer-events-none" aria-hidden="true"></div>
   <div class="max-w-2xl mx-auto relative">
@@ -953,6 +1075,8 @@
       <a href="#services" class="hover:text-white transition-colors">Services</a>
       <a href="#process" class="hover:text-white transition-colors">Process</a>
       <a href="#about" class="hover:text-white transition-colors">Our Team</a>
+      <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
+      <button type="button" data-cookie-policy class="hover:text-white transition-colors">Cookie Policy</button>
       <a href="#start" class="hover:text-white transition-colors">Open a File</a>
     </nav>
     <div class="flex items-center gap-3">
@@ -963,11 +1087,72 @@
   </div>
 </footer>
 
+<!-- ══════════════════════ COOKIE CONSENT + POLICY ══════════════════════ -->
+<div id="cookieBar" class="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:right-6 sm:max-w-sm z-[150] hidden" role="region" aria-label="Cookie consent">
+  <div class="rounded-2xl border border-white/10 bg-[#101013]/95 backdrop-blur-xl p-5 shadow-2xl shadow-black/60">
+    <p class="text-sm text-white font-medium mb-1">A quick word on cookies</p>
+    <p class="text-[13px] text-white/55 leading-relaxed mb-4">Daftrify sets no tracking or advertising cookies &mdash; this notice only remembers your choice on your device. <button type="button" class="underline underline-offset-2 text-white/75 hover:text-white" data-cookie-policy>Cookie policy</button></p>
+    <div class="flex gap-2">
+      <button id="cookieAccept" type="button" class="flex-1 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200">Accept</button>
+      <button id="cookieDecline" type="button" class="flex-1 rounded-full border border-white/15 px-4 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/10">Decline</button>
+    </div>
+  </div>
+</div>
+<div id="cookiePolicy" class="fixed inset-0 z-[160] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="cookiePolicyTitle">
+  <div class="absolute inset-0 bg-black/70" data-cookie-close></div>
+  <div class="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#101013] p-6 sm:p-8 max-h-[85vh] overflow-y-auto">
+    <h3 id="cookiePolicyTitle" class="text-white text-xl font-medium tracking-tight mb-4">Cookie Policy</h3>
+    <div class="text-white/60 text-sm leading-relaxed space-y-4">
+      <p><strong class="text-white/85 font-medium">No tracking cookies.</strong> Daftrify sets no analytics, advertising, or cross-site tracking cookies. We do not follow you around the internet, and we do not sell or share browsing data &mdash; because we do not collect it.</p>
+      <p><strong class="text-white/85 font-medium">Your choice, on your device.</strong> When you answer the cookie notice, your choice (accepted or declined) is saved in your browser&rsquo;s local storage &mdash; on your device only. Nothing about that choice is sent to us.</p>
+      <p><strong class="text-white/85 font-medium">The intake form.</strong> Anything you type into the contact form is sent only to our intake endpoint and our email so we can reply. It is never used for advertising or profiling.</p>
+      <p><strong class="text-white/85 font-medium">Questions?</strong> Write to contact@daftrify.info.</p>
+      <p class="text-white/40 text-xs">Last updated: September 2026.</p>
+    </div>
+    <button type="button" data-cookie-close class="mt-6 w-full rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200">Close</button>
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var KEY = 'daftrify-cookie-choice';
+  var bar = document.getElementById('cookieBar');
+  var policy = document.getElementById('cookiePolicy');
+  function openPolicy() {
+    if (!policy) return;
+    policy.classList.remove('hidden'); policy.classList.add('flex');
+    document.body.style.overflow = 'hidden';
+  }
+  function closePolicy() {
+    if (!policy) return;
+    policy.classList.add('hidden'); policy.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
+  function showBar() { if (bar) bar.classList.remove('hidden'); }
+  try {
+    if (!localStorage.getItem(KEY)) setTimeout(showBar, 2600);
+  } catch (e) { setTimeout(showBar, 2600); }
+  function choose(v) { try { localStorage.setItem(KEY, v); } catch (e) {} if (bar) bar.classList.add('hidden'); }
+  var acc = document.getElementById('cookieAccept'), dec = document.getElementById('cookieDecline');
+  if (acc) acc.addEventListener('click', function () { choose('accepted'); });
+  if (dec) dec.addEventListener('click', function () { choose('declined'); });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-cookie-policy]'), function (b) { b.addEventListener('click', openPolicy); });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-cookie-close]'), function (b) { b.addEventListener('click', closePolicy); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePolicy(); });
+})();
+</script>
+
 <script>
 (function () {
   'use strict';
   if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* headline: static text in HTML for no-JS; cleared here so the typewriter starts empty */
+  var twH1 = document.getElementById('heroHeadline');
+  if (twH1 && !reduce) {
+    Array.prototype.forEach.call(twH1.querySelectorAll('[data-type]'), function (s) { s.textContent = ''; });
+  }
 
   /* ── Background Video Seamless Loop & Scroll Up/Down Parallax ── */
   var bgVideo = document.getElementById('bgVideo');
@@ -1070,8 +1255,6 @@
       document.querySelectorAll('.cinematic-heading').forEach(function (el) {
         cinematicObserver.observe(el);
       });
-      var heroHeadline = document.getElementById('heroHeadline');
-      if (heroHeadline) { initTypewriter(heroHeadline); }
     } else {
       document.querySelectorAll('.cinematic-heading').forEach(function (el) {
         el.classList.add('is-revealed');
@@ -1116,6 +1299,24 @@
         if (curRm) curRm.style.display = 'none';
       }
     }
+
+    /* ── Orchestrated intro (Ochi/Lusion-style): preloader hands off into the hero ── */
+    var introDone = false;
+    function liftIntro() {
+      if (introDone) return; introDone = true;
+      document.body.classList.add('is-ready');
+      var loader = document.getElementById('introLoader');
+      if (loader) {
+        loader.classList.add('done');
+        setTimeout(function () { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 750);
+      }
+      var hh = document.getElementById('heroHeadline');
+      if (hh && !reduce) setTimeout(function () { initTypewriter(hh); }, 300);
+    }
+    var minIntro = new Promise(function (res) { setTimeout(res, reduce ? 150 : 900); });
+    var fontsOk = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
+    var maxIntro = new Promise(function (res) { setTimeout(res, 3200); });
+    Promise.race([Promise.all([minIntro, fontsOk]).then(function () {}), maxIntro]).then(liftIntro);
 
     /* ── Prompt 2: hand-drawn underline draws when scrolled into view ── */
     if ('IntersectionObserver' in window) {
