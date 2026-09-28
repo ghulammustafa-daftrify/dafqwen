@@ -22,9 +22,11 @@
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
 <style>
   body { font-family: "Inter", sans-serif; }
 
@@ -108,6 +110,8 @@
     }
     .liquid-glass, .liquid-glass:active { transition: none; transform: none; }
     .rv { opacity: 1 !important; transform: none !important; transition: none !important; filter: none !important; }
+    .grain { animation: none; opacity: .03; }
+    .orb-a, .orb-b { animation: none; }
   }
 
   /* buttery anchor glides (respects reduced motion) */
@@ -136,6 +140,37 @@
   /* floating WhatsApp hides while the contact section (with its own WhatsApp card) is on screen */
   #waFloat { transition: opacity .4s ease, transform .4s ease; }
   #waFloat.wa-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; }
+
+  /* ── 2026 feel: designed near-black canvas (never pure #000) ── */
+  body { background-color: #0a0a0b; }
+  .bg-black { background-color: #0a0a0b !important; }
+
+  /* ── 2026 feel: film grain ── */
+  .grain {
+    position: fixed; inset: -60%; width: 220%; height: 220%;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: .045; pointer-events: none; z-index: 90;
+    animation: grainShift 1.1s steps(4) infinite;
+  }
+  @keyframes grainShift {
+    0% { transform: translate(0,0); } 25% { transform: translate(-2%,2%); }
+    50% { transform: translate(2%,-1%); } 75% { transform: translate(-1%,-2%); }
+    100% { transform: translate(1%,2%); }
+  }
+
+  /* ── 2026 feel: ambient glow field (slow-drifting light) ── */
+  .orb { position: absolute; border-radius: 9999px; filter: blur(100px); will-change: transform; }
+  .orb-a { width: 46rem; height: 46rem; left: -14rem; top: -16rem;
+    background: radial-gradient(circle, rgba(16,185,129,.13), transparent 62%);
+    animation: driftA 16s ease-in-out infinite alternate; }
+  .orb-b { width: 40rem; height: 40rem; right: -12rem; bottom: -18rem;
+    background: radial-gradient(circle, rgba(214,158,64,.07), transparent 62%);
+    animation: driftB 21s ease-in-out infinite alternate; }
+  @keyframes driftA { to { transform: translate(7rem, 5rem) scale(1.1); } }
+  @keyframes driftB { to { transform: translate(-6rem, -4rem) scale(1.06); } }
+
+  /* ── 2026 feel: serif-italic display line (sans + serif pairing) ── */
+  .serif-line { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.015em; }
 
   /* scroll reveal for sections below the hero (one-shot: stays revealed) */
   .rv {
@@ -242,6 +277,28 @@
     .hl.drawn .hl-svg path { animation: none; }
     .rolo-word { transition: none; }
   }
+
+  /* ── Exploded view: anatomy of a verified file ── */
+  html, body { overflow-x: clip; }
+  .xv-stage { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+  .xv-layer { width: min(340px, 100%); position: relative; }
+  .xv-tag { display: block; font-size: 10px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.35); font-weight: 500; margin-bottom: .9rem; }
+  .xv-layer svg.lucide { width: 20px; height: 20px; color: rgba(255,255,255,.7); margin-bottom: .8rem; }
+  .xv-layer h3 { color: #fff; font-size: 1rem; font-weight: 500; letter-spacing: -0.01em; margin-bottom: .35rem; }
+  .xv-layer p { color: rgba(255,255,255,.55); font-size: 13px; line-height: 1.6; }
+  .xv-label { display: block; margin-top: .8rem; font-size: 11px; letter-spacing: .14em; text-transform: uppercase; color: rgba(255,255,255,.4); font-weight: 500; }
+  .xv-caption { display: none; }
+  .xv-stamp { margin-top: .5rem; display: inline-flex; align-items: center; gap: .6rem; border: 1px solid rgba(52,211,153,.4); background: rgba(52,211,153,.08); color: #a7f3d0; border-radius: 999px; padding: .55rem 1.1rem; font-size: 12px; font-weight: 600; letter-spacing: .12em; text-transform: uppercase; }
+  .xv-stamp svg.lucide { width: 14px; height: 14px; }
+  /* pinned desktop mode — JS adds .xv-on only when GSAP is ready and viewport is wide */
+  .xv-on .xv-stage { position: relative; display: block; height: 100vh; height: 100svh; overflow: hidden; }
+  .xv-on .xv-layer { margin: 0; width: 320px; max-width: 74vw; will-change: transform; }
+  .xv-on .xv-label { position: absolute; top: 50%; margin: 0; transform: translateY(-50%); white-space: nowrap; opacity: 0; }
+  .xv-layer[data-side="left"] .xv-label { right: calc(100% + 26px); text-align: right; }
+  .xv-layer[data-side="right"] .xv-label { left: calc(100% + 26px); text-align: left; }
+  .xv-on .xv-caption { display: block; position: absolute; left: 0; right: 0; bottom: 4.5vh; height: 1.5rem; text-align: center; }
+  .xv-caption span { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; letter-spacing: .18em; text-transform: uppercase; color: rgba(255,255,255,.45); font-weight: 500; }
+  .xv-on .xv-stamp { position: absolute; left: 50%; top: 50%; margin: 0; white-space: nowrap; }
 </style>
 <script type="application/ld+json">
 {
@@ -263,6 +320,9 @@
 <body class="bg-black text-white antialiased">
 <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[100] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-black">Skip to content</a>
 
+<!-- film grain: the 2026 premium-dark finish -->
+<div class="grain" aria-hidden="true"></div>
+
 <!-- ══════════════════════ CINEMATIC HERO (Taste-Grade Desk Architecture) ══════════════════════ -->
 <div class="relative flex min-h-dvh flex-col justify-between overflow-hidden bg-black text-white">
 
@@ -270,6 +330,12 @@
   <video id="bgVideo" class="absolute inset-0 z-0 h-full w-full object-cover opacity-80"
     autoPlay muted loop playsInline preload="auto" tabindex="-1" aria-hidden="true"
     src="https://videos.pexels.com/video-files/7054942/7054942-uhd_3840_2160_24fps.mp4"></video>
+
+  <!-- ambient glow field: slow-drifting light above the video, below the veil -->
+  <div class="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
+    <div class="orb orb-a"></div>
+    <div class="orb orb-b"></div>
+  </div>
 
   <!-- multi-layer cinematic gradient veil -->
   <div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black via-black/60 to-black/30 backdrop-blur-[2px]" aria-hidden="true"></div>
@@ -350,9 +416,9 @@
           </div>
         </div>
 
-        <h1 id="heroHeadline" class="mb-4 text-4xl font-light tracking-[-0.04em] sm:text-6xl md:text-7xl lg:text-[4.75rem] leading-[1.02]" aria-label="Documents In. Clarity Out.">
+        <h1 id="heroHeadline" class="mb-4 text-4xl font-light tracking-[-0.04em] sm:text-6xl md:text-7xl lg:text-[5.25rem] leading-[1.02]" aria-label="Documents In. Clarity Out.">
           <span class="block text-white" aria-hidden="true"><span data-type="Documents In."></span><span class="type-cursor" data-cursor></span></span>
-          <span class="block font-normal text-zinc-100 drop-shadow-sm" aria-hidden="true"><span data-type="Clarity Out."></span></span>
+          <span class="block serif-line text-zinc-100 drop-shadow-sm" aria-hidden="true"><span data-type="Clarity Out."></span></span>
         </h1>
 
         <p class="animate-blur-fade-up mb-5 max-w-xl text-base text-zinc-300 sm:text-lg leading-relaxed font-normal" style="animation-delay: 120ms">
@@ -630,6 +696,62 @@
         <p id="deskStat" class="text-[11px] font-medium tracking-[0.16em] uppercase text-red-200/80">4 fields require review</p>
         <button id="runPass" type="button" class="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-gray-200">Run verification pass</button>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════ ANATOMY ══════════════════════ -->
+<section id="anatomy" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
+  <div class="max-w-6xl mx-auto">
+    <div class="rv mb-12 sm:mb-16 text-center">
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Anatomy</p>
+      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">One file, opened up.</h2>
+      <p class="text-white/55 text-sm leading-relaxed max-w-xl mx-auto mt-4">Scroll to pull a verified file apart &mdash; then watch it lock back into the package your recipient opens. <span class="text-white/35">Illustrated.</span></p>
+    </div>
+  </div>
+  <div class="xv-pin max-w-6xl mx-auto">
+    <div class="xv-stage">
+      <article class="xv-layer liquid-glass rounded-2xl p-5" data-side="right">
+        <span class="xv-tag">Layer 01</span>
+        <i data-lucide="scan-line"></i>
+        <h3>Raw scans</h3>
+        <p>Pages land exactly as they exist &mdash; mixed order, skewed, unrenamed.</p>
+        <span class="xv-label">As received</span>
+      </article>
+      <article class="xv-layer liquid-glass rounded-2xl p-5" data-side="left">
+        <span class="xv-tag">Layer 02</span>
+        <i data-lucide="table-2"></i>
+        <h3>Extracted fields</h3>
+        <p>Names, dates, amounts and references lifted into one working sheet.</p>
+        <span class="xv-label">Structured</span>
+      </article>
+      <article class="xv-layer liquid-glass rounded-2xl p-5" data-side="right">
+        <span class="xv-tag">Layer 03</span>
+        <i data-lucide="flag"></i>
+        <h3>Exception flags</h3>
+        <p>Every mismatch, blur and missing page logged up front &mdash; nothing buried.</p>
+        <span class="xv-label">Flagged</span>
+      </article>
+      <article class="xv-layer liquid-glass rounded-2xl p-5" data-side="left">
+        <span class="xv-tag">Layer 04</span>
+        <i data-lucide="badge-check"></i>
+        <h3>Human verification</h3>
+        <p>Each value read back against the source. Character by character.</p>
+        <span class="xv-label">Verified by hand</span>
+      </article>
+      <article class="xv-layer liquid-glass rounded-2xl p-5" data-side="right">
+        <span class="xv-tag">Layer 05</span>
+        <i data-lucide="archive"></i>
+        <h3>Final package</h3>
+        <p>One indexed dossier. Open questions at the front, not the back.</p>
+        <span class="xv-label">Ready to submit</span>
+      </article>
+      <div class="xv-stamp"><i data-lucide="check"></i><span>Verified &mdash; Ghulam Mustafa</span></div>
+      <p class="xv-caption" aria-hidden="true">
+        <span>Scroll &mdash; pull the file apart</span>
+        <span>Every layer, visible</span>
+        <span>Locked. Ready to submit.</span>
+      </p>
     </div>
   </div>
 </section>
@@ -1601,6 +1723,66 @@
         }
       }, { passive: true });
     }
+
+    /* ── Exploded view: pin + scrub a 5-layer file apart, then lock it (desktop, GSAP) ── */
+    (function explodedView() {
+      var stage = document.querySelector('.xv-stage');
+      var pin = document.querySelector('.xv-pin');
+      if (!stage || !pin) return;
+      var tries = 0;
+      (function waitGsap() {
+        if (window.gsap && window.ScrollTrigger) { init(); return; }
+        if (++tries > 80) return; /* CDN failed: leave the honest static stack */
+        setTimeout(waitGsap, 50);
+      })();
+      function init() {
+        gsap.registerPlugin(ScrollTrigger);
+        gsap.matchMedia().add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', function () {
+          var layers = gsap.utils.toArray('.xv-layer');
+          var labels = gsap.utils.toArray('.xv-label');
+          var stamp = pin.querySelector('.xv-stamp');
+          var caps = gsap.utils.toArray('.xv-caption span');
+          var tl = null;
+          try {
+            pin.classList.add('xv-on');
+            var spreadY = [-252, -126, 0, 126, 252];
+            var driftX = [-34, 38, -26, 42, -30];
+            var tilt = [-2.4, 1.8, 0, -1.8, 2.4];
+            gsap.set(layers, { position: 'absolute', left: '50%', top: '50%', xPercent: -50, yPercent: -50, x: 0, y: 0, rotation: 0 });
+            gsap.set(labels, { autoAlpha: 0 });
+            gsap.set(stamp, { xPercent: -50, yPercent: -50, autoAlpha: 0, scale: 0.6, rotation: -8 });
+            gsap.set([caps[1], caps[2]], { autoAlpha: 0 });
+            tl = gsap.timeline({
+              defaults: { ease: 'power2.inOut' },
+              scrollTrigger: { trigger: pin, start: 'top top', end: '+=220%', pin: true, scrub: 1 }
+            });
+            if (!tl.scrollTrigger) throw new Error('xv pin failed');
+          tl.to(layers, { x: function (i) { return driftX[i]; }, y: function (i) { return spreadY[i]; }, rotation: function (i) { return tilt[i]; }, duration: 1, stagger: 0.07 }, 0)
+            .to(labels, { autoAlpha: 1, duration: 0.45, stagger: 0.07 }, 0.4)
+            .to(caps[0], { autoAlpha: 0, duration: 0.3 }, 0.85)
+            .to(caps[1], { autoAlpha: 1, duration: 0.3 }, 0.95)
+            .to(labels, { autoAlpha: 0, duration: 0.4 }, 1.75)
+            .to(layers, { x: 0, y: function (i) { return (i - 2) * 7; }, rotation: 0, duration: 1, stagger: 0.05 }, 1.85)
+            .to(caps[1], { autoAlpha: 0, duration: 0.3 }, 2.45)
+            .to(caps[2], { autoAlpha: 1, duration: 0.3 }, 2.55)
+            .to(stamp, { autoAlpha: 1, scale: 1, rotation: 0, duration: 0.5, ease: 'back.out(1.7)' }, 2.6);
+          if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { ScrollTrigger.refresh(); });
+          } catch (err) {
+            if (tl && tl.scrollTrigger) tl.scrollTrigger.kill();
+            if (tl) tl.kill();
+            pin.classList.remove('xv-on');
+            gsap.set([layers, labels, stamp, caps], { clearProps: 'all' });
+            return;
+          }
+          return function () {
+            if (tl.scrollTrigger) tl.scrollTrigger.kill();
+            tl.kill();
+            pin.classList.remove('xv-on');
+            gsap.set([layers, labels, stamp, caps], { clearProps: 'all' });
+          };
+        });
+      }
+    })();
   }
 })();
 </script>
