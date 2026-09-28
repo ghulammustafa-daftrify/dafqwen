@@ -28,7 +28,7 @@
   body { font-family: "Inter", sans-serif; }
 
   /* liquid glass — exact spec */
-  .liquid-glass {
+  .liquid-glass:not(.fixed) {
     position: relative;
     overflow: hidden;
     border: none;
@@ -155,8 +155,25 @@
   .faq .pm { transition: transform .3s ease; }
   .faq.open .pm { transform: rotate(180deg); }
 </style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ProfessionalService",
+  "name": "Daftrify",
+  "url": "https://www.daftrify.info/",
+  "email": "contact@daftrify.info",
+  "telephone": "+92 318 7668851",
+  "description": "A specialized production desk that intakes complex document stacks and returns them structured, reconciled, and ready to submit.",
+  "address": {
+    "@type": "PostalAddress",
+    "addressLocality": "Faisalabad",
+    "addressCountry": "PK"
+  }
+}
+</script>
 </head>
 <body class="bg-black text-white antialiased">
+<a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[100] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-black">Skip to content</a>
 
 <!-- ══════════════════════ CINEMATIC HERO (Taste-Grade Desk Architecture) ══════════════════════ -->
 <div class="relative flex min-h-dvh flex-col justify-between overflow-hidden bg-black text-white">
@@ -221,7 +238,7 @@
   </header>
 
   <!-- hero main content (2-column balanced layout) -->
-  <main class="relative z-10 flex flex-1 flex-col justify-center px-4 py-8 sm:px-6 md:px-12 md:py-12">
+  <main id="main" class="relative z-10 flex flex-1 flex-col justify-center px-4 py-8 sm:px-6 md:px-12 md:py-12">
     <div class="mx-auto w-full max-w-7xl grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
       
       <!-- Left Column: Primary Copy & Actions -->
@@ -493,6 +510,7 @@
     <div class="grid md:grid-cols-3 gap-4">
       <div class="rv liquid-glass rounded-2xl p-7 md:col-span-2 md:grid md:grid-cols-2 md:items-center md:gap-8">
         <div>
+          <i data-lucide="layers" class="text-white/70 mb-4"></i>
           <p class="text-white/40 text-xs font-medium tracking-[0.18em] uppercase mb-3">Signature service</p>
           <h3 class="text-white text-xl font-medium tracking-tight mb-3">Full Set Reconciliation</h3>
           <p class="text-white/55 text-sm leading-relaxed max-w-sm">Every document cross-checked against every other. Names, dates and amounts compared in both directions, each conflict written down. Returned as one organized, indexed file with an exception register at the front.</p>
@@ -649,13 +667,13 @@
       </div>
 
       <div class="liquid-glass rounded-2xl px-5 py-4">
-        <p class="text-white/40 text-[10px] font-medium tracking-[0.16em] uppercase mb-2">Not in scope</p>
+        <p class="text-white/40 text-[10px] font-medium tracking-[0.16em] uppercase mb-2">What we don't handle</p>
         <p class="text-white/55 text-[13px] leading-relaxed">No legal, financial, medical or immigration advice. No representation before any authority. No outcome claims &mdash; you keep the decisions, we do the document work.</p>
       </div>
     </div>
 
     <div class="rv" style="--d:.08s">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Frequently Asked Inquiries</p>
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Common questions</p>
       <div class="liquid-glass rounded-2xl divide-y divide-white/10 overflow-hidden">
         <!-- Question 1: Document Types & Intake -->
         <div class="faq open">
@@ -766,6 +784,7 @@
             </button>
           </div>
         </div>
+        <p id="fileWarn" class="hidden mt-3 text-left text-[11px] leading-relaxed text-amber-200/90">This file is over 10MB and can't go through the form &mdash; please share a Drive/Dropbox link in the message box above, or send it via WhatsApp instead.</p>
       </div>
 
       <!-- Trust & Security Signals -->
@@ -832,6 +851,10 @@
       <a href="#about" class="hover:text-white transition-colors">Our Team</a>
       <a href="#start" class="hover:text-white transition-colors">Open a File</a>
     </nav>
+    <div class="flex items-center gap-3">
+      <a href="https://wa.me/923187668851" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/60 transition-colors hover:border-emerald-400/50 hover:text-emerald-300"><i data-lucide="message-circle" style="width:16px;height:16px"></i></a>
+      <a href="mailto:contact@daftrify.info" aria-label="Email" class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/60 transition-colors hover:border-white/40 hover:text-white"><i data-lucide="mail" style="width:16px;height:16px"></i></a>
+    </div>
     <p class="text-white/35 text-xs tracking-[0.14em] uppercase">&copy; 2026 Daftrify &middot; Faisalabad, Pakistan</p>
   </div>
 </footer>
@@ -1194,6 +1217,7 @@
   var filePreview = document.getElementById('filePreview');
   var fileNameEl = document.getElementById('fileName');
   var fileSizeEl = document.getElementById('fileSize');
+  var fileWarnEl = document.getElementById('fileWarn');
   var removeFileBtn = document.getElementById('removeFile');
   var selectedFile = null;
 
@@ -1209,11 +1233,13 @@
       if (fileSizeEl) fileSizeEl.textContent = formatSize(file.size);
       if (uploadPrompt) uploadPrompt.classList.add('hidden');
       if (filePreview) filePreview.classList.remove('hidden');
+      if (fileWarnEl) fileWarnEl.classList.toggle('hidden', file.size <= 10 * 1024 * 1024);
       if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
     } else {
       if (fattach) fattach.value = '';
       if (uploadPrompt) uploadPrompt.classList.remove('hidden');
       if (filePreview) filePreview.classList.add('hidden');
+      if (fileWarnEl) fileWarnEl.classList.add('hidden');
     }
   };
 
