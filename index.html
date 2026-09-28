@@ -1980,5 +1980,26 @@
       }
 })();
 </script>
+<script>
+/* reveal safety net: never leave content hidden or blurred if the intro or observers stall */
+(function () {
+  function inView(el) {
+    var r = el.getBoundingClientRect();
+    return r.bottom > 0 && r.top < (window.innerHeight || 800);
+  }
+  function force() {
+    if (!document.body.classList.contains('is-ready')) document.body.classList.add('is-ready');
+    Array.prototype.forEach.call(document.querySelectorAll('.cinematic-heading:not(.is-revealed)'), function (el) {
+      if (inView(el)) el.classList.add('is-revealed');
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.rv:not(.in)'), function (el) {
+      if (inView(el)) el.classList.add('in');
+    });
+  }
+  function arm() { setTimeout(force, 4000); setTimeout(force, 8000); }
+  if (document.readyState === 'complete') arm();
+  else window.addEventListener('load', arm);
+})();
+</script>
 </body>
 </html>
