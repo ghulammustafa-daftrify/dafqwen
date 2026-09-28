@@ -54,8 +54,39 @@
   }
   .animate-blur-fade-up { opacity: 0; animation: blurFadeUp 1s ease-out forwards; }
 
+  /* ── Invisible mask + Power4.out ease + 5px blur character reveal ── */
+  @keyframes maskCharSlideBlur {
+    0% {
+      opacity: 0.5;
+      filter: blur(5px);
+      transform: translateY(115%);
+    }
+    100% {
+      opacity: 1;
+      filter: blur(0px);
+      transform: translateY(0%);
+    }
+  }
+  .mask-word {
+    display: inline-block;
+    overflow: hidden;
+    vertical-align: top;
+    padding-bottom: 0.08em;
+    margin-bottom: -0.08em;
+  }
+  .cinematic-char {
+    display: inline-block;
+    opacity: 0.5;
+    filter: blur(5px);
+    transform: translateY(115%);
+    animation: maskCharSlideBlur 0.75s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(var(--ci, 0) * 0.02s + var(--base-d, 0.25s));
+    will-change: transform, opacity, filter;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .animate-blur-fade-up { animation-duration: 0.01ms; animation-delay: 0ms !important; }
+    .cinematic-char { opacity: 1 !important; filter: none !important; transform: none !important; animation: none !important; }
     .liquid-glass, .liquid-glass:active { transition: none; transform: none; }
     .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
   }
@@ -175,9 +206,15 @@
           </div>
         </div>
 
-        <h1 id="heroHeadline" class="animate-blur-fade-up mb-4 text-4xl font-light tracking-[-0.04em] sm:text-6xl md:text-7xl lg:text-[4.75rem] leading-[1.02]" style="animation-delay: 300ms" aria-label="Documents In. Clarity Out.">
-          <span id="typeLine1" class="inline"></span><br class="hidden sm:inline" />
-          <span id="typeLine2" class="font-normal bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent drop-shadow-sm inline"></span><span id="typeCursor" class="inline-block w-[3px] h-[0.82em] bg-emerald-400 ml-1.5 align-middle animate-pulse"></span>
+        <h1 id="heroHeadline" class="mb-4 text-4xl font-light tracking-[-0.04em] sm:text-6xl md:text-7xl lg:text-[4.75rem] leading-[1.02]" aria-label="Documents In. Clarity Out.">
+          <!-- Line 1: Documents In. -->
+          <span class="block">
+            <span class="mask-word"><span class="cinematic-char" style="--ci:0">D</span><span class="cinematic-char" style="--ci:1">o</span><span class="cinematic-char" style="--ci:2">c</span><span class="cinematic-char" style="--ci:3">u</span><span class="cinematic-char" style="--ci:4">m</span><span class="cinematic-char" style="--ci:5">e</span><span class="cinematic-char" style="--ci:6">n</span><span class="cinematic-char" style="--ci:7">t</span><span class="cinematic-char" style="--ci:8">s</span></span><span class="inline-block">&nbsp;</span><span class="mask-word"><span class="cinematic-char" style="--ci:9">I</span><span class="cinematic-char" style="--ci:10">n</span><span class="cinematic-char" style="--ci:11">.</span></span>
+          </span>
+          <!-- Line 2: Clarity Out. -->
+          <span class="block font-normal bg-gradient-to-r from-white via-zinc-100 to-zinc-400 bg-clip-text text-transparent drop-shadow-sm">
+            <span class="mask-word"><span class="cinematic-char" style="--ci:12">C</span><span class="cinematic-char" style="--ci:13">l</span><span class="cinematic-char" style="--ci:14">a</span><span class="cinematic-char" style="--ci:15">r</span><span class="cinematic-char" style="--ci:16">i</span><span class="cinematic-char" style="--ci:17">t</span><span class="cinematic-char" style="--ci:18">y</span></span><span class="inline-block">&nbsp;</span><span class="mask-word"><span class="cinematic-char" style="--ci:19">O</span><span class="cinematic-char" style="--ci:20">u</span><span class="cinematic-char" style="--ci:21">t</span><span class="cinematic-char" style="--ci:22">.</span></span>
+          </span>
         </h1>
 
         <p class="animate-blur-fade-up mb-8 max-w-xl text-base text-zinc-300 sm:text-lg leading-relaxed font-normal" style="animation-delay: 400ms">
@@ -750,44 +787,20 @@
   if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ── Hero Headline Typing Animation (50ms delay per character) ── */
-  var textLine1 = "Documents In.";
-  var textLine2 = "Clarity Out.";
-  var el1 = document.getElementById('typeLine1');
-  var el2 = document.getElementById('typeLine2');
-  var cursor = document.getElementById('typeCursor');
+  /* ── Cinematic Scroll Reveal for Section Headings ── */
+  if (!reduce && 'IntersectionObserver' in window) {
+    var cinematicObserver = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('cinematic-in');
+          cinematicObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
 
-  if (el1 && el2) {
-    if (reduce) {
-      el1.textContent = textLine1;
-      el2.textContent = textLine2;
-    } else {
-      var i = 0;
-      var j = 0;
-      setTimeout(function () {
-        var timer1 = setInterval(function () {
-          if (i < textLine1.length) {
-            el1.textContent += textLine1.charAt(i);
-            i++;
-          } else {
-            clearInterval(timer1);
-            setTimeout(function () {
-              var timer2 = setInterval(function () {
-                if (j < textLine2.length) {
-                  el2.textContent += textLine2.charAt(j);
-                  j++;
-                } else {
-                  clearInterval(timer2);
-                  if (cursor) {
-                    cursor.classList.add('opacity-80');
-                  }
-                }
-              }, 50); // 50ms per character as requested
-            }, 100);
-          }
-        }, 50); // 50ms per character as requested
-      }, 150);
-    }
+    document.querySelectorAll('.cinematic-heading').forEach(function (el) {
+      cinematicObserver.observe(el);
+    });
   }
 
   /* ── Interactive Live Desk Console & Engine Pipeline Controller ── */
