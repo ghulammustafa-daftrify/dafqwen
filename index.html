@@ -9,6 +9,7 @@
 <meta property="og:description" content="DAFTRIFY is a document operations desk — send document-heavy stacks and get back organized, reconciled, source-verified working files. Faisalabad, Pakistan." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://www.daftrify.info/" />
+<link rel="canonical" href="https://www.daftrify.info/" />
 <meta property="og:image" content="https://www.daftrify.info/public/og-image.png" />
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
@@ -20,7 +21,6 @@
 <meta name="theme-color" content="#000000" />
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000'/%3E%3Cpath d='M9 6h11l5 5v15H9z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M20 6v5h5' stroke='%23fff' stroke-width='2' fill='none'/%3E%3Cpath d='M12 15h9M12 19h9M12 23h5' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -79,34 +79,11 @@
     display: inline-block;
     white-space: pre;
   }
-  .cinematic-char {
-    display: inline-block;
-    opacity: 0.35;
-    filter: blur(5px);
-    transform: translateY(115%);
-    transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-                opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: calc(var(--ci, 0) * 0.02s);
-    will-change: transform, opacity, filter;
-  }
-  .is-revealed .cinematic-char,
-  .hero-in #heroHeadline .cinematic-char {
-    opacity: 1;
-    filter: blur(0px);
-    transform: translateY(0%);
-  }
 
   /* hero video fades in only when it can actually play — no late pop-in */
-  #bgVideo { transition: opacity 1.4s ease; }
+  #bgVideo { transition: opacity 0.65s ease; }
   @media (prefers-reduced-motion: reduce) {
     .animate-blur-fade-up { animation-duration: 0.01ms; animation-delay: 0ms !important; }
-    .cinematic-char, #heroHeadline .cinematic-char, .cinematic-heading .cinematic-char {
-      opacity: 1 !important;
-      filter: none !important;
-      transform: none !important;
-      transition: none !important;
-    }
     .liquid-glass, .liquid-glass:active { transition: none; transform: none; }
     .rv { opacity: 1 !important; transform: none !important; transition: none !important; filter: none !important; }
     .grain { animation: none; opacity: .03; }
@@ -127,7 +104,7 @@
     filter: grayscale(1) contrast(1.06) brightness(0.62);
     transform-origin: center center;
     will-change: transform;
-    animation: heroVideoAmbient 22s ease-in-out infinite;
+    animation: heroVideoAmbient 36s ease-in-out infinite;
     pointer-events: none;
   }
 
@@ -152,6 +129,63 @@
     .stack-marquee { overflow-x: auto; }
   }
 
+  /* ── Scroll-driven headlines: bidirectional, one motion per section ── */
+  .hanim { --p: 0; }
+  .hanim .hchar, .hanim .hword, .hanim .hword-in, .hanim .hline-in, .hanim .hb, .hanim .hs, .hanim .hx {
+    will-change: transform, opacity, filter;
+  }
+  /* chars-up: letters rise + deblur */
+  .hanim-chars-up .hchar { display: inline-block;
+    --cp: clamp(0, 1, var(--p) * (1 + var(--n, 20) * 0.022) - var(--i) * 0.022);
+    transform: translateY(calc((1 - var(--cp)) * 110%));
+    opacity: calc(0.25 + 0.75 * var(--cp));
+    filter: blur(calc((1 - var(--cp)) * 5px)); }
+  /* chars-down: letters drop from above + deblur */
+  .hanim-chars-down .hchar { display: inline-block;
+    --cp: clamp(0, 1, var(--p) * (1 + var(--n, 20) * 0.022) - var(--i) * 0.022);
+    transform: translateY(calc((var(--cp) - 1) * 110%));
+    opacity: calc(0.25 + 0.75 * var(--cp));
+    filter: blur(calc((1 - var(--cp)) * 5px)); }
+  /* scale: letters pop in */
+  .hanim-scale .hchar { display: inline-block;
+    --cp: clamp(0, 1, var(--p) * (1 + var(--n, 20) * 0.025) - var(--i) * 0.025);
+    transform: scale(calc(0.35 + 0.65 * var(--cp)));
+    opacity: var(--cp); }
+  /* words-mask: words rise inside masks with a tilt */
+  .hword { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.12em; margin-bottom: -0.12em; }
+  .hanim-words-mask .hword-in { display: inline-block;
+    --wp: clamp(0, 1, var(--p) * (1 + var(--n, 8) * 0.06) - var(--i) * 0.06);
+    transform: translateY(calc((1 - var(--wp)) * 115%)) rotate(calc((1 - var(--wp)) * 7deg)); }
+  /* words-blur: words settle from blur */
+  .hanim-words-blur .hword {
+    --wp: clamp(0, 1, var(--p) * (1 + var(--n, 8) * 0.07) - var(--i) * 0.07);
+    opacity: var(--wp);
+    filter: blur(calc((1 - var(--wp)) * 10px));
+    transform: translateY(calc((1 - var(--wp)) * 22px)); }
+  /* reveal-x: directional clip reveal, left to right */
+  .hanim-reveal-x .hx { display: block;
+    clip-path: inset(0 calc((1 - var(--p)) * 100%) 0 0);
+    transform: translateX(calc((1 - var(--p)) * -28px)); }
+  /* blur: whole heading settles into focus */
+  .hanim-blur .hb { display: block;
+    opacity: var(--p);
+    filter: blur(calc((1 - var(--p)) * 14px));
+    transform: translateY(calc((1 - var(--p)) * 36px)); }
+  /* lines: segments slide in from alternate sides */
+  .hline { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
+  .hanim-lines .hline-in { display: block;
+    --lp: clamp(0, 1, var(--p) * (1 + var(--n, 3) * 0.16) - var(--i) * 0.16);
+    transform: translateX(calc((1 - var(--lp)) * var(--dir, 70px)));
+    opacity: var(--lp); }
+  /* skew: rise with a tilt + blur */
+  .hanim-skew .hs { display: block;
+    opacity: var(--p);
+    filter: blur(calc((1 - var(--p)) * 6px));
+    transform: translateY(calc((1 - var(--p)) * 56px)) skewY(calc((1 - var(--p)) * 5deg)); }
+  @media (prefers-reduced-motion: reduce) {
+    .hanim, .rv { --p: 1 !important; }
+  }
+
   /* ── Hero: masked line-rise (Linear-style) — distinct from the char-blur used elsewhere ── */
   .hero-line { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
   .hero-line > span { display: block; transform: translateY(112%); will-change: transform; }
@@ -171,6 +205,13 @@
   @media (prefers-reduced-motion: reduce) {
     .hero-line > span { transform: none; animation: none; }
     .hero-dossier, .hero-dossier::after { animation: none; }
+  }
+
+  /* ── Founder portrait: black & white at rest, colour on hover ── */
+  .founder-photo { filter: grayscale(1) contrast(1.06); transition: filter .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
+  .group:hover .founder-photo { filter: grayscale(0) contrast(1); transform: scale(1.08); }
+  @media (prefers-reduced-motion: reduce) {
+    .founder-photo, .group:hover .founder-photo { transition: none; transform: none; }
   }
 
   /* floating WhatsApp hides while the contact section (with its own WhatsApp card) is on screen */
@@ -209,20 +250,13 @@
   .intro-line span { display: block; height: 100%; width: 40%; background: #fff; animation: introSlide 1.1s ease-in-out infinite; }
   @keyframes introSlide { 0% { transform: translateX(-110%); } 100% { transform: translateX(310%); } }
 
-  /* scroll reveal for sections below the hero (one-shot: stays revealed) */
+  /* scroll reveals: bidirectional — forward on scroll down, reverse on scroll up */
   .rv {
-    opacity: 0;
-    transform: translateY(28px);
-    filter: blur(6px);
-    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-                transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
-                filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
-    transition-delay: var(--d, 0s);
-  }
-  .rv.in {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0px);
+    --p: 0;
+    opacity: var(--p);
+    transform: translateY(calc((1 - var(--p)) * 28px));
+    filter: blur(calc((1 - var(--p)) * 6px));
+    will-change: transform, opacity, filter;
   }
 
   /* verifier */
@@ -344,16 +378,75 @@
     "@type": "PostalAddress",
     "addressLocality": "Faisalabad",
     "addressCountry": "PK"
-  }
+  },
+  "founder": {
+    "@type": "Person",
+    "name": "Ghulam Mustafa"
+  },
+  "slogan": "Send the mess. Get the dossier."
 }
 </script>
-<noscript><style>#introLoader{display:none!important}.animate-blur-fade-up{opacity:1!important}</style></noscript>
 <script type="application/ld+json">
-{"@context":"https://schema.org","@type":"ProfessionalService","name":"Daftrify","url":"https://www.daftrify.info/","email":"contact@daftrify.info","address":{"@type":"PostalAddress","addressLocality":"Faisalabad","addressCountry":"PK"},"description":"Document intake and verification desk. Complex document stacks returned structured, reconciled, and ready to submit."}
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "Daftrify",
+  "url": "https://www.daftrify.info/"
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What kinds of messy document stacks can I send to Daftrify?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Anything document-heavy where accuracy is non-negotiable: multi-page PDF stacks, dense financial ledgers, contractor invoices, Excel tables, handwritten receipts, architectural drawing sets, tax bundles, compliance files, and recurring back-office documentation. You can send the material exactly as it exists — no renaming, no sorting, and no tidying required."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the verification process work?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your stack is triaged, extracted and cross-checked file by file. Before anything leaves the desk, Ghulam Mustafa personally reviews the output against your originals — every value checked back against its source. Nothing is invented or hallucinated."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How is my firm\u2019s confidentiality protected?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Your material is treated as strictly confidential and used only for your file — never published, resold or shared. One person handles it from receipt to delivery, and once you\u2019ve accepted the dossier, the working files are removed on your confirmation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How are project turnaround times and pricing scoped?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Initial triage readouts are returned promptly, most within a day. Pricing is scoped transparently by the actual set: volume of sheets, source material clarity, cross-reference density, and deadline urgency. There are no surprise retainers or generic inflated cards — you receive an honest fixed quotation after we inspect the stack."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What exact final deliverables do I receive upon completion?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "You receive one structured, indexed package: an upfront Exception Register itemizing every variance or missing gap, reconciled cross-tables, highlighted PDF callouts, and clean export sheets. Everything is audit-ready and pre-formatted for direct submission to legal counsel, banks, or regulatory authorities."
+      }
+    }
+  ]
+}
 </script>
 <noscript><style>
   .animate-blur-fade-up { opacity: 1 !important; }
   .hero-line > span { transform: none !important; }
+  .rv { opacity: 1 !important; transform: none !important; filter: none !important; }
+  .hanim { --p: 1 !important; }
 </style></noscript>
 </head>
 <body class="bg-black text-white antialiased">
@@ -370,7 +463,7 @@
 <div class="relative flex min-h-dvh flex-col justify-between overflow-hidden bg-black text-white">
 
   <!-- background video with subtle cinematic gradient overlay -->
-  <video id="bgVideo" class="absolute inset-0 z-0 h-full w-full object-cover opacity-80"
+  <video id="bgVideo" preload="auto" class="absolute inset-0 z-0 h-full w-full object-cover opacity-80"
     autoPlay muted loop playsInline preload="auto" tabindex="-1" aria-hidden="true"
     src="https://videos.pexels.com/video-files/7054942/7054942-uhd_3840_2160_24fps.mp4"></video>
 
@@ -477,7 +570,7 @@
           Zero login required
         </span>
         <span class="text-white/20">&bull;</span>
-        <span>Strict mutual NDA &amp; confidentiality</span>
+        <span>Confidential one-desk handling</span>
         <span class="text-white/20">&bull;</span>
         <span>Direct partner review</span>
       </div>
@@ -624,7 +717,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="rv mb-12 sm:mb-16 text-center">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">The transformation</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05]">From this <span class="text-white/60">&rarr; to this.</span></h2>
+      <h2 data-hanim="reveal-x" class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05]">From this <span class="text-white/60">&rarr; to this.</span></h2>
       <p class="text-white/50 text-xs mt-5 tracking-wide">Illustrated sample &mdash; your stack, same treatment.</p>
     </div>
     <div class="grid lg:grid-cols-[1fr_auto_1fr] gap-5 items-stretch max-w-5xl mx-auto">
@@ -667,7 +760,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="rv mb-14 sm:mb-20">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">How it works</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05] max-w-3xl">Chaos in. Clarity out.<br><span class="text-white/60">Three moves.</span></h2>
+      <h2 data-hanim="chars-up" class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05] max-w-3xl">Chaos in. Clarity out.<br><span class="text-white/60">Three moves.</span></h2>
     </div>
     <div class="grid md:grid-cols-3 gap-4 sm:gap-5">
       <article class="rv liquid-glass rounded-2xl p-7 sm:p-8">
@@ -697,7 +790,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="rv mb-12 flex flex-col gap-3">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase">Services</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight max-w-2xl">A desk, not a folder. <span class="text-white/65">Five ways it works.</span></h2>
+      <h2 data-hanim="words-mask" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight max-w-2xl">A desk, not a folder. <span class="text-white/65">Five ways it works.</span></h2>
     </div>
 
     <div class="grid md:grid-cols-3 gap-4">
@@ -751,7 +844,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="rv mb-12">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Process</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight max-w-2xl">Five stations, in order. <span class="text-white/65">No skips, no silence.</span></h2>
+      <h2 data-hanim="lines" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight max-w-2xl">Five stations, in order. <span class="text-white/65">No skips, no silence.</span></h2>
     </div>
 
     <ol class="grid md:grid-cols-5 gap-4">
@@ -828,7 +921,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="rv mb-12 sm:mb-16 text-center">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Anatomy</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">One file, opened up.</h2>
+      <h2 data-hanim="blur" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">One file, opened up.</h2>
       <p class="text-white/55 text-sm leading-relaxed max-w-xl mx-auto mt-4">Five layers of one file, stacking as you scroll &mdash; the exact order nothing leaves the desk without. <span class="text-white/50">Illustrated.</span></p>
     </div>
   </div>
@@ -869,7 +962,7 @@
   <div class="max-w-6xl mx-auto">
     <div class="rv mb-14 sm:mb-20">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Auditability</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05] max-w-3xl">Every number<br><span class="text-white/60">earns its place.</span></h2>
+      <h2 data-hanim="scale" class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05] max-w-3xl">Every number<br><span class="text-white/60">earns its place.</span></h2>
       <p class="text-white/55 text-sm sm:text-base leading-relaxed max-w-xl mt-6">A dossier you can defend. Nothing in your file is taken on faith &mdash; each figure carries its proof.</p>
     </div>
     <div class="grid sm:grid-cols-2 gap-4 sm:gap-5">
@@ -901,7 +994,7 @@
   <div class="max-w-4xl mx-auto">
     <div class="rv mb-12">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Principles</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">The operating rules, <span class="text-white/65">in plain words.</span></h2>
+      <h2 data-hanim="words-blur" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">The operating rules, <span class="text-white/65">in plain words.</span></h2>
     </div>
     <div class="space-y-3">
       <div class="rv liquid-glass rounded-2xl px-6 py-5 flex items-start gap-4"><i data-lucide="search-check" class="text-white/60 mt-0.5 shrink-0"></i><p class="text-white/75 text-sm sm:text-[15px] leading-relaxed"><span class="text-white font-medium">Source first.</span> No value enters the working file unless it can be traced to a document you actually hold. If it cannot be traced, it is reported as a gap &mdash; never filled in.</p></div>
@@ -917,11 +1010,13 @@
   <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
     <div class="rv">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Our Team</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight mb-6">One desk. <span class="hl">One pair of eyes.<svg class="hl-svg" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 55 3, 145 3, 197 8" pathLength="1"/></svg></span> <span class="text-white/65">Yours, first.</span></h2>
+      <h2 data-hanim="chars-down" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight mb-6">One desk. <span class="hl">One pair of eyes.<svg class="hl-svg" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 55 3, 145 3, 197 8" pathLength="1"/></svg></span> <span class="text-white/65">Yours, first.</span></h2>
       <p class="text-white/55 text-sm leading-relaxed max-w-md mb-8">Daftrify is run by Ghulam Mustafa from Faisalabad, Pakistan. Every file crosses one screen, and one person signs the verification pass &mdash; which is precisely why nothing leaves on assumption.</p>
 
-      <div class="liquid-glass rounded-2xl p-5 flex items-center gap-4 mb-4">
-        <div class="w-14 h-14 rounded-full bg-white/10 border border-white/15 grid place-items-center text-white font-medium text-lg">GM</div>
+      <div class="liquid-glass group rounded-2xl p-5 flex items-center gap-4 mb-4">
+        <div class="w-14 h-14 rounded-full overflow-hidden border border-white/15 shrink-0">
+          <img src="/public/founder.png" alt="Ghulam Mustafa — founder of Daftrify" class="founder-photo h-full w-full object-cover" loading="lazy" />
+        </div>
         <div>
           <p class="text-white text-sm font-medium">Ghulam Mustafa</p>
           <p class="text-white/40 text-xs font-medium tracking-[0.16em] uppercase mt-1">Founder &middot; Reviewer</p>
@@ -953,19 +1048,19 @@
         <!-- Question 2: Engine Stack & Human Verification -->
         <div class="faq">
           <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
-            <span class="text-white text-sm font-medium">2. How does your multi-engine pipeline and human verification desk operate?</span>
+            <span class="text-white text-sm font-medium">2. How does the verification process work?</span>
             <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
           </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Your files pass through a four-stage engine: multi-format triage intake, multimodal OCR data extraction, and bi-directional relational cross-reconciliation. Before anything leaves the desk, Ghulam Mustafa conducts a human verification pass &mdash; reading each extracted value back against the original source character by character. We never hallucinate or invent data.</p></div></div>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Your stack is triaged, extracted and cross-checked file by file. Before anything leaves the desk, Ghulam Mustafa personally reviews the output against your originals &mdash; every value checked back against its source. Nothing is invented or hallucinated.</p></div></div>
         </div>
 
         <!-- Question 3: Security & NDA -->
         <div class="faq">
           <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
-            <span class="text-white text-sm font-medium">3. What confidentiality, mutual NDA, and security protocols protect my firm?</span>
+            <span class="text-white text-sm font-medium">3. How is my firm&rsquo;s confidentiality protected?</span>
             <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
           </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Every engagement operates under strict mutual NDA standards with end-to-end 256-bit encryption. Your material is used solely to execute your specific file audit &mdash; never published, resold, or used for AI model training. Once delivery is accepted, files are completely purged from our workspace upon your confirmation.</p></div></div>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Your material is treated as strictly confidential and used only for your file &mdash; never published, resold or shared. One person handles it from receipt to delivery, and once you&rsquo;ve accepted the dossier, the working files are removed on your confirmation.</p></div></div>
         </div>
 
         <!-- Question 4: Pricing & Turnaround -->
@@ -974,7 +1069,7 @@
             <span class="text-white text-sm font-medium">4. How are project turnaround times and pricing scoped?</span>
             <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
           </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Standard initial triage readouts are returned within 24 hours. Pricing is scoped transparently by the actual set: volume of sheets, source material clarity, cross-reference density, and deadline urgency. There are no surprise retainers or generic inflated cards &mdash; you receive an honest fixed quotation after we inspect the stack.</p></div></div>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Initial triage readouts are returned promptly, most within a day. Pricing is scoped transparently by the actual set: volume of sheets, source material clarity, cross-reference density, and deadline urgency. There are no surprise retainers or generic inflated cards &mdash; you receive an honest fixed quotation after we inspect the stack.</p></div></div>
         </div>
 
         <!-- Question 5: Final Deliverables -->
@@ -996,7 +1091,7 @@
   <div class="max-w-3xl mx-auto">
     <div class="rv mb-12 sm:mb-16">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">FAQ</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">Asked, answered.</h2>
+      <h2 data-hanim="skew" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">Asked, answered.</h2>
     </div>
     <div class="rv divide-y divide-white/10 border-y border-white/10">
       <details class="group py-6">
@@ -1005,7 +1100,7 @@
       </details>
       <details class="group py-6">
         <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">How fast is the turnaround?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
-        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Most stacks are returned within 24 hours. Larger or unusually tangled sets get a firm time estimate before we begin &mdash; agreed up front, not discovered later.</p>
+        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Most stacks are returned quickly. Larger or unusually tangled sets get a firm time estimate before we begin &mdash; agreed up front, not discovered later.</p>
       </details>
       <details class="group py-6">
         <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">How do I send my files?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
@@ -1017,7 +1112,7 @@
       </details>
       <details class="group py-6">
         <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">Is my information kept confidential?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
-        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Yes. Every file is handled under strict mutual confidentiality and reviewed directly at the desk &mdash; never resold, never shared, never used for anything but your file.</p>
+        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Yes. Every file is handled under strict confidentiality and reviewed directly at the desk &mdash; never resold, never shared, never used for anything but your file.</p>
       </details>
       <details class="group py-6">
         <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">Do you use AI to process documents?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
@@ -1091,9 +1186,9 @@
 
       <!-- Trust & Security Signals -->
       <div class="mb-6 flex flex-wrap items-center justify-center sm:justify-start gap-4 text-[11px] text-white/45 border-t border-white/10 pt-4">
-        <span class="inline-flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i> Strict NDA Protocol</span>
-        <span class="inline-flex items-center gap-1.5"><i data-lucide="lock" class="w-3.5 h-3.5 text-white/60"></i> 256-Bit TLS Encryption</span>
-        <span class="inline-flex items-center gap-1.5"><i data-lucide="trash-2" class="w-3.5 h-3.5 text-white/60"></i> Zero-Retention Post-Delivery</span>
+        <span class="inline-flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i> Confidential handling</span>
+        <span class="inline-flex items-center gap-1.5"><i data-lucide="user-check" class="w-3.5 h-3.5 text-white/60"></i> One reviewer, start to finish</span>
+        <span class="inline-flex items-center gap-1.5"><i data-lucide="key-round" class="w-3.5 h-3.5 text-white/60"></i> No account needed</span>
       </div>
 
       <button type="submit" id="submitBtn" class="w-full rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-colors hover:bg-gray-200 cursor-pointer flex items-center justify-center gap-2">
@@ -1227,10 +1322,23 @@
   /* ── Background Video Seamless Loop & Scroll Up/Down Parallax ── */
   var bgVideo = document.getElementById('bgVideo');
   if (bgVideo) {
-    bgVideo.playbackRate = 0.85;
+    bgVideo.playbackRate = 0.5; /* slow cinematic drift — kills the frantic restart feel */
+    /* seamless loop: fade out just before the end, restart, fade back in — hides the seek jump */
+    var loopFading = false;
+    bgVideo.addEventListener('timeupdate', function () {
+      if (loopFading || !bgVideo.duration) return;
+      if (bgVideo.duration - bgVideo.currentTime < 0.65) {
+        loopFading = true;
+        bgVideo.style.opacity = '0';
+      }
+    });
+    bgVideo.addEventListener('seeked', function () {
+      if (loopFading) { loopFading = false; bgVideo.style.opacity = ''; }
+    });
     bgVideo.addEventListener('ended', function () {
-      bgVideo.currentTime = 0;
-      bgVideo.play().catch(function () {});
+      try { bgVideo.currentTime = 0; } catch (e) {}
+      var pr = bgVideo.play();
+      if (pr && pr.catch) pr.catch(function () {});
     });
 
     if (!reduce) {
@@ -1253,85 +1361,151 @@
     }
   }
 
-  /* ── Cinematic Mask & Blur Character Reveal for Section Headings ── */
-  function prepareCinematicHeadline(el) {
-    if (!el || el.dataset.cinematicReady) return;
-    el.dataset.cinematicReady = 'true';
-    var globalCharIndex = 0;
+  /* ── Scroll-driven headlines: bidirectional, one motion per section ── */
+  (function () {
+    var heads = Array.prototype.slice.call(document.querySelectorAll('.cinematic-heading'));
+    var TYPES = { 'chars-up': 1, 'chars-down': 1, 'scale': 1, 'words-mask': 1, 'words-blur': 1, 'reveal-x': 1, 'blur': 1, 'lines': 1, 'skew': 1 };
 
-    function processNode(node) {
-      if (node.nodeType === Node.TEXT_NODE) {
-        var text = node.textContent;
-        if (!text) return null;
-        var words = text.split(/(\s+)/);
+    function walk(el, fn) {
+      Array.prototype.slice.call(el.childNodes).forEach(function (node) {
+        if (node.nodeType === 3) {
+          var res = fn(node.data);
+          if (res) el.replaceChild(res, node);
+        } else if (node.nodeType === 1) {
+          if (node.tagName === 'SVG' || node.tagName === 'BR') return;
+          var c = node.classList;
+          if (c && (c.contains('hchar') || c.contains('hword') || c.contains('hline') || c.contains('hb') || c.contains('hs') || c.contains('hx'))) return;
+          walk(node, fn);
+        }
+      });
+    }
+
+    var ci = 0;
+    function splitChars(el) {
+      ci = 0; /* per-heading index: a shared counter would push later headings' stagger out of range */
+      walk(el, function (text) {
         var frag = document.createDocumentFragment();
-        words.forEach(function (part) {
+        text.split(/(\s+)/).forEach(function (part) {
           if (!part) return;
-          if (/^\s+$/.test(part)) {
-            var space = document.createElement('span');
-            space.className = 'mask-space';
-            space.textContent = part;
-            frag.appendChild(space);
-          } else {
-            var word = document.createElement('span');
-            word.className = 'mask-word';
-            for (var c = 0; c < part.length; c++) {
-              var ch = document.createElement('span');
-              ch.className = 'cinematic-char';
-              ch.textContent = part[c];
-              ch.style.setProperty('--ci', globalCharIndex++);
-              word.appendChild(ch);
-            }
-            frag.appendChild(word);
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
+          var w = document.createElement('span');
+          w.style.display = 'inline-block'; w.style.whiteSpace = 'nowrap';
+          for (var k = 0; k < part.length; k++) {
+            var ch = document.createElement('span');
+            ch.className = 'hchar'; ch.textContent = part[k];
+            ch.style.setProperty('--i', ci++);
+            w.appendChild(ch);
           }
+          frag.appendChild(w);
         });
         return frag;
-      } else if (node.nodeType === Node.ELEMENT_NODE) {
-        if (node.classList.contains('mask-word') || node.classList.contains('cinematic-char')) {
-          return node;
-        }
-        var clone = node.cloneNode(false);
-        Array.from(node.childNodes).forEach(function (child) {
-          var res = processNode(child);
-          if (res) clone.appendChild(res);
+      });
+      el.style.setProperty('--n', ci);
+    }
+
+    function splitWords(el, masked) {
+      var wi = 0;
+      walk(el, function (text) {
+        var frag = document.createDocumentFragment();
+        text.split(/(\s+)/).forEach(function (part) {
+          if (!part) return;
+          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
+          var w = document.createElement('span');
+          w.className = 'hword'; w.style.setProperty('--i', wi++);
+          if (masked) {
+            var inner = document.createElement('span');
+            inner.className = 'hword-in'; inner.textContent = part;
+            w.appendChild(inner);
+          } else { w.textContent = part; }
+          frag.appendChild(w);
         });
-        return clone;
+        return frag;
+      });
+      el.style.setProperty('--n', wi);
+    }
+
+    function splitLines(el) {
+      var segs = [], buf = [];
+      function flush() {
+        var has = buf.some(function (n) { return (n.nodeType === 3 && /\S/.test(n.data)) || n.nodeType === 1; });
+        if (has) segs.push(buf);
+        buf = [];
       }
-      return node;
+      Array.prototype.slice.call(el.childNodes).forEach(function (n) {
+        if (n.nodeType === 1 && n.tagName === 'BR') { flush(); }
+        else if (n.nodeType === 1) { flush(); segs.push([n]); }
+        else buf.push(n);
+      });
+      flush();
+      el.innerHTML = '';
+      segs.forEach(function (nodes, i) {
+        var line = document.createElement('span'); line.className = 'hline';
+        var inner = document.createElement('span'); inner.className = 'hline-in';
+        inner.style.setProperty('--i', i);
+        inner.style.setProperty('--dir', (i % 2 ? '-' : '') + '70px');
+        nodes.forEach(function (n) { inner.appendChild(n); });
+        line.appendChild(inner); el.appendChild(line);
+      });
+      el.style.setProperty('--n', segs.length);
     }
 
-    var frag = document.createDocumentFragment();
-    Array.from(el.childNodes).forEach(function (child) {
-      var res = processNode(child);
-      if (res) frag.appendChild(res);
+    function wrapAll(el, cls) {
+      var w = document.createElement('span'); w.className = cls;
+      while (el.firstChild) w.appendChild(el.firstChild);
+      el.appendChild(w);
+    }
+
+    heads.forEach(function (h) {
+      try {
+        var t = h.getAttribute('data-hanim') || 'chars-up';
+        if (!TYPES[t]) t = 'chars-up';
+        if (t === 'chars-up' || t === 'chars-down' || t === 'scale') splitChars(h);
+        else if (t === 'words-mask') splitWords(h, true);
+        else if (t === 'words-blur') splitWords(h, false);
+        else if (t === 'lines') splitLines(h);
+        else if (t === 'blur') wrapAll(h, 'hb');
+        else if (t === 'skew') wrapAll(h, 'hs');
+        else if (t === 'reveal-x') wrapAll(h, 'hx');
+        h.classList.add('hanim', 'hanim-' + t);
+      } catch (e) { h.style.setProperty('--p', 1); }
     });
-    el.innerHTML = '';
-    el.appendChild(frag);
-  }
 
-  if (!reduce) {
-    document.querySelectorAll('.cinematic-heading').forEach(prepareCinematicHeadline);
-
-    if ('IntersectionObserver' in window) {
-      var cinematicObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('is-revealed');
-            cinematicObserver.unobserve(entry.target); /* one-shot: headings animate once and stay */
-          }
-        });
-      }, { rootMargin: '0px 0px -6% 0px', threshold: 0.12 });
-
-      document.querySelectorAll('.cinematic-heading').forEach(function (el) {
-        cinematicObserver.observe(el);
-      });
-    } else {
-      document.querySelectorAll('.cinematic-heading').forEach(function (el) {
-        el.classList.add('is-revealed');
-      });
+    /* unified scroll driver: headlines + .rv — forward on scroll down, reverse on scroll up */
+    var rvs = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+    var ticking = false;
+    function update() {
+      ticking = false;
+      if (document.hidden) return;
+      var vh = window.innerHeight || 800, i, el, r, raw, pd, p;
+      for (i = 0; i < heads.length; i++) {
+        el = heads[i]; r = el.getBoundingClientRect();
+        if (r.bottom < -vh * 0.4 || r.top > vh * 1.4) continue;
+        raw = (vh * 0.94 - r.top) / (vh * 0.44);
+        el.style.setProperty('--p', Math.max(0, Math.min(1, raw)).toFixed(3));
+      }
+      for (i = 0; i < rvs.length; i++) {
+        el = rvs[i]; r = el.getBoundingClientRect();
+        if (r.bottom < -vh * 0.4 || r.top > vh * 1.4) continue;
+        raw = Math.max(0, Math.min(1, (vh * 0.94 - r.top) / (vh * 0.44)));
+        pd = parseFloat(el.style.getPropertyValue('--d')) || 0;
+        pd = Math.min(0.45, pd * 1.2);
+        p = pd > 0 ? Math.max(0, Math.min(1, (raw - pd) / (1 - pd))) : raw;
+        el.style.setProperty('--p', p.toFixed(3));
+      }
+      window.__hanimOk = true;
     }
+    function kick() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
+    if (reduce) {
+      heads.concat(rvs).forEach(function (el) { el.style.setProperty('--p', 1); });
+    } else {
+      window.addEventListener('scroll', kick, { passive: true });
+      window.addEventListener('resize', kick);
+      window.addEventListener('load', kick);
+      kick();
+    }
+  })();
 
-    /* ── Prompt 1: typewriter headline (50ms per character) ── */
+/* ── Prompt 1: typewriter headline (50ms per character) ── */
     /* ── Orchestrated intro (Ochi/Lusion-style): preloader hands off into the hero ── */
     var introDone = false;
     function liftIntro() {
@@ -1434,7 +1608,6 @@
         nxt.className = 'rolo-word on text-emerald-300 font-semibold';
       }, 2600);
     })();
-  }
 
   /* stack train: duplicate the logo set for a seamless -50% loop */
   (function () {
@@ -1567,21 +1740,6 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) setMenu(false); });
 
-  /* ── scroll reveals (bi-directional reversible on scroll up / down) ── */
-  var rvs = Array.prototype.slice.call(document.querySelectorAll('.rv'));
-  if (reduce || !('IntersectionObserver' in window)) {
-    rvs.forEach(function (el) { el.classList.add('in'); });
-  } else {
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (en.isIntersecting) {
-          en.target.classList.add('in');
-          io.unobserve(en.target); /* one-shot: revealed sections stay put, no re-animation on scroll */
-        }
-      });
-    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.1 });
-    rvs.forEach(function (el) { io.observe(el); });
-  }
 
   /* hide floating WhatsApp while the contact section (with its own WhatsApp card) is on screen */
   (function () {
@@ -1763,11 +1921,11 @@
 
       if (btn) {
         btn.disabled = true;
-        if (btnText) btnText.textContent = 'Encrypting & Transmitting…';
+        if (btnText) btnText.textContent = 'Sending…';
         btn.classList.add('opacity-70', 'cursor-not-allowed');
       }
       if (statusBox) {
-        statusBox.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-center text-xs text-white/70 flex items-center justify-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Encrypting documents &amp; transmitting to desk…</div>';
+        statusBox.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-center text-xs text-white/70 flex items-center justify-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Sending to desk…</div>';
         statusBox.classList.remove('hidden');
       }
 
@@ -1848,24 +2006,21 @@
           statusBox.innerHTML = '<div class="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-5 text-center">' +
             '<div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center mb-3 text-lg font-bold">✓</div>' +
             '<p class="text-sm font-semibold text-emerald-300">File &amp; Details Sent Directly to Desk</p>' +
-            '<p class="text-xs text-white/70 mt-1.5 leading-relaxed">Your documents and details have been transmitted directly to our intake desk (<span class="text-emerald-300 font-mono">contact@daftrify.info</span>). We will review and reply within 24 hours to <span class="text-white font-medium">' + em.value.trim() + '</span>.</p>' +
+            '<p class="text-xs text-white/70 mt-1.5 leading-relaxed">Your documents and details have been sent to our intake desk (<span class="text-emerald-300 font-mono">contact@daftrify.info</span>). We will review and reply to <span class="text-white font-medium">' + em.value.trim() + '</span> as soon as your file is reviewed.</p>' +
             '</div>';
           statusBox.classList.remove('hidden');
         }
         form.reset();
         updateFileState(null);
       } else {
-        // Even in edge cases, keep user on page with clean status and clear one-click direct options
+        // Both routes failed: be honest, keep the user's input, offer direct alternatives
         if (statusBox) {
-          statusBox.innerHTML = '<div class="rounded-xl border border-emerald-500/30 bg-emerald-500/10 p-5 text-center">' +
-            '<div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center mb-3 text-lg font-bold">✓</div>' +
-            '<p class="text-sm font-semibold text-emerald-300">Intake Recorded at Desk</p>' +
-            '<p class="text-xs text-white/70 mt-1 mb-3">Your document stack has been logged for <span class="text-emerald-300 font-mono">contact@daftrify.info</span>. Our operations team will respond to <span class="text-white font-medium">' + em.value.trim() + '</span> shortly.</p>' +
+          statusBox.innerHTML = '<div class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-5 text-center">' +
+            '<p class="text-sm font-semibold text-amber-300">Couldn&rsquo;t send just now</p>' +
+            '<p class="text-xs text-white/70 mt-1.5 mb-3 leading-relaxed">The form couldn&rsquo;t reach the desk. Your details are still here &mdash; please try again, or send directly via <a href="https://wa.me/923187668851?text=' + encodeURIComponent('Hi Daftrify, I would like to start a file.') + '" target="_blank" class="underline font-semibold text-white">WhatsApp</a> or <a href="mailto:contact@daftrify.info" class="underline font-semibold text-white">contact@daftrify.info</a>.</p>' +
             '</div>';
           statusBox.classList.remove('hidden');
         }
-        form.reset();
-        updateFileState(null);
       }
 
       if (btn) {
@@ -1954,12 +2109,14 @@
   }
   function force() {
     if (!document.body.classList.contains('is-ready')) document.body.classList.add('is-ready');
-    Array.prototype.forEach.call(document.querySelectorAll('.cinematic-heading:not(.is-revealed)'), function (el) {
-      if (inView(el)) el.classList.add('is-revealed');
-    });
-    Array.prototype.forEach.call(document.querySelectorAll('.rv:not(.in)'), function (el) {
-      if (inView(el)) el.classList.add('in');
-    });
+    if (!window.__hanimOk) {
+      Array.prototype.forEach.call(document.querySelectorAll('.hanim'), function (el) {
+        if (inView(el)) el.style.setProperty('--p', 1);
+      });
+      Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) {
+        if (inView(el)) el.style.setProperty('--p', 1);
+      });
+    }
   }
   function arm() { setTimeout(force, 4000); setTimeout(force, 8000); }
   if (document.readyState === 'complete') arm();
