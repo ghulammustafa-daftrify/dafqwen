@@ -54,19 +54,7 @@
   }
   .animate-blur-fade-up { opacity: 0; animation: blurFadeUp 1s ease-out forwards; }
 
-  /* ── Invisible mask + Power4.out ease + 5px blur character reveal ── */
-  @keyframes maskCharSlideBlur {
-    0% {
-      opacity: 0.5;
-      filter: blur(5px);
-      transform: translateY(115%);
-    }
-    100% {
-      opacity: 1;
-      filter: blur(0px);
-      transform: translateY(0%);
-    }
-  }
+  /* ── Invisible mask + Power4.out ease + 5px blur character reveal (Bi-directional) ── */
   .mask-word {
     display: inline-block;
     overflow: hidden;
@@ -79,25 +67,22 @@
     display: inline-block;
     white-space: pre;
   }
-  #heroHeadline .cinematic-char {
+  .cinematic-char {
     display: inline-block;
-    opacity: 0.5;
+    opacity: 0.35;
     filter: blur(5px);
     transform: translateY(115%);
-    animation: maskCharSlideBlur 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: calc(var(--ci, 0) * 0.02s + var(--base-d, 0.2s));
+    transition: transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: calc(var(--ci, 0) * 0.02s);
     will-change: transform, opacity, filter;
   }
-  .cinematic-heading .cinematic-char {
-    display: inline-block;
-    opacity: 0.5;
-    filter: blur(5px);
-    transform: translateY(115%);
-    will-change: transform, opacity, filter;
-  }
-  .cinematic-heading.is-revealed .cinematic-char {
-    animation: maskCharSlideBlur 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: calc(var(--ci, 0) * 0.02s + 0.1s);
+  .is-revealed .cinematic-char,
+  .hero-in #heroHeadline .cinematic-char {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0%);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -106,10 +91,10 @@
       opacity: 1 !important;
       filter: none !important;
       transform: none !important;
-      animation: none !important;
+      transition: none !important;
     }
     .liquid-glass, .liquid-glass:active { transition: none; transform: none; }
-    .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
+    .rv { opacity: 1 !important; transform: none !important; transition: none !important; filter: none !important; }
   }
 
   /* hero video grade for the monochrome cinematic look with smooth motion */
@@ -129,9 +114,22 @@
   @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   .marquee-track { animation: marquee 30s linear infinite; }
 
-  /* scroll reveal for sections below the hero */
-  .rv { opacity: 0; transform: translateY(20px); transition: opacity .7s ease, transform .7s ease; transition-delay: var(--d, 0s); }
-  .rv.in { opacity: 1; transform: none; }
+  /* scroll reveal for sections below the hero (bi-directional reversible) */
+  .rv {
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(6px);
+    transition: opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
+                filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
+    transition-delay: var(--d, 0s);
+    will-change: opacity, transform, filter;
+  }
+  .rv.in {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0px);
+  }
 
   /* verifier */
   .vrow { transition: background .35s ease; }
@@ -647,35 +645,51 @@
     </div>
 
     <div class="rv" style="--d:.08s">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Common Questions</p>
+      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Frequently Asked Inquiries</p>
       <div class="liquid-glass rounded-2xl divide-y divide-white/10 overflow-hidden">
+        <!-- Question 1: Document Types & Intake -->
         <div class="faq open">
           <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="true">
-            <span class="text-white text-sm font-medium">What kinds of documents do you handle?</span>
+            <span class="text-white text-sm font-medium">1. What kinds of messy document stacks can I send to Daftrify?</span>
             <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
           </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Anything document-heavy where accuracy matters: professional services files, finance and admin records, real estate and construction documentation, compliance and legal support bundles, healthcare administration, immigration paperwork, education records, procurement sets, and recurring back-office document work.</p></div></div>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Anything document-heavy where accuracy is non-negotiable: multi-page PDF stacks, dense financial ledgers, contractor invoices, Excel tables, handwritten receipts, architectural drawing sets, tax bundles, compliance files, and recurring back-office documentation. You can send the material exactly as it exists &mdash; no renaming, no sorting, and no tidying required.</p></div></div>
         </div>
+
+        <!-- Question 2: Engine Stack & Human Verification -->
         <div class="faq">
           <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
-            <span class="text-white text-sm font-medium">What happens to my documents?</span>
+            <span class="text-white text-sm font-medium">2. How does your multi-engine pipeline and human verification desk operate?</span>
             <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
           </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Your material is used for the engagement and nothing else. It is not resold, published or shared. If you want files removed after delivery, say so when you send the set and it is done &mdash; you keep every original either way.</p></div></div>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Your files pass through a four-stage engine: multi-format triage intake, multimodal OCR data extraction, and bi-directional relational cross-reconciliation. Before anything leaves the desk, Ghulam Mustafa conducts a human verification pass &mdash; reading each extracted value back against the original source character by character. We never hallucinate or invent data.</p></div></div>
         </div>
+
+        <!-- Question 3: Security & NDA -->
         <div class="faq">
           <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
-            <span class="text-white text-sm font-medium">How is pricing decided?</span>
+            <span class="text-white text-sm font-medium">3. What confidentiality, mutual NDA, and security protocols protect my firm?</span>
             <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
           </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">By the actual set: volume, the condition of the source material, how many documents must be cross-checked against each other, and urgency. There is no published rate card because a clean twelve-page file and a chaotic four-hundred-page one are not the same job.</p></div></div>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Every engagement operates under strict mutual NDA standards with end-to-end 256-bit encryption. Your material is used solely to execute your specific file audit &mdash; never published, resold, or used for AI model training. Once delivery is accepted, files are completely purged from our workspace upon your confirmation.</p></div></div>
         </div>
+
+        <!-- Question 4: Pricing & Turnaround -->
         <div class="faq">
           <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
-            <span class="text-white text-sm font-medium">What if the desk is at capacity?</span>
+            <span class="text-white text-sm font-medium">4. How are project turnaround times and pricing scoped?</span>
             <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
           </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">You hear it openly in the first reply, with a realistic date instead of a silent queue. A small desk can promise that much.</p></div></div>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Standard initial triage readouts are returned within 24 hours. Pricing is scoped transparently by the actual set: volume of sheets, source material clarity, cross-reference density, and deadline urgency. There are no surprise retainers or generic inflated cards &mdash; you receive an honest fixed quotation after we inspect the stack.</p></div></div>
+        </div>
+
+        <!-- Question 5: Final Deliverables -->
+        <div class="faq">
+          <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
+            <span class="text-white text-sm font-medium">5. What exact final deliverables do I receive upon completion?</span>
+            <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
+          </button>
+          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">You receive one structured, indexed package: an upfront Exception Register itemizing every variance or missing gap, reconciled cross-tables, highlighted PDF callouts, and clean export sheets. Everything is audit-ready and pre-formatted for direct submission to legal counsel, banks, or regulatory authorities.</p></div></div>
         </div>
       </div>
     </div>
@@ -911,14 +925,22 @@
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-revealed');
-            cinematicObserver.unobserve(entry.target);
+          } else {
+            // Reversible animation on scroll up and down
+            entry.target.classList.remove('is-revealed');
           }
         });
-      }, { threshold: 0.2 });
+      }, { rootMargin: '0px 0px -6% 0px', threshold: 0.12 });
 
       document.querySelectorAll('.cinematic-heading').forEach(function (el) {
         cinematicObserver.observe(el);
       });
+      var heroHeadline = document.getElementById('heroHeadline');
+      if (heroHeadline) {
+        cinematicObserver.observe(heroHeadline);
+        // Initially activate hero
+        setTimeout(function () { heroHeadline.classList.add('is-revealed'); }, 100);
+      }
     } else {
       document.querySelectorAll('.cinematic-heading').forEach(function (el) {
         el.classList.add('is-revealed');
@@ -1059,14 +1081,21 @@
   });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) setMenu(false); });
 
-  /* ── scroll reveals ── */
+  /* ── scroll reveals (bi-directional reversible on scroll up / down) ── */
   var rvs = Array.prototype.slice.call(document.querySelectorAll('.rv'));
   if (reduce || !('IntersectionObserver' in window)) {
     rvs.forEach(function (el) { el.classList.add('in'); });
   } else {
     var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); } });
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
+      entries.forEach(function (en) {
+        if (en.isIntersecting) {
+          en.target.classList.add('in');
+        } else {
+          // Reverses when element leaves viewport so it re-animates when scrolling back!
+          en.target.classList.remove('in');
+        }
+      });
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.1 });
     rvs.forEach(function (el) { io.observe(el); });
   }
 
