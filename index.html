@@ -21,7 +21,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%23000'/%3E%3Cpath d='M9 6h11l5 5v15H9z' fill='none' stroke='%23fff' stroke-width='2'/%3E%3Cpath d='M20 6v5h5' stroke='%23fff' stroke-width='2' fill='none'/%3E%3Cpath d='M12 15h9M12 19h9M12 23h5' stroke='%23fff' stroke-width='1.6'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
 <style>
@@ -159,6 +159,82 @@
   .faq.open .faq-a { grid-template-rows: 1fr; }
   .faq .pm { transition: transform .3s ease; }
   .faq.open .pm { transform: rotate(180deg); }
+
+  /* ── Prompt 1: typewriter cursor ── */
+  .type-cursor {
+    display: inline-block;
+    width: 0.42ch;
+    height: 0.82em;
+    background: #fff;
+    margin-left: 0.08em;
+    vertical-align: -0.06em;
+    animation: cursorBlink 1.05s steps(1) infinite;
+  }
+  @keyframes cursorBlink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0; } }
+
+  /* ── Prompt 2: hand-drawn underline (draws on scroll into view) ── */
+  .hl { position: relative; display: inline-block; white-space: nowrap; }
+  .hl-svg {
+    position: absolute;
+    left: -3%;
+    bottom: -0.16em;
+    width: 106%;
+    height: 0.32em;
+    overflow: visible;
+    pointer-events: none;
+  }
+  .hl-svg path {
+    fill: none;
+    stroke: #34d399;
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+  }
+  .hl.drawn .hl-svg path { animation: drawStroke 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards; }
+  @keyframes drawStroke { to { stroke-dashoffset: 0; } }
+
+  /* ── Prompt 3: TextPressure (variable-font proximity effect) ── */
+  .pressure-head {
+    font-family: "Archivo", "Inter", system-ui, sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    cursor: default;
+  }
+  .pressure-head .p-char {
+    display: inline-block;
+    will-change: font-variation-settings;
+    font-variation-settings: 'wght' 800, 'wdth' 100, 'ital' 0;
+  }
+  .pressure-head .p-space { display: inline-block; white-space: pre; }
+
+  /* ── Prompt 4: rolodex word flipper ── */
+  .rolo {
+    display: inline-block;
+    position: relative;
+    transform-style: preserve-3d;
+    perspective: 500px;
+    vertical-align: baseline;
+  }
+  .rolo-word {
+    display: inline-block;
+    white-space: nowrap;
+    transform-origin: 50% 60%;
+    backface-visibility: hidden;
+    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
+    will-change: transform, opacity;
+  }
+  .rolo-word.pre { position: absolute; left: 0; top: 0; transform: rotateX(-90deg); opacity: 0; }
+  .rolo-word.on { position: relative; transform: rotateX(0deg); opacity: 1; }
+  .rolo-word.off { position: absolute; left: 0; top: 0; transform: rotateX(90deg); opacity: 0; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .type-cursor { animation: none; }
+    .hl-svg path { stroke-dashoffset: 0; }
+    .hl.drawn .hl-svg path { animation: none; }
+    .rolo-word { transition: none; }
+  }
 </style>
 <script type="application/ld+json">
 {
@@ -268,19 +344,18 @@
         </div>
 
         <h1 id="heroHeadline" class="mb-4 text-4xl font-light tracking-[-0.04em] sm:text-6xl md:text-7xl lg:text-[4.75rem] leading-[1.02]" aria-label="Documents In. Clarity Out.">
-          <!-- Line 1: Documents In. -->
-          <span class="block text-white">
-            <span class="mask-word"><span class="cinematic-char" style="--ci:0">D</span><span class="cinematic-char" style="--ci:1">o</span><span class="cinematic-char" style="--ci:2">c</span><span class="cinematic-char" style="--ci:3">u</span><span class="cinematic-char" style="--ci:4">m</span><span class="cinematic-char" style="--ci:5">e</span><span class="cinematic-char" style="--ci:6">n</span><span class="cinematic-char" style="--ci:7">t</span><span class="cinematic-char" style="--ci:8">s</span></span><span class="inline-block">&nbsp;</span><span class="mask-word"><span class="cinematic-char" style="--ci:9">I</span><span class="cinematic-char" style="--ci:10">n</span><span class="cinematic-char" style="--ci:11">.</span></span>
-          </span>
-          <!-- Line 2: Clarity Out. -->
-          <span class="block font-normal text-zinc-100 drop-shadow-sm">
-            <span class="mask-word"><span class="cinematic-char" style="--ci:12">C</span><span class="cinematic-char" style="--ci:13">l</span><span class="cinematic-char" style="--ci:14">a</span><span class="cinematic-char" style="--ci:15">r</span><span class="cinematic-char" style="--ci:16">i</span><span class="cinematic-char" style="--ci:17">t</span><span class="cinematic-char" style="--ci:18">y</span></span><span class="inline-block">&nbsp;</span><span class="mask-word"><span class="cinematic-char" style="--ci:19">O</span><span class="cinematic-char" style="--ci:20">u</span><span class="cinematic-char" style="--ci:21">t</span><span class="cinematic-char" style="--ci:22">.</span></span>
-          </span>
+          <span class="block text-white" aria-hidden="true"><span data-type="Documents In."></span><span class="type-cursor" data-cursor></span></span>
+          <span class="block font-normal text-zinc-100 drop-shadow-sm" aria-hidden="true"><span data-type="Clarity Out."></span></span>
         </h1>
 
-        <p class="animate-blur-fade-up mb-8 max-w-xl text-base text-zinc-300 sm:text-lg leading-relaxed font-normal" style="animation-delay: 400ms">
+        <p class="animate-blur-fade-up mb-5 max-w-xl text-base text-zinc-300 sm:text-lg leading-relaxed font-normal" style="animation-delay: 400ms">
           A specialized production desk that intakes complex document stacks &mdash; multi-page PDFs, technical drawings, and dense financial ledgers &mdash; returning them structured, reconciled, and ready to submit.
         </p>
+
+        <p class="animate-blur-fade-up mb-8 font-mono text-sm sm:text-[15px] text-white/70" style="animation-delay: 460ms" aria-hidden="true">
+          <span>We turn&nbsp;</span><span class="rolo" id="rolo"><span class="rolo-word on text-emerald-300 font-semibold">chaos</span><span class="rolo-word pre text-emerald-300 font-semibold">paper piles</span><span class="rolo-word pre text-emerald-300 font-semibold">messy scans</span><span class="rolo-word pre text-emerald-300 font-semibold">dense ledgers</span></span><span>&nbsp;into order.</span>
+        </p>
+        <span class="sr-only">We turn chaos, paper piles, messy scans and dense ledgers into order.</span>
 
         <div class="flex flex-wrap items-center gap-3 sm:gap-4">
           <a href="#start" class="animate-blur-fade-up inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-black transition-all hover:bg-zinc-200 hover:shadow-xl hover:shadow-white/10 active:scale-[0.98]" style="animation-delay: 500ms">
@@ -656,7 +731,7 @@
   <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
     <div class="rv">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Our Team</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight mb-6">One desk. One pair of eyes. <span class="text-white/50">Yours, first.</span></h2>
+      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight mb-6">One desk. <span class="hl">One pair of eyes.<svg class="hl-svg" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 55 3, 145 3, 197 8" pathLength="1"/></svg></span> <span class="text-white/50">Yours, first.</span></h2>
       <p class="text-white/55 text-sm leading-relaxed max-w-md mb-8">Daftrify is run by Ghulam Mustafa from Faisalabad, Pakistan. Every file crosses one screen, and one person signs the verification pass &mdash; which is precisely why nothing leaves on assumption.</p>
 
       <div class="liquid-glass rounded-2xl p-5 flex items-center gap-4 mb-4">
@@ -735,7 +810,7 @@
   <div class="max-w-2xl mx-auto relative">
     <div class="rv text-center mb-10">
       <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Start</p>
-      <h2 class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight mb-4">Put the mess on the table.</h2>
+      <h2 id="pressureHead" class="pressure-head text-white text-3xl sm:text-5xl mb-4" data-pressure>Put the mess on the table.</h2>
       <p class="text-white/55 text-sm leading-relaxed max-w-md mx-auto">Describe the documents, the rough volume, and what usually goes wrong. No files needed yet &mdash; an honest read comes back within twenty-four hours.</p>
     </div>
 
@@ -974,16 +1049,137 @@
         cinematicObserver.observe(el);
       });
       var heroHeadline = document.getElementById('heroHeadline');
-      if (heroHeadline) {
-        cinematicObserver.observe(heroHeadline);
-        // Initially activate hero
-        setTimeout(function () { heroHeadline.classList.add('is-revealed'); }, 100);
-      }
+      if (heroHeadline) { initTypewriter(heroHeadline); }
     } else {
       document.querySelectorAll('.cinematic-heading').forEach(function (el) {
         el.classList.add('is-revealed');
       });
     }
+
+    /* ── Prompt 1: typewriter headline (50ms per character) ── */
+    function initTypewriter(h1) {
+      var lines = Array.prototype.slice.call(h1.querySelectorAll('[data-type]'));
+      var cursor = h1.querySelector('[data-cursor]');
+      if (!lines.length) return;
+      if (reduce) {
+        lines.forEach(function (s) { s.textContent = s.getAttribute('data-type'); });
+        if (cursor) cursor.style.display = 'none';
+        return;
+      }
+      var li = 0, ci = 0;
+      function step() {
+        if (li >= lines.length) return; /* done — cursor keeps blinking */
+        var s = lines[li], full = s.getAttribute('data-type') || '';
+        if (cursor && cursor.previousElementSibling !== s) s.parentNode.insertBefore(cursor, s.nextSibling);
+        if (ci <= full.length) {
+          s.textContent = full.slice(0, ci);
+          ci++;
+          setTimeout(step, 50);
+        } else {
+          li++; ci = 0;
+          setTimeout(step, 380);
+        }
+      }
+      setTimeout(step, 650);
+    }
+
+    /* typewriter instant-fill for reduced motion (the block above is skipped) */
+    if (reduce) {
+      var h1rm = document.getElementById('heroHeadline');
+      if (h1rm) {
+        Array.prototype.forEach.call(h1rm.querySelectorAll('[data-type]'), function (s) {
+          s.textContent = s.getAttribute('data-type');
+        });
+        var curRm = h1rm.querySelector('[data-cursor]');
+        if (curRm) curRm.style.display = 'none';
+      }
+    }
+
+    /* ── Prompt 2: hand-drawn underline draws when scrolled into view ── */
+    if ('IntersectionObserver' in window) {
+      var hlObserver = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('drawn');
+            hlObserver.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.6 });
+      document.querySelectorAll('.hl').forEach(function (el) { hlObserver.observe(el); });
+    } else {
+      document.querySelectorAll('.hl').forEach(function (el) { el.classList.add('drawn'); });
+    }
+
+    /* ── Prompt 3: TextPressure — variable-font proximity effect ── */
+    (function initPressure() {
+      var head = document.getElementById('pressureHead');
+      if (!head || reduce) return;
+      if (window.matchMedia && !window.matchMedia('(pointer: fine)').matches) return;
+      var text = head.textContent;
+      head.setAttribute('aria-label', text);
+      head.innerHTML = '';
+      var chars = [];
+      Array.prototype.forEach.call(text, function (c) {
+        var sp = document.createElement('span');
+        if (c === ' ') { sp.className = 'p-space'; sp.textContent = '\u00A0'; }
+        else { sp.className = 'p-char'; sp.textContent = c; chars.push(sp); }
+        head.appendChild(sp);
+      });
+      var mx = -9999, my = -9999, running = false, inView = true;
+      var MAXD = 140;
+      window.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
+      document.addEventListener('mouseleave', function () { mx = -9999; my = -9999; });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(function (es) { inView = es[0].isIntersecting; }, { threshold: 0 }).observe(head);
+      }
+      function frame() {
+        running = true;
+        if (inView) {
+          for (var i = 0; i < chars.length; i++) {
+            var r = chars[i].getBoundingClientRect();
+            var dx = mx - (r.left + r.width / 2), dy = my - (r.top + r.height / 2);
+            var d = Math.sqrt(dx * dx + dy * dy);
+            var t = Math.max(0, 1 - d / MAXD);
+            var eased = t * t * (3 - 2 * t);
+            var wght = Math.round(800 + eased * 100);
+            var wdth = Math.round(100 + eased * 25);
+            var ital = (eased * 0.9).toFixed(2);
+            chars[i].style.fontVariationSettings = "'wght' " + wght + ", 'wdth' " + wdth + ", 'ital' " + ital;
+          }
+        }
+        requestAnimationFrame(frame);
+      }
+      if (!running) requestAnimationFrame(frame);
+    })();
+
+    /* ── Prompt 4: rolodex word flipper (inline, left-aligned) ── */
+    (function initRolodex() {
+      var rolo = document.getElementById('rolo');
+      if (!rolo) return;
+      var words = Array.prototype.slice.call(rolo.querySelectorAll('.rolo-word'));
+      if (words.length < 2) return;
+      function sizeRolo() {
+        var w = 0;
+        words.forEach(function (wd) {
+          var prev = wd.style.position;
+          wd.style.position = 'static'; wd.style.visibility = 'hidden'; wd.style.opacity = '0';
+          w = Math.max(w, wd.offsetWidth);
+          wd.style.position = prev; wd.style.visibility = ''; wd.style.opacity = '';
+        });
+        rolo.style.width = w + 'px';
+      }
+      sizeRolo();
+      window.addEventListener('resize', sizeRolo);
+      if (reduce) return;
+      var idx = 0;
+      setInterval(function () {
+        var cur = words[idx];
+        idx = (idx + 1) % words.length;
+        var nxt = words[idx];
+        cur.className = 'rolo-word off text-emerald-300 font-semibold';
+        nxt.className = 'rolo-word on text-emerald-300 font-semibold';
+      }, 2600);
+    })();
   }
 
   /* ── Interactive Live Desk Console & Engine Pipeline Controller ── */
