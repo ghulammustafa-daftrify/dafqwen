@@ -131,8 +131,9 @@
   /* living marquee */
   @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
   .marquee-track { animation: marquee 30s linear infinite; }
+  .marquee-track > span { margin-right: 3rem; } /* margin (not container gap) => exact -50% loop, no seam jump */
 
-  /* scroll reveal for sections below the hero (bi-directional reversible) */
+  /* scroll reveal for sections below the hero (one-shot: stays revealed) */
   .rv {
     opacity: 0;
     transform: translateY(28px);
@@ -141,7 +142,6 @@
                 transform 0.75s cubic-bezier(0.16, 1, 0.3, 1),
                 filter 0.75s cubic-bezier(0.16, 1, 0.3, 1);
     transition-delay: var(--d, 0s);
-    will-change: opacity, transform, filter;
   }
   .rv.in {
     opacity: 1;
@@ -478,7 +478,7 @@
 
 <!-- ══════════════════════ TRUST MARQUEE ══════════════════════ -->
 <div class="border-y border-gray-800 bg-black py-4 overflow-hidden" aria-hidden="true">
-  <div class="marquee-track flex w-max items-center gap-12 whitespace-nowrap">
+  <div class="marquee-track flex w-max items-center whitespace-nowrap">
     <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="file-text" style="width:15px;height:15px"></i>Contracts</span>
     <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="receipt" style="width:15px;height:15px"></i>Invoices</span>
     <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="table-2" style="width:15px;height:15px"></i>Ledgers</span>
@@ -958,9 +958,7 @@
         entries.forEach(function (entry) {
           if (entry.isIntersecting) {
             entry.target.classList.add('is-revealed');
-          } else {
-            // Reversible animation on scroll up and down
-            entry.target.classList.remove('is-revealed');
+            cinematicObserver.unobserve(entry.target); /* one-shot: headings animate once and stay */
           }
         });
       }, { rootMargin: '0px 0px -6% 0px', threshold: 0.12 });
@@ -1090,6 +1088,7 @@
       }
       sizeRolo();
       window.addEventListener('resize', sizeRolo);
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeRolo); /* re-measure after font swap — keeps words flush */
       if (reduce) return;
       var idx = 0;
       setInterval(function () {
@@ -1109,10 +1108,7 @@
     v.style.opacity = '0';
     var show = function () { v.style.opacity = '0.8'; };
     if (v.readyState >= 3) show();
-    else {
-      v.addEventListener('canplay', show, { once: true });
-      setTimeout(function () { if (v.style.opacity === '0') show(); }, 6000); /* safety: never stay black */
-    }
+    else v.addEventListener('canplay', show, { once: true });
   })();
 
   /* ── Pipeline walkthrough: 4 honest stages, no fake-live chrome ── */
@@ -1236,9 +1232,7 @@
       entries.forEach(function (en) {
         if (en.isIntersecting) {
           en.target.classList.add('in');
-        } else {
-          // Reverses when element leaves viewport so it re-animates when scrolling back!
-          en.target.classList.remove('in');
+          io.unobserve(en.target); /* one-shot: revealed sections stay put, no re-animation on scroll */
         }
       });
     }, { rootMargin: '0px 0px -6% 0px', threshold: 0.1 });
@@ -1538,8 +1532,8 @@
       Array.prototype.forEach.call(magnets, function (el) {
         var x = 0, y = 0, tx = 0, ty = 0, raf = null;
         var render = function () {
-          x += (tx - x) * 0.25;
-          y += (ty - y) * 0.25;
+          x += (tx - x) * 0.18;
+          y += (ty - y) * 0.18;
           if (Math.abs(tx - x) < 0.05) x = tx;
           if (Math.abs(ty - y) < 0.05) y = ty;
           el.style.translate = x.toFixed(1) + 'px ' + y.toFixed(1) + 'px';
@@ -1548,8 +1542,8 @@
         var kick = function () { if (!raf) raf = requestAnimationFrame(render); };
         el.addEventListener('pointermove', function (e) {
           var r = el.getBoundingClientRect();
-          tx = Math.max(-12, Math.min(12, (e.clientX - (r.left + r.width / 2)) * 0.28));
-          ty = Math.max(-10, Math.min(10, (e.clientY - (r.top + r.height / 2)) * 0.28));
+          tx = Math.max(-9, Math.min(9, (e.clientX - (r.left + r.width / 2)) * 0.22));
+          ty = Math.max(-8, Math.min(8, (e.clientY - (r.top + r.height / 2)) * 0.22));
           kick();
         });
         el.addEventListener('pointerleave', function () { tx = 0; ty = 0; kick(); });
@@ -1566,7 +1560,7 @@
           var r = card.getBoundingClientRect();
           var px = (e.clientX - r.left) / r.width - 0.5;
           var py = (e.clientY - r.top) / r.height - 0.5;
-          card.style.transform = 'perspective(900px) rotateX(' + (-py * 7).toFixed(2) + 'deg) rotateY(' + (px * 7).toFixed(2) + 'deg) translateY(-3px)';
+          card.style.transform = 'perspective(900px) rotateX(' + (-py * 5).toFixed(2) + 'deg) rotateY(' + (px * 5).toFixed(2) + 'deg) translateY(-3px)';
         });
         card.addEventListener('pointerleave', function () {
           if (!armed) return;
