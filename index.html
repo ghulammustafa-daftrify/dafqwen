@@ -133,6 +133,10 @@
   .marquee-track { animation: marquee 30s linear infinite; }
   .marquee-track > span { margin-right: 3rem; } /* margin (not container gap) => exact -50% loop, no seam jump */
 
+  /* floating WhatsApp hides while the contact section (with its own WhatsApp card) is on screen */
+  #waFloat { transition: opacity .4s ease, transform .4s ease; }
+  #waFloat.wa-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; }
+
   /* scroll reveal for sections below the hero (one-shot: stays revealed) */
   .rv {
     opacity: 0;
@@ -833,7 +837,7 @@
 </section>
 
 <!-- Floating Desk Connect Badge -->
-<a href="https://wa.me/923187668851?text=Hi%20Daftrify%2C%20I%20have%20documents%20that%20need%20pre-submission%20auditing%20and%20verification." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-40 liquid-glass rounded-full px-4 py-2.5 flex items-center gap-2.5 shadow-2xl border border-white/20 hover:border-emerald-400/50 bg-black/80 backdrop-blur-md transition-all hover:scale-105 active:scale-95 group" aria-label="Chat with Daftrify Desk on WhatsApp">
+<a id="waFloat" href="https://wa.me/923187668851?text=Hi%20Daftrify%2C%20I%20have%20documents%20that%20need%20pre-submission%20auditing%20and%20verification." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-40 liquid-glass rounded-full px-4 py-2.5 flex items-center gap-2.5 shadow-2xl border border-white/20 hover:border-emerald-400/50 bg-black/80 backdrop-blur-md transition-all hover:scale-105 active:scale-95 group" aria-label="Chat with Daftrify Desk on WhatsApp">
   <span class="relative flex h-2.5 w-2.5">
     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
     <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
@@ -1238,6 +1242,16 @@
     }, { rootMargin: '0px 0px -6% 0px', threshold: 0.1 });
     rvs.forEach(function (el) { io.observe(el); });
   }
+
+  /* hide floating WhatsApp while the contact section (with its own WhatsApp card) is on screen */
+  (function () {
+    var wa = document.getElementById('waFloat');
+    var start = document.getElementById('start');
+    if (!wa || !start || !('IntersectionObserver' in window)) return;
+    new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) { wa.classList.toggle('wa-hidden', en.isIntersecting); });
+    }, { threshold: 0.12 }).observe(start);
+  })();
 
   /* ── live desk readout (simulated) ── */
   var roFields = document.getElementById('roFields'), roFlags = document.getElementById('roFlags'), roStatus = document.getElementById('roStatus');
