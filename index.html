@@ -4,9 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>DAFTRIFY — Send the mess. Get the dossier.</title>
-<meta name="description" content="DAFTRIFY is a document operations desk — send document-heavy stacks and get back organized, reconciled, source-verified working files. Faisalabad, Pakistan." />
+<meta name="description" content="Daftrify is a one-desk document operation in Faisalabad, Pakistan. Send the raw document stack; get back an organized set, checked against its sources." />
 <meta property="og:title" content="DAFTRIFY — Send the mess. Get the dossier." />
-<meta property="og:description" content="DAFTRIFY is a document operations desk — send document-heavy stacks and get back organized, reconciled, source-verified working files. Faisalabad, Pakistan." />
+<meta property="og:description" content="Daftrify is a one-desk document operation in Faisalabad, Pakistan. Send the raw document stack; get back an organized set, checked against its sources." />
 <meta property="og:type" content="website" />
 <meta property="og:url" content="https://www.daftrify.info/" />
 <link rel="canonical" href="https://www.daftrify.info/" />
@@ -16,7 +16,7 @@
 <meta property="og:image:alt" content="DAFTRIFY — Send the mess. Get the dossier." />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="DAFTRIFY — Send the mess. Get the dossier." />
-<meta name="twitter:description" content="DAFTRIFY is a document operations desk — send document-heavy stacks and get back organized, reconciled, source-verified working files. Faisalabad, Pakistan." />
+<meta name="twitter:description" content="Daftrify is a one-desk document operation in Faisalabad, Pakistan. Send the raw document stack; get back an organized set, checked against its sources." />
 <meta name="twitter:image" content="https://www.daftrify.info/public/og-image.png" />
 <meta name="theme-color" content="#0B1220" />
 <link rel="icon" type="image/svg+xml" href="/public/favicon.svg" />
@@ -25,348 +25,45 @@
 <link rel="apple-touch-icon" sizes="180x180" href="/public/apple-touch-icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Archivo:ital,wdth,wght@0,62..125,100..900;1,62..125,100..900&family=Inter:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 <script src="https://unpkg.com/lucide@0.475.0/dist/umd/lucide.min.js"></script>
 <style>
+  html { scroll-behavior: smooth; }
   body { font-family: "Inter", sans-serif; }
+  .font-display { font-family: "Archivo", sans-serif; }
+  ::selection { background: #34d399; color: #000; }
 
-  /* liquid glass — exact spec */
-  .liquid-glass:not(.fixed) {
-    position: relative;
-    overflow: hidden;
-    border: none;
-    background: rgba(255, 255, 255, 0.01);
-    background-blend-mode: luminosity;
-    -webkit-backdrop-filter: blur(4px);
-    backdrop-filter: blur(4px);
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1);
-    transition: background-color 0.35s ease, box-shadow 0.35s ease;
-  }
-  .liquid-glass:hover { background-color: rgba(255, 255, 255, 0.09); box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2); }
-  .liquid-glass:active { transform: scale(0.96); }
-  .liquid-glass::before {
-    content: ""; position: absolute; inset: 0; border-radius: inherit; padding: 1.4px;
-    background: linear-gradient(180deg, rgba(255,255,255,0.45) 0%, rgba(255,255,255,0.15) 20%, rgba(255,255,255,0) 40%, rgba(255,255,255,0) 60%, rgba(255,255,255,0.15) 80%, rgba(255,255,255,0.45) 100%);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    mask-composite: exclude;
-    pointer-events: none;
-  }
+  /* film grain: the one allowed texture */
+  .grain { position: fixed; inset: 0; z-index: 60; pointer-events: none; opacity: .05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E"); }
 
-  /* bottom blur veil — only blur, no gradient darkening */
-  .bottom-blur-mask {
-    -webkit-mask-image: linear-gradient(to top, black 0%, transparent 45%);
-    mask-image: linear-gradient(to top, black 0%, transparent 45%);
-  }
-
-  /* blur-fade-up entrance */
-  @keyframes blurFadeUp {
-    from { opacity: 0; filter: blur(20px); transform: translateY(40px); }
-    to { opacity: 1; filter: blur(0); transform: translateY(0); }
-  }
-  .animate-blur-fade-up { opacity: 0; }
-  body.is-ready .animate-blur-fade-up { animation: blurFadeUp 1s ease-out forwards; }
-
-  /* ── Invisible mask + Power4.out ease + 5px blur character reveal (Bi-directional) ── */
-  .mask-word {
-    display: inline-block;
-    overflow: hidden;
-    vertical-align: top;
-    padding-bottom: 0.12em;
-    margin-bottom: -0.12em;
-    white-space: nowrap;
-  }
-  .mask-space {
-    display: inline-block;
-    white-space: pre;
-  }
-
-  /* hero video fades in only when it can actually play — no late pop-in */
-  #bgVideo { transition: opacity 0.65s ease; }
+  /* ── the one motion system: reveal-once ── */
+  .rv { opacity: 0; transform: translateY(12px);
+    transition: opacity .32s cubic-bezier(.16,1,.3,1), transform .32s cubic-bezier(.16,1,.3,1); }
+  .rv.in { opacity: 1; transform: none; }
   @media (prefers-reduced-motion: reduce) {
-    .animate-blur-fade-up { animation-duration: 0.01ms; animation-delay: 0ms !important; }
-    .liquid-glass, .liquid-glass:active { transition: none; transform: none; }
-    .rv { opacity: 1 !important; transform: none !important; transition: none !important; filter: none !important; }
-    .grain { animation: none; opacity: .03; }
-    .orb-a, .orb-b { animation: none; }
+    html { scroll-behavior: auto; }
+    .rv { opacity: 1 !important; transform: none !important; transition: none !important; }
+    * { animation-duration: .01ms !important; transition-duration: .01ms !important; }
   }
 
-  /* buttery anchor glides (respects reduced motion) */
-  @media (prefers-reduced-motion: no-preference) {
-    html { scroll-behavior: smooth; scroll-padding-top: 16px; }
-  }
+  /* hairline rule used between list rows */
+  .rule { border-color: rgba(255,255,255,.09); }
 
-  /* hero video grade for the monochrome cinematic look with smooth motion */
-  @keyframes heroVideoAmbient {
-    0%, 100% { transform: scale(1.05) translate3d(0, 0, 0); }
-    50% { transform: scale(1.08) translate3d(0, -8px, 0); }
-  }
-  #bgVideo {
-    filter: grayscale(1) contrast(1.06) brightness(0.62);
-    transform-origin: center center;
-    will-change: transform;
-    animation: heroVideoAmbient 36s ease-in-out infinite;
-    pointer-events: none;
-  }
-
-  /* living marquee */
-  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .marquee-track { animation: marquee 30s linear infinite; }
-  .marquee-track > span { margin-right: 3rem; } /* margin (not container gap) => exact -50% loop, no seam jump */
-
-  /* ── Stack ribbon: the train — infinite logo marquee with brand glows ── */
-  @keyframes stackRide { from { transform: translateX(0); } to { transform: translateX(-50%); } }
-  .stack-track { display: flex; width: max-content; animation: stackRide 34s linear infinite; will-change: transform; }
-  .stack-set { display: flex; align-items: center; gap: 3.5rem; padding-right: 3.5rem; }
-  #pipeline:hover .stack-track { animation-play-state: paused; }
-  .stack-marquee {
-    -webkit-mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-    mask-image: linear-gradient(to right, transparent, #000 10%, #000 90%, transparent);
-  }
-  .stack-logo { opacity: .7; filter: grayscale(.3); transition: opacity .35s ease, filter .35s ease, transform .35s ease; }
-  .stack-logo:hover { opacity: 1; filter: grayscale(0) drop-shadow(0 0 14px var(--glow, rgba(52,211,153,.45))); transform: translateY(-2px); }
-  @media (prefers-reduced-motion: reduce) {
-    .stack-track { animation: none; }
-    .stack-marquee { overflow-x: auto; }
-  }
-
-  /* ── Scroll-driven headlines: bidirectional, one motion per section ── */
-  .hanim { --p: 0; }
-  .hanim .hchar, .hanim .hword, .hanim .hword-in, .hanim .hline-in, .hanim .hb, .hanim .hs, .hanim .hx {
-    will-change: transform, opacity, filter;
-  }
-  /* chars-up: letters rise + deblur */
-  .hanim-chars-up .hchar { display: inline-block;
-    --cp: clamp(0, 1, var(--p) * (1 + var(--n, 20) * 0.022) - var(--i) * 0.022);
-    transform: translateY(calc((1 - var(--cp)) * 110%));
-    opacity: calc(0.25 + 0.75 * var(--cp));
-    filter: blur(calc((1 - var(--cp)) * 5px)); }
-  /* chars-down: letters drop from above + deblur */
-  .hanim-chars-down .hchar { display: inline-block;
-    --cp: clamp(0, 1, var(--p) * (1 + var(--n, 20) * 0.022) - var(--i) * 0.022);
-    transform: translateY(calc((var(--cp) - 1) * 110%));
-    opacity: calc(0.25 + 0.75 * var(--cp));
-    filter: blur(calc((1 - var(--cp)) * 5px)); }
-  /* scale: letters pop in */
-  .hanim-scale .hchar { display: inline-block;
-    --cp: clamp(0, 1, var(--p) * (1 + var(--n, 20) * 0.025) - var(--i) * 0.025);
-    transform: scale(calc(0.35 + 0.65 * var(--cp)));
-    opacity: var(--cp); }
-  /* words-mask: words rise inside masks with a tilt */
-  .hword { display: inline-block; overflow: hidden; vertical-align: top; padding-bottom: 0.12em; margin-bottom: -0.12em; }
-  .hanim-words-mask .hword-in { display: inline-block;
-    --wp: clamp(0, 1, var(--p) * (1 + var(--n, 8) * 0.06) - var(--i) * 0.06);
-    transform: translateY(calc((1 - var(--wp)) * 115%)) rotate(calc((1 - var(--wp)) * 7deg)); }
-  /* words-blur: words settle from blur */
-  .hanim-words-blur .hword {
-    --wp: clamp(0, 1, var(--p) * (1 + var(--n, 8) * 0.07) - var(--i) * 0.07);
-    opacity: var(--wp);
-    filter: blur(calc((1 - var(--wp)) * 10px));
-    transform: translateY(calc((1 - var(--wp)) * 22px)); }
-  /* reveal-x: directional clip reveal, left to right */
-  .hanim-reveal-x .hx { display: block;
-    clip-path: inset(0 calc((1 - var(--p)) * 100%) 0 0);
-    transform: translateX(calc((1 - var(--p)) * -28px)); }
-  /* blur: whole heading settles into focus */
-  .hanim-blur .hb { display: block;
-    opacity: var(--p);
-    filter: blur(calc((1 - var(--p)) * 14px));
-    transform: translateY(calc((1 - var(--p)) * 36px)); }
-  /* lines: segments slide in from alternate sides */
-  .hline { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
-  .hanim-lines .hline-in { display: block;
-    --lp: clamp(0, 1, var(--p) * (1 + var(--n, 3) * 0.16) - var(--i) * 0.16);
-    transform: translateX(calc((1 - var(--lp)) * var(--dir, 70px)));
-    opacity: var(--lp); }
-  /* skew: rise with a tilt + blur */
-  .hanim-skew .hs { display: block;
-    opacity: var(--p);
-    filter: blur(calc((1 - var(--p)) * 6px));
-    transform: translateY(calc((1 - var(--p)) * 56px)) skewY(calc((1 - var(--p)) * 5deg)); }
-  @media (prefers-reduced-motion: reduce) {
-    .hanim, .rv { --p: 1 !important; }
-  }
-
-  /* ── Hero: masked line-rise (Linear-style) — distinct from the char-blur used elsewhere ── */
-  .hero-line { display: block; overflow: hidden; padding-bottom: 0.1em; margin-bottom: -0.1em; }
-  .hero-line > span { display: block; transform: translateY(112%); will-change: transform; }
-  body.is-ready .hero-line > span { animation: heroRise 1.1s cubic-bezier(.19,1,.22,1) forwards; }
-  body.is-ready .hero-line + .hero-line > span { animation-delay: .13s; }
-  @keyframes heroRise { to { transform: translateY(0); } }
-
-  /* ── Hero dossier: gentle float + occasional shine sweep ── */
-  @keyframes dossierFloat { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-8px); } }
-  .hero-dossier { animation: dossierFloat 7s ease-in-out infinite; }
-  .hero-dossier::after {
-    content: ""; position: absolute; inset: 0; pointer-events: none;
-    background: linear-gradient(105deg, transparent 42%, rgba(255,255,255,.055) 50%, transparent 58%);
-    transform: translateX(-101%); animation: dossierShine 6.5s ease-in-out infinite;
-  }
-  @keyframes dossierShine { 0%,58% { transform: translateX(-101%); } 92%,100% { transform: translateX(101%); } }
-  @media (prefers-reduced-motion: reduce) {
-    .hero-line > span { transform: none; animation: none; }
-    .hero-dossier, .hero-dossier::after { animation: none; }
-  }
-
-  /* ── Founder portrait: black & white at rest, colour on hover ── */
-  .founder-photo { filter: grayscale(1) contrast(1.06); transition: filter .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1); }
-  .group:hover .founder-photo { filter: grayscale(0) contrast(1); transform: scale(1.08); }
-  @media (prefers-reduced-motion: reduce) {
-    .founder-photo, .group:hover .founder-photo { transition: none; transform: none; }
-  }
-
-  /* floating WhatsApp hides while the contact section (with its own WhatsApp card) is on screen */
-  #waFloat { transition: opacity .4s ease, transform .4s ease; }
-  #waFloat.wa-hidden { opacity: 0; transform: translateY(12px); pointer-events: none; }
-
-  /* ── 2026 feel: designed near-black canvas (never pure #000) ── */
-  body { background-color: #0a0a0b; }
-  .bg-black { background-color: #0a0a0b !important; }
-
-  /* ── 2026 feel: film grain ── */
-  .grain {
-    position: fixed; inset: -60%; width: 220%; height: 220%;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 240 240' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    opacity: .05; pointer-events: none; z-index: 90;
-  }
-
-  /* ── 2026 feel: ambient glow field (static light, zero motion cost) ── */
-  .orb { position: absolute; border-radius: 9999px; filter: blur(90px); }
-  .orb-a { width: 42rem; height: 42rem; left: -13rem; top: -15rem;
-    background: radial-gradient(circle, rgba(16,185,129,.12), transparent 62%); }
-  .orb-b { width: 36rem; height: 36rem; right: -11rem; bottom: -17rem;
-    background: radial-gradient(circle, rgba(214,158,64,.07), transparent 62%); }
-
-  /* ── 2026 feel: serif-italic display line (sans + serif pairing) ── */
-  .serif-line { font-family: 'Instrument Serif', Georgia, serif; font-style: italic; font-weight: 400; letter-spacing: -0.015em; }
-
-  /* ── Orchestrated intro loader: everything reveals as one moment ── */
-  #introLoader { position: fixed; inset: 0; z-index: 200; background: #060607;
-    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem;
-    transition: opacity .6s ease; animation: introFailsafe .6s ease 4.5s forwards; }
-  #introLoader.done { opacity: 0; pointer-events: none; }
-  @keyframes introFailsafe { to { opacity: 0; visibility: hidden; } }
-  .intro-mark { font-size: 13px; font-weight: 600; letter-spacing: .5em; text-indent: .5em; color: rgba(255,255,255,.85); }
-  .intro-line { width: 120px; height: 1px; background: rgba(255,255,255,.12); overflow: hidden; }
-  .intro-line span { display: block; height: 100%; width: 40%; background: #fff; animation: introSlide 1.1s ease-in-out infinite; }
-  @keyframes introSlide { 0% { transform: translateX(-110%); } 100% { transform: translateX(310%); } }
-
-  /* scroll reveals: bidirectional — forward on scroll down, reverse on scroll up */
-  .rv {
-    --p: 0;
-    opacity: var(--p);
-    transform: translateY(calc((1 - var(--p)) * 28px));
-    filter: blur(calc((1 - var(--p)) * 6px));
-    will-change: transform, opacity, filter;
-  }
-
-  /* verifier */
-  .vrow { transition: background .35s ease; }
-  .tick { opacity: 0; transform: scale(.4); transition: opacity .35s ease, transform .45s cubic-bezier(.2,1.3,.4,1); }
-  .vrow[data-ok="1"] .tick { opacity: 1; transform: scale(1); }
-  .val { transition: color .35s ease, background .35s ease; }
-  .vrow[data-ok="1"] .val { color: #bff0d3; background: rgba(120,220,160,.12); }
-
-  /* faq */
-  .faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
-  .faq-a > div { overflow: hidden; }
+  /* faq accordion */
+  .faq-a { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .28s cubic-bezier(.16,1,.3,1); }
   .faq.open .faq-a { grid-template-rows: 1fr; }
-  .faq .pm { transition: transform .3s ease; }
-  .faq.open .pm { transform: rotate(180deg); }
+  .faq-a > div { overflow: hidden; }
+  .faq .pm { transition: transform .2s ease; }
+  .faq.open .pm { transform: rotate(45deg); }
 
+  /* form focus */
+  .field { transition: border-color .18s ease, background-color .18s ease; }
+  .field:focus { border-color: rgba(255,255,255,.45); background-color: rgba(255,255,255,.06); outline: none; }
 
-  /* ── Prompt 2: hand-drawn underline (draws on scroll into view) ── */
-  .hl { position: relative; display: inline-block; white-space: nowrap; }
-  .hl-svg {
-    position: absolute;
-    left: -3%;
-    bottom: -0.16em;
-    width: 106%;
-    height: 0.32em;
-    overflow: visible;
-    pointer-events: none;
-  }
-  .hl-svg path {
-    fill: none;
-    stroke: #34d399;
-    stroke-width: 5;
-    stroke-linecap: round;
-    stroke-dasharray: 1;
-    stroke-dashoffset: 1;
-  }
-  .hl.drawn .hl-svg path { animation: drawStroke 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards; }
-  @keyframes drawStroke { to { stroke-dashoffset: 0; } }
-
-  /* ── Prompt 3: TextPressure (variable-font proximity effect) ── */
-  .pressure-head {
-    font-family: "Archivo", "Inter", system-ui, sans-serif;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    line-height: 1.02;
-    cursor: default;
-  }
-  .pressure-head .p-char {
-    display: inline-block;
-    will-change: font-variation-settings;
-    font-variation-settings: 'wght' 800, 'wdth' 100, 'ital' 0;
-  }
-  .pressure-head .p-space { display: inline-block; white-space: pre; }
-
-  /* ── Prompt 4: rolodex word flipper ── */
-  .rolo {
-    display: inline-block;
-    position: relative;
-    transform-style: preserve-3d;
-    perspective: 500px;
-    vertical-align: baseline;
-  }
-  .rolo-word {
-    display: inline-block;
-    white-space: nowrap;
-    transform-origin: 50% 60%;
-    backface-visibility: hidden;
-    transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease;
-    will-change: transform, opacity;
-  }
-  .rolo-word.pre { position: absolute; left: 0; top: 0; transform: rotateX(-90deg); opacity: 0; }
-  .rolo-word.on { position: relative; transform: rotateX(0deg); opacity: 1; }
-  .rolo-word.off { position: absolute; left: 0; top: 0; transform: rotateX(90deg); opacity: 0; }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hl-svg path { stroke-dashoffset: 0; }
-    .hl.drawn .hl-svg path { animation: none; }
-    .rolo-word { transition: none; }
-  }
-
-  /* ── Anatomy: sticky stacking cards — scroll-driven chapters, pure CSS ── */
-  .xstack { display: grid; gap: 5vh; }
-  .xcard {
-    position: sticky;
-    top: calc(10vh + var(--i) * 20px);
-    min-height: 56vh;
-    background: #101013;
-    border: 1px solid rgba(255,255,255,.09);
-    border-radius: 22px;
-    padding: clamp(1.6rem, 4vw, 3rem);
-    display: flex; flex-direction: column; justify-content: center;
-    box-shadow: 0 -18px 50px rgba(0,0,0,.5);
-  }
-  .xcard-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; margin-bottom: 1.4rem; }
-  .xnum {
-    font-family: "Archivo", sans-serif; font-stretch: 125%; font-weight: 800;
-    font-size: clamp(3.2rem, 7vw, 5.2rem); line-height: 1; letter-spacing: -0.04em;
-    color: rgba(255,255,255,.13);
-  }
-  .xtag {
-    font-size: 11px; font-weight: 500; letter-spacing: .16em; text-transform: uppercase;
-    color: rgba(255,255,255,.5); border: 1px solid rgba(255,255,255,.15);
-    border-radius: 999px; padding: .5rem .95rem; white-space: nowrap;
-  }
-  .xcard h3 { color: #fff; font-size: clamp(1.55rem, 3.2vw, 2.3rem); font-weight: 600; letter-spacing: -0.02em; margin-bottom: .7rem; }
-  .xcard p { color: rgba(255,255,255,.6); font-size: 15px; line-height: 1.7; max-width: 36rem; }
-  .xcard-final { border-color: rgba(52,211,153,.28); }
+  /* quiet link hovers: color only, fast */
+  a, button { transition: color .18s ease, border-color .18s ease, background-color .18s ease; }
 </style>
 <script type="application/ld+json">
 {
@@ -378,7 +75,7 @@
   "image": "https://www.daftrify.info/public/og-image.png",
   "email": "contact@daftrify.info",
   "telephone": "+92 318 7668851",
-  "description": "A specialized production desk that intakes complex document stacks and returns them structured, reconciled, and ready to submit.",
+  "description": "A one-desk document operation in Faisalabad, Pakistan. Send the raw document stack; get back an organized set, checked against its sources.",
   "address": {
     "@type": "PostalAddress",
     "addressLocality": "Faisalabad",
@@ -406,918 +103,375 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "What kinds of messy document stacks can I send to Daftrify?",
+      "name": "What kinds of document stacks can I send?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Anything document-heavy where accuracy is non-negotiable: multi-page PDF stacks, dense financial ledgers, contractor invoices, Excel tables, handwritten receipts, architectural drawing sets, tax bundles, compliance files, and recurring back-office documentation. You can send the material exactly as it exists — no renaming, no sorting, and no tidying required."
+        "text": "Anything document-heavy where accuracy matters: multi-page PDF stacks, scanned contracts, invoices and ledgers, Excel tables, drawings, tax bundles, compliance files. Send the material as it exists. No renaming, no sorting, no tidying required."
       }
     },
     {
       "@type": "Question",
-      "name": "How does the verification process work?",
+      "name": "How does the checking work?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Your stack is triaged, extracted and cross-checked file by file. Before anything leaves the desk, Ghulam Mustafa personally reviews the output against your originals — every value checked back against its source. Nothing is invented or hallucinated."
+        "text": "Your stack is read by hand and checked back against the source documents you provide. Anything that does not check out, or is missing, is listed up front in an exception register so you see it before anyone else does."
       }
     },
     {
       "@type": "Question",
-      "name": "How is my firm\u2019s confidentiality protected?",
+      "name": "Who handles my files?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Your material is treated as strictly confidential and used only for your file — never published, resold or shared. One person handles it from receipt to delivery, and once you\u2019ve accepted the dossier, the working files are removed on your confirmation."
+        "text": "One person: Ghulam Mustafa, the founder. Your file is handled at one desk from receipt to delivery."
       }
     },
     {
       "@type": "Question",
-      "name": "How are project turnaround times and pricing scoped?",
+      "name": "How is pricing decided?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Initial triage readouts are returned promptly, most within a day. Pricing is scoped transparently by the actual set: volume of sheets, source material clarity, cross-reference density, and deadline urgency. There are no surprise retainers or generic inflated cards — you receive an honest fixed quotation after we inspect the stack."
+        "text": "Every stack is different, so pricing is per project. Send your files and you get a quote before any work starts."
       }
     },
     {
       "@type": "Question",
-      "name": "What exact final deliverables do I receive upon completion?",
+      "name": "How long does it take?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "You receive one structured, indexed package: an upfront Exception Register itemizing every variance or missing gap, reconciled cross-tables, highlighted PDF callouts, and clean export sheets. Everything is audit-ready and pre-formatted for direct submission to legal counsel, banks, or regulatory authorities."
+        "text": "It depends on the size and condition of the stack. After a first look, you get a firm time estimate, agreed up front."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What do I get back?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "One organized package: the checked set, an exception register listing the variances and gaps found, and clean export sheets of the reconciled tables."
       }
     }
   ]
 }
 </script>
-<noscript><style>
-  .animate-blur-fade-up { opacity: 1 !important; }
-  .hero-line > span { transform: none !important; }
-  .rv { opacity: 1 !important; transform: none !important; filter: none !important; }
-  .hanim { --p: 1 !important; }
-</style></noscript>
+<noscript><style>.rv { opacity: 1 !important; transform: none !important; }</style></noscript>
 </head>
-<body class="bg-black text-white antialiased">
-<div id="introLoader" aria-hidden="true">
-  <div class="intro-mark">DAFTRIFY</div>
-  <div class="intro-line"><span></span></div>
-</div>
+<body class="bg-[#0a0a0b] text-white antialiased" id="top">
 <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-3 focus:top-3 focus:z-[100] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-medium focus:text-black">Skip to content</a>
-
-<!-- film grain: the 2026 premium-dark finish -->
 <div class="grain" aria-hidden="true"></div>
 
-<!-- ══════════════════════ CINEMATIC HERO (Taste-Grade Desk Architecture) ══════════════════════ -->
-<div class="relative flex min-h-dvh flex-col justify-between overflow-hidden bg-black text-white">
-
-  <!-- background video with subtle cinematic gradient overlay -->
-  <video id="bgVideo" preload="auto" class="absolute inset-0 z-0 h-full w-full object-cover opacity-80"
-    autoPlay muted loop playsInline preload="auto" tabindex="-1" aria-hidden="true"
-    src="https://videos.pexels.com/video-files/7054942/7054942-uhd_3840_2160_24fps.mp4"></video>
-
-  <!-- ambient glow field: slow-drifting light above the video, below the veil -->
-  <div class="pointer-events-none absolute inset-0 z-[1] overflow-hidden" aria-hidden="true">
-    <div class="orb orb-a"></div>
-    <div class="orb orb-b"></div>
-  </div>
-
-  <!-- multi-layer cinematic gradient veil -->
-  <div class="pointer-events-none absolute inset-0 z-[1] bg-gradient-to-t from-black via-black/60 to-black/30 backdrop-blur-[2px]" aria-hidden="true"></div>
-  <div class="bottom-blur-mask pointer-events-none absolute inset-x-0 bottom-0 h-48 z-[2] backdrop-blur-xl" aria-hidden="true"></div>
-
-  <!-- mobile menu dropdown -->
-  <div id="mobile-menu" class="absolute inset-x-0 top-[72px] z-40 border-t border-b border-white/10 bg-black/95 shadow-2xl backdrop-blur-xl transition-all duration-500 ease-out lg:hidden pointer-events-none -translate-y-4 opacity-0">
-    <nav class="flex flex-col gap-1 px-4 py-4 sm:px-6" aria-label="Mobile">
-      <a href="#services" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Services</a>
-      <a href="#pipeline" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Tool Stack</a>
-      <a href="#process" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Process</a>
-      <a href="#principles" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Principles</a>
-      <a href="#about" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Our Team</a>
-      <a href="#faq" class="mmob rounded-lg px-3 py-3 text-sm transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">FAQ</a>
-      <a href="#start" class="mmob rounded-lg px-3 py-3 text-sm font-semibold text-emerald-400 transition-all duration-500 ease-out hover:bg-white/10 -translate-x-4 opacity-0">Start a file</a>
-    </nav>
-    <div class="flex items-center gap-3 border-t border-white/10 px-4 py-4 sm:hidden">
-      <a href="#start" class="mmob liquid-glass flex items-center gap-2 rounded-full px-4 py-2 text-sm">
-        <i data-lucide="folder-up" style="width:16px;height:16px"></i><span>Send Stack</span>
-      </a>
-      <a href="#about" class="mmob liquid-glass flex h-10 w-10 shrink-0 items-center justify-center rounded-full" aria-label="Our Team">
-        <i data-lucide="user" style="width:16px;height:16px"></i>
-      </a>
-    </div>
-  </div>
-
-  <!-- navbar -->
-  <header class="relative z-50 flex items-center justify-between px-4 py-4 sm:px-6 md:px-12 md:py-6">
-    <a href="#top" aria-label="DAFTRIFY — home" class="animate-blur-fade-up flex h-8 items-center gap-2.5 md:h-10" style="animation-delay: 0ms">
-      <img src="/public/assets/brand/daftrify-fold-d.svg" alt="" width="30" height="33" class="h-7 w-auto md:h-8" />
-      <span class="text-lg font-light leading-none tracking-[0.35em] md:text-xl">DAFTRI<span class="font-semibold">FY</span></span>
+<!-- ══════════ HEADER ══════════ -->
+<header class="border-b rule">
+  <div class="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 sm:px-8">
+    <a href="#top" class="flex items-center gap-2.5" aria-label="DAFTRIFY — home">
+      <img src="/public/assets/brand/daftrify-fold-d.svg" alt="" width="28" height="31" class="h-7 w-auto" />
+      <span class="text-base font-light tracking-[0.32em]">DAFTRI<span class="font-semibold">FY</span></span>
     </a>
-
-    <nav class="hidden items-center gap-8 lg:flex" aria-label="Primary">
-      <a href="#services" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Services</a>
-      <a href="#pipeline" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Tool Stack</a>
-      <a href="#process" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Process</a>
-      <a href="#principles" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Principles</a>
-      <a href="#about" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">Our Team</a>
-      <a href="#faq" class="animate-blur-fade-up text-sm text-white/80 transition-colors hover:text-white" style="animation-delay: 0ms">FAQ</a>
-      <a href="#start" class="animate-blur-fade-up text-sm font-medium text-emerald-400 transition-colors hover:text-emerald-300" style="animation-delay: 0ms">Start a file &rarr;</a>
+    <nav class="hidden items-center gap-7 md:flex" aria-label="Primary">
+      <a href="#how" class="text-sm text-white/60 hover:text-white">How it works</a>
+      <a href="#scope" class="text-sm text-white/60 hover:text-white">Scope</a>
+      <a href="#desk" class="text-sm text-white/60 hover:text-white">The desk</a>
+      <a href="#faq" class="text-sm text-white/60 hover:text-white">FAQ</a>
+      <a href="#start" class="rounded-full border border-white/20 px-4 py-1.5 text-sm text-white hover:border-white/60">Start a file</a>
     </nav>
+    <button id="menuBtn" type="button" class="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 md:hidden" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+      <i data-lucide="menu" style="width:18px;height:18px"></i>
+    </button>
+  </div>
+  <div id="mobileMenu" class="hidden border-t rule md:hidden">
+    <nav class="flex flex-col px-5 py-3" aria-label="Mobile">
+      <a href="#how" class="border-b rule py-3 text-sm text-white/70">How it works</a>
+      <a href="#scope" class="border-b rule py-3 text-sm text-white/70">Scope</a>
+      <a href="#desk" class="border-b rule py-3 text-sm text-white/70">The desk</a>
+      <a href="#faq" class="border-b rule py-3 text-sm text-white/70">FAQ</a>
+      <a href="#start" class="py-3 text-sm font-medium text-white">Start a file</a>
+    </nav>
+  </div>
+</header>
 
-    <div class="flex items-center gap-3">
-      <a href="#start" class="liquid-glass animate-blur-fade-up hidden items-center gap-2 rounded-full px-4 py-2 text-xs font-mono tracking-tight sm:flex md:px-5" style="animation-delay: 0ms">
-        <span class="h-2 w-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>DESK LIVE</span>
-      </a>
-      <a href="#about" class="liquid-glass animate-blur-fade-up hidden h-10 w-10 items-center justify-center rounded-full sm:flex" style="animation-delay: 0ms" aria-label="Desk Team">
-        <i data-lucide="user" style="width:18px;height:18px"></i>
-      </a>
-      <button id="menuBtn" type="button" class="liquid-glass animate-blur-fade-up relative flex h-10 w-10 items-center justify-center rounded-full lg:hidden" style="animation-delay: 0ms" aria-expanded="false" aria-controls="mobile-menu" aria-label="Open menu">
-        <i data-lucide="menu" style="width:18px;height:18px" class="hicon absolute transition-all duration-500 ease-out rotate-0 scale-100 opacity-100"></i>
-        <i data-lucide="x" style="width:18px;height:18px" class="xicon absolute transition-all duration-500 ease-out -rotate-180 scale-50 opacity-0"></i>
-      </button>
-    </div>
-  </header>
-
-  <!-- hero: centered, Linear-style — one idea, one dossier -->
-  <main id="main" class="relative z-10 flex flex-1 flex-col justify-center px-4 py-10 sm:px-6 md:px-12 md:py-14">
-    <div class="mx-auto w-full max-w-5xl text-center">
-
-      <!-- eyebrow -->
-      <div class="animate-blur-fade-up mb-6 flex justify-center" style="animation-delay: 80ms">
-        <div class="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-950/40 px-4 py-1.5 font-mono text-[11px] uppercase tracking-wider text-emerald-300 backdrop-blur-md">
-          <span class="relative flex h-2 w-2">
-            <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
-            <span class="relative inline-flex h-2 w-2 rounded-full bg-emerald-500"></span>
-          </span>
-          <span class="font-semibold">Desk active &middot; Accepting stacks</span>
-        </div>
-      </div>
-
-      <h1 id="heroHeadline" class="mb-6 text-5xl font-medium tracking-[-0.045em] leading-[0.98] text-white sm:text-7xl md:text-[6.5rem]" aria-label="Send the mess. Get the dossier.">
-        <span class="hero-line" aria-hidden="true"><span>Send the mess.</span></span>
-        <span class="hero-line" aria-hidden="true"><span>Get the <em class="serif-line text-emerald-300">dossier.</em></span></span>
-      </h1>
-
-      <p class="animate-blur-fade-up mx-auto mb-8 max-w-2xl text-base leading-relaxed text-zinc-300 sm:text-lg" style="animation-delay: 220ms">
-        Daftrify takes your raw, inconsistent document stacks and returns them verified, exception-flagged, and presentation-ready &mdash; ready for clients, auditors, and bid committees.
+<!-- ══════════ HERO ══════════ -->
+<main id="main">
+<section class="border-b rule">
+  <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+    <div class="max-w-3xl">
+      <p class="rv mb-6 flex items-center gap-2 text-xs text-white/45">
+        <span class="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400"></span>
+        Document operations desk &middot; Faisalabad, Pakistan
       </p>
-
-      <div class="animate-blur-fade-up flex flex-wrap items-center justify-center gap-3 sm:gap-4" style="animation-delay: 300ms">
-        <a href="#start" class="inline-flex items-center gap-2.5 rounded-full bg-white px-7 py-3.5 text-sm font-semibold text-black transition-all hover:bg-zinc-200 hover:shadow-xl hover:shadow-white/10 active:scale-[0.98]">
-          <i data-lucide="folder-up" style="width:17px;height:17px" class="text-black"></i>
-          <span>Start a file</span>
-        </a>
-        <a href="#transformation" class="liquid-glass inline-flex items-center gap-2 rounded-full px-6 py-3.5 text-sm font-medium text-white transition-all hover:bg-white/10 active:scale-[0.98]">
-          <span>See the proof</span>
-          <i data-lucide="chevron-down" style="width:16px;height:16px" class="text-white/70"></i>
-        </a>
+      <h1 class="rv font-display text-4xl font-semibold leading-[1.05] tracking-tight sm:text-6xl" style="transition-delay:60ms">Send the mess.<br />Get the dossier.</h1>
+      <p class="rv mt-6 max-w-xl text-base leading-relaxed text-white/60 sm:text-lg" style="transition-delay:120ms">Daftrify is a one-desk document operation. You send the raw stack, as it is. It comes back organized, checked against its sources, with everything that did not check out listed up front.</p>
+      <div class="rv mt-8 flex flex-wrap items-center gap-4" style="transition-delay:180ms">
+        <a href="#start" class="rounded-full bg-white px-6 py-3 text-sm font-medium text-black hover:bg-zinc-200">Start a file</a>
+        <a href="#how" class="text-sm text-white/60 underline underline-offset-4 hover:text-white">How a file moves</a>
       </div>
-
-      <div class="animate-blur-fade-up mt-6 flex flex-wrap items-center justify-center gap-x-4 gap-y-1.5 font-mono text-[11px] tracking-tight text-white/50" style="animation-delay: 360ms">
-        <span class="flex items-center gap-1.5">
-          <i data-lucide="lock" style="width:13px;height:13px" class="text-emerald-400"></i>
-          Zero login required
-        </span>
-        <span class="text-white/20">&bull;</span>
-        <span>Confidential one-desk handling</span>
-        <span class="text-white/20">&bull;</span>
-        <span>Direct partner review</span>
-      </div>
-
-      <!-- the product shot: a verified dossier, fresh off the desk -->
-      <div class="animate-blur-fade-up relative mx-auto mt-14 max-w-3xl" style="animation-delay: 440ms">
-        <div class="pointer-events-none absolute -inset-8 rounded-[2rem] bg-emerald-400/[0.07] blur-[70px]" aria-hidden="true"></div>
-        <div class="hero-dossier relative overflow-hidden rounded-2xl border border-white/10 bg-[#0a0f0d]/90 text-left shadow-2xl shadow-black/60 backdrop-blur-xl">
-          <div class="flex items-center gap-2 border-b border-white/10 px-4 py-3">
-            <span class="h-2.5 w-2.5 rounded-full bg-white/15"></span>
-            <span class="h-2.5 w-2.5 rounded-full bg-white/15"></span>
-            <span class="h-2.5 w-2.5 rounded-full bg-white/15"></span>
-            <span class="ml-3 truncate font-mono text-[11px] text-white/40">daftrify.info/dossier/Q3-vendor-pack</span>
-            <span class="ml-auto inline-flex shrink-0 items-center gap-1.5 rounded-full border border-emerald-500/30 bg-emerald-950/50 px-2.5 py-1 font-mono text-[10px] uppercase tracking-wider text-emerald-300">
-              <i data-lucide="badge-check" style="width:12px;height:12px"></i>Verified
-            </span>
-          </div>
-          <div class="space-y-1 px-3 py-3 sm:px-4">
-            <div class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-white/[0.03]">
-              <i data-lucide="check" style="width:16px;height:16px" class="shrink-0 text-emerald-400"></i>
-              <span class="text-sm text-white/85">Invoice INV-2041</span>
-              <span class="ml-auto font-mono text-[11px] text-white/40">Matched</span>
-            </div>
-            <div class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-white/[0.03]">
-              <i data-lucide="check" style="width:16px;height:16px" class="shrink-0 text-emerald-400"></i>
-              <span class="text-sm text-white/85">Purchase order PO-8823</span>
-              <span class="ml-auto font-mono text-[11px] text-white/40">Matched</span>
-            </div>
-            <div class="flex items-center gap-3 rounded-lg border border-amber-400/20 bg-amber-400/[0.05] px-3 py-2.5">
-              <i data-lucide="alert-triangle" style="width:16px;height:16px" class="shrink-0 text-amber-300"></i>
-              <span class="text-sm text-white/85">Drawing A-117</span>
-              <span class="ml-auto font-mono text-[11px] text-amber-300/90">Exception &middot; revision mismatch</span>
-            </div>
-            <div class="flex items-center gap-3 rounded-lg px-3 py-2.5 transition-colors hover:bg-white/[0.03]">
-              <i data-lucide="check" style="width:16px;height:16px" class="shrink-0 text-emerald-400"></i>
-              <span class="text-sm text-white/85">Q3 ledger</span>
-              <span class="ml-auto font-mono text-[11px] text-white/40">Reconciled</span>
-            </div>
-            <div class="flex items-center gap-3 rounded-lg border border-amber-400/20 bg-amber-400/[0.05] px-3 py-2.5">
-              <i data-lucide="alert-triangle" style="width:16px;height:16px" class="shrink-0 text-amber-300"></i>
-              <span class="text-sm text-white/85">Tax certificate</span>
-              <span class="ml-auto font-mono text-[11px] text-amber-300/90">Exception &middot; expired</span>
-            </div>
-          </div>
-          <div class="flex flex-wrap items-center gap-x-5 gap-y-1 border-t border-white/10 px-4 py-3.5 font-mono text-[11px] text-white/50 sm:px-6">
-            <span><span class="text-white/85">214</span> fields verified</span>
-            <span><span class="text-amber-300/90">3</span> exceptions flagged</span>
-            <span class="ml-auto text-white/40">&lt;24h turnaround</span>
-          </div>
-        </div>
-      </div>
-
     </div>
-  </main>
+  </div>
+</section>
 
-  <!-- ══════════════════════ PRODUCTION STACK LOGO RIBBON ══════════════════════ -->
-  <div id="pipeline" class="relative z-20 border-t border-b border-white/10 bg-black/90 py-5 backdrop-blur-md overflow-hidden">
-    <div class="pointer-events-none absolute inset-0" aria-hidden="true">
-      <div class="absolute left-1/2 top-1/2 h-[110px] w-[560px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-emerald-400/[0.07] blur-[70px]"></div>
-    </div>
-    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-12 flex flex-col lg:flex-row items-center gap-4 lg:gap-10">
-      <div class="flex items-center gap-2 font-mono text-[11px] uppercase tracking-wider text-white/40 shrink-0">
-        <i data-lucide="layers" style="width:14px;height:14px" class="text-emerald-400"></i>
-        <span>Enterprise Processing Stack:</span>
+<!-- ══════════ HOW A FILE MOVES ══════════ -->
+<section id="how" class="border-b rule">
+  <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+    <div class="grid gap-10 md:grid-cols-[1fr_2fr] md:gap-16">
+      <div class="rv">
+        <h2 class="font-display text-2xl font-semibold tracking-tight sm:text-3xl">How a file moves</h2>
+        <p class="mt-3 text-sm leading-relaxed text-white/55">Four passes. One pair of eyes. Nothing skipped, nothing assumed.</p>
       </div>
-      
-      <div class="stack-marquee relative w-full flex-1 overflow-hidden">
-        <div class="stack-track">
-          <div class="stack-set">
-        
-        <!-- Alteryx Logo with Label -->
-        <div class="stack-logo flex items-center gap-2.5" style="--glow: rgba(0,132,255,.55)">
-          <svg class="h-5 w-5" role="img" viewBox="0 0 24 24" fill="#0084FF" xmlns="http://www.w3.org/2000/svg">
-            <path d="m2.312 13.2-.014.01-.014.008a1.796 1.796 0 0 1-.943.293C.886 13.5.72 13.34.71 12.9c.01-.504.178-.66.747-.695l.785-.037.035-.002h.034V13.2zm1.429.248a.185.185 0 0 0-.182-.137.37.37 0 0 0-.072.009c-.121.03-.189.038-.282.045-.178.008-.21-.061-.22-.26v-2.732a.24.24 0 0 0-.088-.164l-.017-.012c-.006-.004-.012-.01-.02-.014-.148-.087-.394-.157-.604-.21l-.015-.005a3.437 3.437 0 0 0-1.158-.072c-.12.012-.442.065-.55.102-.032.01-.133.059-.137.155.002.05.058.21.058.21.037.111.076.138.146.153.057.006.18-.02.261-.033a2.726 2.726 0 0 1 .922-.032c.357.055.494.165.494.165v1.06l-.031.001-.762.02c-1.02.032-1.49.436-1.484 1.25-.001.37.115.667.335.858.205.18.506.276.868.276h.001a1.73 1.73 0 0 0 1.122-.404l.033-.026.017.038a.611.611 0 0 0 .423.355 1.172 1.172 0 0 0 .412.031c.117-.016.271-.037.443-.118.095-.045.162-.1.157-.2a2.037 2.037 0 0 0-.07-.309zm11.261.614h-.37a.177.177 0 0 1-.135-.051c-.03-.035-.043-.082-.043-.146v-3.51c-.003-.066.014-.114.048-.146.03-.03.073-.043.132-.043h.335c.063 0 .105.013.138.04.033.028.051.075.05.13l.004.094.003.079.053-.058a1.103 1.103 0 0 1 1.048-.347c.07.013.096.083.09.12 0 .019 0 .033-.002.046l-.056.354a.116.116 0 0 1-.107.107.618.618 0 0 1-.095-.01c-.04-.006-.085-.014-.165-.014-.26 0-.549.171-.742.438l-.006.008v2.712c0 .06-.015.108-.045.142a.174.174 0 0 1-.135.055zm-2.287-2.375h-1.702c.024-.858.351-1.21.89-1.21.524 0 .82.288.82.961 0 .053 0 .187-.008.25zm-.796-1.756c-.953 0-1.67.663-1.67 2.17 0 1.382.647 2.06 1.865 2.06.193 0 .422-.022.64-.067.035-.006.07-.015.105-.023a2.45 2.45 0 0 0 .33-.12c.076-.029.135-.088.139-.161a3.34 3.34 0 0 0-.08-.33c-.03-.073-.096-.119-.163-.115-.023 0-.35.071-.37.077a2.406 2.406 0 0 1-.586.077c-.866 0-1.124-.414-1.124-1.266v-.062h2.27a.143.143 0 0 0 .128-.125l.002-.03c.008-.148.013-.305.013-.43 0-1.047-.508-1.655-1.5-1.655zm5.371 5.712h-.025c-.134 0-.244-.01-.352-.031-.067-.012-.092-.099-.078-.217 0 0 .008-.126.027-.215.017-.09.06-.132.108-.132h.014l.037.002c.021.001.052.005.081.008.066.007.133.014.186.014.442-.005.681-.167.85-.577l.204-.498.02-.053.007-.022-.007-.023-1.363-3.604a.133.133 0 0 1-.008-.047.09.09 0 0 1 .02-.06.09.09 0 0 1 .065-.027h.517c.075 0 .13.04.147.098l.898 2.58.06.174.061-.173.927-2.562a.152.152 0 0 1 .146-.118h.004l.014.001h.428c.035 0 .06.007.078.021a.07.07 0 0 1 .024.055.186.186 0 0 1-.013.066l-1.525 4.09c-.332.911-.752 1.25-1.552 1.25z"/>
-          </svg>
-          <span class="text-xs font-medium text-white/90">Alteryx</span>
-        </div>
-
-        <!-- Adobe Acrobat Logo with Label -->
-        <div class="stack-logo flex items-center gap-2.5" style="--glow: rgba(255,45,45,.5)">
-          <svg class="h-5 w-5 rounded" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <rect width="24" height="24" rx="4" fill="#FF0000"/>
-            <path d="M7 17.5C7.8 17.5 8.9 16.8 9.8 15.3C11.3 14.8 13.5 14.3 15.2 14.2C16.4 15 17.3 15.2 18 15.2C18.6 15.2 19 14.9 19 14.4C19 13.7 18 13.2 16.5 13.2C15.8 13.2 15 13.3 14.1 13.5C13.6 12.7 12.8 11.4 12.3 9.8C12.5 8.8 12.6 7.9 12.6 7.2C12.6 6.3 12.3 5.8 11.7 5.8C11.3 5.8 11 6.1 10.9 6.6C10.7 7.7 11 9.4 11.7 11.3C10.6 12.9 9.3 14.5 8.2 15.4C7.5 16 7 16.7 7 17.5Z" fill="white"/>
-          </svg>
-          <span class="text-xs font-medium text-white/90">Adobe Acrobat</span>
-        </div>
-
-        <!-- Google Gemini with Label -->
-        <div class="stack-logo flex items-center gap-2.5" style="--glow: rgba(78,130,238,.55)">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M11.04 19.32Q12 21.51 12 24q0-2.49.93-4.68.96-2.19 2.58-3.81t3.81-2.55Q21.51 12 24 12q-2.49 0-4.68-.93a12.3 12.3 0 0 1-3.81-2.58 12.3 12.3 0 0 1-2.58-3.81Q12 2.49 12 0q0 2.49-.96 4.68-.93 2.19-2.55 3.81a12.3 12.3 0 0 1-3.81 2.58Q2.49 12 0 12q2.49 0 4.68.96 2.19.93 3.81 2.55t2.55 3.81" fill="#4E82EE"/>
-          </svg>
-          <span class="text-xs font-medium text-white/90">Google Gemini</span>
-        </div>
-
-        <!-- Zapier with Label -->
-        <div class="stack-logo flex items-center gap-2.5" style="--glow: rgba(255,74,0,.55)">
-          <svg class="h-4 w-4" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill="#FF4A00" d="M128.08 0c7.231.013 14.343.624 21.256 1.78V76.3l52.831-52.696a128.425 128.425 0 0 1 16.34 13.789a128.468 128.468 0 0 1 13.84 16.312L179.513 106.4h74.715A127.58 127.58 0 0 1 256 127.587v.173c0 7.226-.613 14.306-1.772 21.2H179.5l52.847 52.682a129.615 129.615 0 0 1-13.824 16.312h-.015a128.254 128.254 0 0 1-16.326 13.789l-52.846-52.696v74.52a130.321 130.321 0 0 1-21.243 1.781h-.186a130.26 130.26 0 0 1-21.23-1.78v-74.52l-52.831 52.695a128.401 128.401 0 0 1-30.18-30.1L76.5 148.96H1.785A126.984 126.984 0 0 1 0 127.72v-.371c.012-1.875.135-4.166.311-6.536l.055-.713c.522-6.671 1.419-13.7 1.419-13.7H76.5L23.666 53.705a126.265 126.265 0 0 1 13.81-16.286l.026-.026a127.746 127.746 0 0 1 16.344-13.789L106.677 76.3V1.78A130.278 130.278 0 0 1 127.933 0h.147Zm-.013 95.76h-.122a76.718 76.718 0 0 0-27.034 4.902a76.662 76.662 0 0 0-4.915 26.952v.12a76.383 76.383 0 0 0 4.927 26.951a76.608 76.608 0 0 0 27.022 4.902h.122c9.51 0 18.617-1.74 27.022-4.902a76.146 76.146 0 0 0 4.915-26.952v-.12c0-9.484-1.747-18.57-4.915-26.951a76.614 76.614 0 0 0-27.022-4.902Z"/>
-          </svg>
-          <span class="text-xs font-medium text-white/90">Zapier</span>
-        </div>
-
-        <!-- n8n with Label -->
-        <div class="stack-logo flex items-center gap-2.5" style="--glow: rgba(234,75,113,.55)">
-          <svg class="h-5 w-5" viewBox="0 0 24 24" fill="#EA4B71" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21.4737 5.6842c-1.1772 0-2.1663.8051-2.4468 1.8947h-2.8955c-1.235 0-2.289.893-2.492 2.111l-.1038.623a1.263 1.263 0 0 1-1.246 1.0555H11.289c-.2805-1.0896-1.2696-1.8947-2.4468-1.8947s-2.1663.8051-2.4467 1.8947H4.973c-.2805-1.0896-1.2696-1.8947-2.4468-1.8947C1.1311 9.4737 0 10.6047 0 12s1.131 2.5263 2.5263 2.5263c1.1772 0 2.1663-.8051 2.4468-1.8947h1.4223c.2804 1.0896 1.2696 1.8947 2.4467 1.8947 1.1772 0 2.1663-.8051 2.4468-1.8947h1.0008a1.263 1.263 0 0 1 1.2459 1.0555l.1038.623c.203 1.218 1.257 2.111 2.492 2.111h.3692c.2804 1.0895 1.2696 1.8947 2.4468 1.8947 1.3952 0 2.5263-1.131 2.5263-2.5263s-1.131-2.5263-2.5263-2.5263c-1.1772 0-2.1664.805-2.4468 1.8947h-.3692a1.263 1.263 0 0 1-1.246-1.0555l-.1037-.623A2.52 2.52 0 0 0 13.9607 12a2.52 2.52 0 0 0 .821-1.4794l.1038-.623a1.263 1.263 0 0 1 1.2459-1.0555h2.8955c.2805 1.0896 1.2696 1.8947 2.4468 1.8947 1.3952 0 2.5263-1.131 2.5263-2.5263s-1.131-2.5263-2.5263-2.5263m0 1.2632a1.263 1.263 0 0 1 1.2631 1.2631 1.263 1.263 0 0 1-1.2631 1.2632 1.263 1.263 0 0 1-1.2632-1.2632 1.263 1.263 0 0 1 1.2632-1.2631M2.5263 10.7368A1.263 1.263 0 0 1 3.7895 12a1.263 1.263 0 0 1-1.2632 1.2632A1.263 1.263 0 0 1 1.2632 12a1.263 1.263 0 0 1 1.2631-1.2632m6.3158 0A1.263 1.263 0 0 1 10.1053 12a1.263 1.263 0 0 1-1.2632 1.2632A1.263 1.263 0 0 1 7.579 12a1.263 1.263 0 0 1 1.2632-1.2632m10.1053 3.7895a1.263 1.263 0 0 1 1.2631 1.2632 1.263 1.263 0 0 1-1.2631 1.2631 1.263 1.263 0 0 1-1.2632-1.2631 1.263 1.263 0 0 1 1.2632-1.2632"/>
-          </svg>
-          <span class="text-xs font-medium text-white/90">n8n nodes</span>
-        </div>
+      <div class="rv" style="transition-delay:80ms">
+        <div class="border-t rule">
+          <div class="grid gap-2 border-b rule py-5 sm:grid-cols-[120px_1fr] sm:gap-6">
+            <p class="text-sm font-medium text-white">Send</p>
+            <p class="text-sm leading-relaxed text-white/55">Send the stack exactly as it exists. No renaming, no sorting, no tidying. A short note on what it is and what it is for helps.</p>
+          </div>
+          <div class="grid gap-2 border-b rule py-5 sm:grid-cols-[120px_1fr] sm:gap-6">
+            <p class="text-sm font-medium text-white">Read</p>
+            <p class="text-sm leading-relaxed text-white/55">Every file is read by hand, page by page. What the stack contains, and what condition it is in, gets mapped first.</p>
+          </div>
+          <div class="grid gap-2 border-b rule py-5 sm:grid-cols-[120px_1fr] sm:gap-6">
+            <p class="text-sm font-medium text-white">Check</p>
+            <p class="text-sm leading-relaxed text-white/55">Values are checked back against the source documents you provided. Gaps, mismatches, and unreadable pages go into an exception register.</p>
+          </div>
+          <div class="grid gap-2 border-b rule py-5 sm:grid-cols-[120px_1fr] sm:gap-6">
+            <p class="text-sm font-medium text-white">Return</p>
+            <p class="text-sm leading-relaxed text-white/55">You get one organized package back. The checked set, the exception register up front, and clean exports of the reconciled tables.</p>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</section>
 
-<!-- ══════════════════════ TRUST MARQUEE ══════════════════════ -->
-<p class="bg-black border-t border-gray-800 text-center text-white/50 text-[11px] tracking-[0.25em] uppercase pt-10">Stacks we take off your desk</p>
-<div class="border-b border-gray-800 bg-black py-4 overflow-hidden" aria-hidden="true">
-  <div class="marquee-track flex w-max items-center whitespace-nowrap">
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="file-text" style="width:15px;height:15px"></i>Contracts</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="receipt" style="width:15px;height:15px"></i>Invoices</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="table-2" style="width:15px;height:15px"></i>Ledgers</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="id-card" style="width:15px;height:15px"></i>Identity</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="clipboard-list" style="width:15px;height:15px"></i>Forms</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="mail" style="width:15px;height:15px"></i>Correspondence</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="file-check" style="width:15px;height:15px"></i>Statements</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="archive" style="width:15px;height:15px"></i>Records</span>
-    <!-- duplicate for seamless loop -->
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="file-text" style="width:15px;height:15px"></i>Contracts</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="receipt" style="width:15px;height:15px"></i>Invoices</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="table-2" style="width:15px;height:15px"></i>Ledgers</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="id-card" style="width:15px;height:15px"></i>Identity</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="clipboard-list" style="width:15px;height:15px"></i>Forms</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="mail" style="width:15px;height:15px"></i>Correspondence</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="file-check" style="width:15px;height:15px"></i>Statements</span>
-    <span class="flex items-center gap-3 text-xs tracking-[0.2em] uppercase text-white/40"><i data-lucide="archive" style="width:15px;height:15px"></i>Records</span>
-  </div>
-</div>
-
-<!-- ══════════════════════ BEFORE / AFTER — the transformation ══════════════════════ -->
-<section id="transformation" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
-  <div class="max-w-6xl mx-auto">
-    <div class="rv mb-12 sm:mb-16 text-center">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">The transformation</p>
-      <h2 data-hanim="reveal-x" class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05]">From this <span class="text-white/60">&rarr; to this.</span></h2>
-      <p class="text-white/50 text-xs mt-5 tracking-wide">Illustrated sample &mdash; your stack, same treatment.</p>
-    </div>
-    <div class="grid lg:grid-cols-[1fr_auto_1fr] gap-5 items-stretch max-w-5xl mx-auto">
-      <!-- RAW -->
-      <div class="rv rounded-2xl border border-white/10 bg-white/[0.02] p-6 sm:p-7">
-        <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-white/40 mb-6 flex items-center gap-2"><i data-lucide="folder-open" style="width:14px;height:14px"></i>Raw stack</p>
-        <ul class="space-y-3 text-sm">
-          <li class="flex items-center gap-3 text-white/55"><i data-lucide="file-warning" class="text-amber-300/80 shrink-0" style="width:16px;height:16px"></i><span class="font-mono text-[13px]">scan_0047.pdf</span><span class="ml-auto text-[11px] text-white/45">skewed</span></li>
-          <li class="flex items-center gap-3 text-white/55"><i data-lucide="file-warning" class="text-amber-300/80 shrink-0" style="width:16px;height:16px"></i><span class="font-mono text-[13px]">IMG_2291.jpg</span><span class="ml-auto text-[11px] text-white/45">blurry</span></li>
-          <li class="flex items-center gap-3 text-white/55"><i data-lucide="file-warning" class="text-amber-300/80 shrink-0" style="width:16px;height:16px"></i><span class="font-mono text-[13px]">ledger-Q3-final(2).xlsx</span><span class="ml-auto text-[11px] text-white/45">unsorted</span></li>
-          <li class="flex items-center gap-3 text-white/55"><i data-lucide="file-warning" class="text-amber-300/80 shrink-0" style="width:16px;height:16px"></i><span class="font-mono text-[13px]">contract-FINAL-v3.pdf</span><span class="ml-auto text-[11px] text-white/45">unsigned?</span></li>
-          <li class="flex items-center gap-3 text-white/55"><i data-lucide="file-warning" class="text-amber-300/80 shrink-0" style="width:16px;height:16px"></i><span class="font-mono text-[13px]">misc-pages.zip</span><span class="ml-auto text-[11px] text-white/45">24 files</span></li>
+<!-- ══════════ SCOPE ══════════ -->
+<section id="scope" class="border-b rule">
+  <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+    <div class="grid gap-10 md:grid-cols-[1fr_2fr] md:gap-16">
+      <div class="rv">
+        <h2 class="font-display text-2xl font-semibold tracking-tight sm:text-3xl">What the desk takes</h2>
+        <p class="mt-3 text-sm leading-relaxed text-white/55">If it lives on paper or on a drive, and accuracy matters, it belongs here.</p>
+      </div>
+      <div class="rv" style="transition-delay:80ms">
+        <ul class="grid gap-x-8 sm:grid-cols-2">
+          <li class="border-t rule py-4 text-sm text-white/75">Multi-page PDF stacks</li>
+          <li class="border-t rule py-4 text-sm text-white/75">Scanned contracts</li>
+          <li class="border-t rule py-4 text-sm text-white/75">Invoices and ledgers</li>
+          <li class="border-t rule py-4 text-sm text-white/75">Excel tables</li>
+          <li class="border-t rule py-4 text-sm text-white/75">Technical drawings</li>
+          <li class="border-t rule py-4 text-sm text-white/75">Tax bundles</li>
+          <li class="border-t rule py-4 text-sm text-white/75">Compliance files</li>
+          <li class="border-t rule py-4 text-sm text-white/75">Back-office documentation</li>
         </ul>
+        <p class="mt-6 border-t rule pt-4 text-sm leading-relaxed text-white/45">Something unusual? Describe it in the intake form. If it cannot be done properly, you will hear that plainly.</p>
       </div>
-      <!-- ARROW -->
-      <div class="rv flex lg:flex-col items-center justify-center gap-3 text-white/45" style="--d:120ms">
-        <span class="hidden lg:block h-16 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent"></span>
-        <i data-lucide="arrow-right" class="lg:rotate-0 rotate-90 text-emerald-300" style="width:22px;height:22px"></i>
-        <span class="hidden lg:block h-16 w-px bg-gradient-to-b from-transparent via-white/30 to-transparent"></span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ THE DESK ══════════ -->
+<section id="desk" class="border-b rule">
+  <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+    <div class="grid items-start gap-10 md:grid-cols-[240px_1fr] md:gap-16">
+      <div class="rv">
+        <img src="/public/founder.png" alt="Ghulam Mustafa, founder of Daftrify" width="480" height="480" class="aspect-square w-full max-w-[240px] rounded-xl border rule object-cover" loading="lazy" />
       </div>
-      <!-- VERIFIED -->
-      <div class="rv rounded-2xl border border-emerald-300/20 bg-emerald-300/[0.03] p-6 sm:p-7 shadow-[0_0_60px_-15px_rgba(52,211,153,0.25)]" style="--d:200ms">
-        <p class="font-mono text-[11px] uppercase tracking-[0.2em] text-emerald-300/90 mb-6 flex items-center gap-2"><i data-lucide="file-check-2" style="width:14px;height:14px"></i>Dossier · DF-2026-118</p>
-        <ul class="space-y-3 text-sm">
-          <li class="flex items-center gap-3 text-white/80"><i data-lucide="check-circle-2" class="text-emerald-300 shrink-0" style="width:16px;height:16px"></i><span>47 fields extracted</span><span class="ml-auto font-mono text-[11px] text-white/50">p. 01&ndash;12</span></li>
-          <li class="flex items-center gap-3 text-white/80"><i data-lucide="check-circle-2" class="text-emerald-300 shrink-0" style="width:16px;height:16px"></i><span>Amounts reconciled</span><span class="ml-auto font-mono text-[11px] text-white/50">p. 04&ndash;09</span></li>
-          <li class="flex items-center gap-3 text-amber-200/90"><i data-lucide="flag" class="text-amber-300 shrink-0" style="width:16px;height:16px"></i><span>1 mismatch flagged</span><span class="ml-auto font-mono text-[11px] text-white/50">p. 07</span></li>
-          <li class="flex items-center gap-3 text-white/80"><i data-lucide="check-circle-2" class="text-emerald-300 shrink-0" style="width:16px;height:16px"></i><span>Index + exception log</span><span class="ml-auto font-mono text-[11px] text-white/50">p. 00</span></li>
-        </ul>
-        <div class="mt-6 pt-5 border-t border-emerald-300/15">
-          <span class="inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-300/[0.08] px-4 py-1.5 text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-200"><i data-lucide="badge-check" style="width:14px;height:14px"></i>Verified &mdash; Ghulam Mustafa</span>
+      <div class="rv" style="transition-delay:80ms">
+        <h2 class="font-display text-2xl font-semibold tracking-tight sm:text-3xl">The desk</h2>
+        <p class="mt-6 max-w-2xl text-base leading-relaxed text-white/70">Daftrify is run by one person. I am Ghulam Mustafa, and every file that comes in is handled by me, from the first page to the last.</p>
+        <p class="mt-4 max-w-2xl text-base leading-relaxed text-white/70">There is no queue it disappears into and no handoff where context gets lost. What you send is what gets read.</p>
+        <p class="mt-6 text-sm text-white/45">Ghulam Mustafa, Founder, Daftrify &middot; Faisalabad, Pakistan</p>
+        <p class="mt-2 text-sm text-white/45">Desk time: <span id="clock" class="text-white/70">--:--:--</span> PKT</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════ FAQ ══════════ -->
+<section id="faq" class="border-b rule">
+  <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+    <div class="grid gap-10 md:grid-cols-[1fr_2fr] md:gap-16">
+      <div class="rv">
+        <h2 class="font-display text-2xl font-semibold tracking-tight sm:text-3xl">Questions</h2>
+        <p class="mt-3 text-sm leading-relaxed text-white/55">The ones that come up on every first call.</p>
+      </div>
+      <div class="rv border-t rule" style="transition-delay:80ms">
+        <div class="faq open border-b rule">
+          <button class="faq-q flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="true">
+            <span class="text-sm font-medium text-white sm:text-base">What kinds of document stacks can I send?</span>
+            <span class="pm text-xl font-light text-white/40">+</span>
+          </button>
+          <div class="faq-a"><div><p class="pb-5 pr-8 text-sm leading-relaxed text-white/55">Anything document-heavy where accuracy matters: multi-page PDF stacks, scanned contracts, invoices and ledgers, Excel tables, drawings, tax bundles, compliance files. Send the material as it exists. No renaming, no sorting, no tidying required.</p></div></div>
+        </div>
+        <div class="faq border-b rule">
+          <button class="faq-q flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+            <span class="text-sm font-medium text-white sm:text-base">How does the checking work?</span>
+            <span class="pm text-xl font-light text-white/40">+</span>
+          </button>
+          <div class="faq-a"><div><p class="pb-5 pr-8 text-sm leading-relaxed text-white/55">Your stack is read by hand and checked back against the source documents you provide. Anything that does not check out, or is missing, is listed up front in an exception register so you see it before anyone else does.</p></div></div>
+        </div>
+        <div class="faq border-b rule">
+          <button class="faq-q flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+            <span class="text-sm font-medium text-white sm:text-base">Who handles my files?</span>
+            <span class="pm text-xl font-light text-white/40">+</span>
+          </button>
+          <div class="faq-a"><div><p class="pb-5 pr-8 text-sm leading-relaxed text-white/55">One person: Ghulam Mustafa, the founder. Your file is handled at one desk from receipt to delivery.</p></div></div>
+        </div>
+        <div class="faq border-b rule">
+          <button class="faq-q flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+            <span class="text-sm font-medium text-white sm:text-base">How is pricing decided?</span>
+            <span class="pm text-xl font-light text-white/40">+</span>
+          </button>
+          <div class="faq-a"><div><p class="pb-5 pr-8 text-sm leading-relaxed text-white/55">Every stack is different, so pricing is per project. Send your files and you get a quote before any work starts.</p></div></div>
+        </div>
+        <div class="faq border-b rule">
+          <button class="faq-q flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+            <span class="text-sm font-medium text-white sm:text-base">How long does it take?</span>
+            <span class="pm text-xl font-light text-white/40">+</span>
+          </button>
+          <div class="faq-a"><div><p class="pb-5 pr-8 text-sm leading-relaxed text-white/55">It depends on the size and condition of the stack. After a first look, you get a firm time estimate, agreed up front.</p></div></div>
+        </div>
+        <div class="faq border-b rule">
+          <button class="faq-q flex w-full items-center justify-between gap-4 py-5 text-left" aria-expanded="false">
+            <span class="text-sm font-medium text-white sm:text-base">What do I get back?</span>
+            <span class="pm text-xl font-light text-white/40">+</span>
+          </button>
+          <div class="faq-a"><div><p class="pb-5 pr-8 text-sm leading-relaxed text-white/55">One organized package: the checked set, an exception register listing the variances and gaps found, and clean export sheets of the reconciled tables.</p></div></div>
         </div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ══════════════════════ CHAPTERS — chaos in, clarity out ══════════════════════ -->
-<section id="chapters" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
-  <div class="max-w-6xl mx-auto">
-    <div class="rv mb-14 sm:mb-20">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">How it works</p>
-      <h2 data-hanim="chars-up" class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05] max-w-3xl">Chaos in. Clarity out.<br><span class="text-white/60">Three moves.</span></h2>
-    </div>
-    <div class="grid md:grid-cols-3 gap-4 sm:gap-5">
-      <article class="rv liquid-glass rounded-2xl p-7 sm:p-8">
-        <p class="font-mono text-xs text-emerald-300 tracking-[0.2em] mb-6">FIG. 01</p>
-        <i data-lucide="inbox" class="text-white/70 mb-5" style="width:22px;height:22px"></i>
-        <h3 class="text-white text-xl font-medium tracking-tight mb-3">Submit</h3>
-        <p class="text-white/55 text-sm leading-relaxed">Send the raw stack &mdash; scans, PDFs, ledgers &mdash; exactly as they exist. No sorting, no renaming, no prep work on your side.</p>
-      </article>
-      <article class="rv liquid-glass rounded-2xl p-7 sm:p-8" style="--d:120ms">
-        <p class="font-mono text-xs text-emerald-300 tracking-[0.2em] mb-6">FIG. 02</p>
-        <i data-lucide="scan-search" class="text-white/70 mb-5" style="width:22px;height:22px"></i>
-        <h3 class="text-white text-xl font-medium tracking-tight mb-3">Verify</h3>
-        <p class="text-white/55 text-sm leading-relaxed">Fields extracted, conflicts flagged, and every value read back against the source &mdash; by a human, character by character.</p>
-      </article>
-      <article class="rv liquid-glass rounded-2xl p-7 sm:p-8" style="--d:240ms">
-        <p class="font-mono text-xs text-emerald-300 tracking-[0.2em] mb-6">FIG. 03</p>
-        <i data-lucide="package-check" class="text-white/70 mb-5" style="width:22px;height:22px"></i>
-        <h3 class="text-white text-xl font-medium tracking-tight mb-3">Receive</h3>
-        <p class="text-white/55 text-sm leading-relaxed">One indexed dossier lands in your inbox. Open questions at the front, everything traceable &mdash; ready to submit.</p>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════ SERVICES (asymmetric, not equal cards) ══════════════════════ -->
-<section id="services" class="bg-black px-6 sm:px-12 py-24 sm:py-32">
-  <div class="max-w-6xl mx-auto">
-    <div class="rv mb-12 flex flex-col gap-3">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase">Services</p>
-      <h2 data-hanim="words-mask" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight max-w-2xl">A desk, not a folder. <span class="text-white/65">Five ways it works.</span></h2>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-4">
-      <div class="rv liquid-glass rounded-2xl p-7 md:col-span-2 md:grid md:grid-cols-2 md:items-center md:gap-8">
-        <div>
-          <i data-lucide="layers" class="text-white/70 mb-4"></i>
-          <p class="text-white/40 text-xs font-medium tracking-[0.18em] uppercase mb-3">Signature service</p>
-          <h3 class="text-white text-xl font-medium tracking-tight mb-3">Full Set Reconciliation</h3>
-          <p class="text-white/55 text-sm leading-relaxed max-w-sm">Every document cross-checked against every other. Names, dates and amounts compared in both directions, each conflict written down. Returned as one organized, indexed file with an exception register at the front.</p>
+<!-- ══════════ START / INTAKE ══════════ -->
+<section id="start">
+  <div class="mx-auto max-w-6xl px-5 py-16 sm:px-8 sm:py-24">
+    <div class="grid gap-10 md:grid-cols-[1fr_2fr] md:gap-16">
+      <div class="rv">
+        <h2 class="font-display text-2xl font-semibold tracking-tight sm:text-3xl">Start a file</h2>
+        <p class="mt-3 text-sm leading-relaxed text-white/55">Describe the stack and what usually goes wrong. No files needed yet.</p>
+        <div class="mt-8 space-y-3">
+          <a href="https://wa.me/923187668851?text=Hi%20Daftrify%2C%20I%20have%20documents%20that%20need%20review." target="_blank" rel="noopener noreferrer" class="flex items-center justify-between border-t rule py-4 text-sm text-white/70 hover:text-white">
+            <span>WhatsApp the desk<br /><span class="text-white/40">+92 318 7668851</span></span>
+            <i data-lucide="arrow-up-right" style="width:16px;height:16px" class="text-white/40"></i>
+          </a>
+          <a href="mailto:contact@daftrify.info" class="flex items-center justify-between border-t rule py-4 text-sm text-white/70 hover:text-white">
+            <span>Email<br /><span class="text-white/40">contact@daftrify.info</span></span>
+            <i data-lucide="arrow-up-right" style="width:16px;height:16px" class="text-white/40"></i>
+          </a>
         </div>
-        <div class="mt-6 md:mt-0">
-          <div class="rounded-xl bg-white/[0.03] border border-white/10 p-5">
-            <p class="text-white/50 text-[10px] font-medium tracking-[0.16em] uppercase mb-3">Live desk readout &middot; simulated</p>
-            <div class="space-y-2.5 text-sm">
-              <div class="flex justify-between gap-3"><span class="text-white/45">Files in set</span><span class="text-white/85">07</span></div>
-              <div class="flex justify-between gap-3"><span class="text-white/45">Fields compared</span><span class="text-white/85" id="roFields">000</span></div>
-              <div class="flex justify-between gap-3"><span class="text-white/45">Exceptions raised</span><span class="text-white/85" id="roFlags">0</span></div>
-              <div class="flex justify-between gap-3"><span class="text-white/45">Status</span><span class="text-emerald-300/90" id="roStatus">Received</span></div>
+      </div>
+      <div class="rv" style="transition-delay:80ms">
+        <form id="intakeForm" class="border-t rule pt-6" novalidate>
+          <div class="grid gap-5 sm:grid-cols-2">
+            <div>
+              <label for="fn" class="mb-2 block text-xs font-medium uppercase tracking-[0.14em] text-white/45">Name <span class="text-red-300/70">*</span></label>
+              <input id="fn" type="text" autocomplete="name" placeholder="Your name" class="field w-full rounded-lg border border-white/15 bg-white/[0.03] px-4 py-3 text-sm text-white placeholder:text-white/35" />
+              <p class="ferr mt-2 hidden text-[11px] text-red-300/80">Please add your name.</p>
+            </div>
+            <div>
+              <label for="fe" class="mb-2 block text-xs font-medium uppercase tracking-[0.14em] text-white/45">Email <span class="text-red-300/70">*</span></label>
+              <input id="fe" type="email" autocomplete="email" placeholder="you@work.com" class="field w-full rounded-lg border border-white/15 bg-white/[0.03] px-4 py-3 text-sm text-white placeholder:text-white/35" />
+              <p class="ferr mt-2 hidden text-[11px] text-red-300/80">That email does not look right.</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      <div class="rv liquid-glass rounded-2xl p-7" style="--d:.06s">
-        <i data-lucide="scan-search" class="text-white/70 mb-4"></i>
-        <h3 class="text-white text-lg font-medium tracking-tight mb-2.5">Document Extraction</h3>
-        <p class="text-white/55 text-sm leading-relaxed">Scans, exports and photos turned into one structured working sheet you can actually read.</p>
-      </div>
-
-      <div class="rv liquid-glass rounded-2xl p-7" style="--d:.06s">
-        <i data-lucide="alert-triangle" class="text-white/70 mb-4"></i>
-        <h3 class="text-white text-lg font-medium tracking-tight mb-2.5">Exception Register</h3>
-        <p class="text-white/55 text-sm leading-relaxed">Every gap and conflict listed at the front of the package, source attached to each item.</p>
-      </div>
-
-      <div class="rv liquid-glass rounded-2xl p-7 md:col-span-2" style="--d:.12s">
-        <div class="flex items-start gap-4">
-          <i data-lucide="user-check" class="text-white/70 mt-0.5 shrink-0"></i>
-          <div>
-            <h3 class="text-white text-lg font-medium tracking-tight mb-2.5">Human Verification Pass</h3>
-            <p class="text-white/55 text-sm leading-relaxed max-w-2xl">Extraction proposes; the record disposes. One reviewer reads each value back against the original document, character by character, before anything is marked verified. Nothing leaves on assumption.</p>
+          <div class="mt-5">
+            <label for="fd" class="mb-2 block text-xs font-medium uppercase tracking-[0.14em] text-white/45">What are the documents? <span class="text-red-300/70">*</span></label>
+            <input id="fd" type="text" placeholder="Contracts, records, application pack, invoices" class="field w-full rounded-lg border border-white/15 bg-white/[0.03] px-4 py-3 text-sm text-white placeholder:text-white/35" />
+            <p class="ferr mt-2 hidden text-[11px] text-red-300/80">Tell us what kind of set it is.</p>
           </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════ PROCESS ══════════════════════ -->
-<section id="process" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
-  <div class="max-w-6xl mx-auto">
-    <div class="rv mb-12">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Process</p>
-      <h2 data-hanim="lines" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight max-w-2xl">Five stations, in order. <span class="text-white/65">No skips, no silence.</span></h2>
-    </div>
-
-    <ol class="grid md:grid-cols-5 gap-4">
-      <li class="rv liquid-glass rounded-2xl p-6">
-        <p class="text-white/50 text-xs font-medium tracking-[0.16em] mb-6">01</p>
-        <i data-lucide="inbox" class="text-white/70 mb-4"></i>
-        <h3 class="text-white text-base font-medium tracking-tight mb-2">Collect</h3>
-        <p class="text-white/55 text-[13px] leading-relaxed">Send the set exactly as it exists. No renaming, no tidying, no cover note.</p>
-      </li>
-      <li class="rv liquid-glass rounded-2xl p-6" style="--d:.06s">
-        <p class="text-white/50 text-xs font-medium tracking-[0.16em] mb-6">02</p>
-        <i data-lucide="table-2" class="text-white/70 mb-4"></i>
-        <h3 class="text-white text-base font-medium tracking-tight mb-2">Extract</h3>
-        <p class="text-white/55 text-[13px] leading-relaxed">Fields, tables and references lifted into one structured working sheet.</p>
-      </li>
-      <li class="rv liquid-glass rounded-2xl p-6" style="--d:.12s">
-        <p class="text-white/50 text-xs font-medium tracking-[0.16em] mb-6">03</p>
-        <i data-lucide="git-compare-arrows" class="text-white/70 mb-4"></i>
-        <h3 class="text-white text-base font-medium tracking-tight mb-2">Reconcile</h3>
-        <p class="text-white/55 text-[13px] leading-relaxed">Shared values cross-checked between documents, in both directions.</p>
-      </li>
-      <li class="rv liquid-glass rounded-2xl p-6" style="--d:.18s">
-        <p class="text-white/50 text-xs font-medium tracking-[0.16em] mb-6">04</p>
-        <i data-lucide="badge-check" class="text-white/70 mb-4"></i>
-        <h3 class="text-white text-base font-medium tracking-tight mb-2">Verify</h3>
-        <p class="text-white/55 text-[13px] leading-relaxed">Each value read back against the original. Character by character.</p>
-      </li>
-      <li class="rv liquid-glass rounded-2xl p-6" style="--d:.24s">
-        <p class="text-white/50 text-xs font-medium tracking-[0.16em] mb-6">05</p>
-        <i data-lucide="archive" class="text-white/70 mb-4"></i>
-        <h3 class="text-white text-base font-medium tracking-tight mb-2">Package</h3>
-        <p class="text-white/55 text-[13px] leading-relaxed">One ordered, indexed file. Open questions at the front, not the back.</p>
-      </li>
-    </ol>
-
-    <!-- interactive verifier -->
-    <div class="rv liquid-glass rounded-2xl mt-10 overflow-hidden" style="--d:.1s">
-      <div class="flex flex-wrap items-center justify-between gap-3 px-6 py-4 border-b border-white/10">
-        <p class="text-white/70 text-sm font-medium">Watch a verification pass</p>
-        <span class="text-white/50 text-[10px] font-medium tracking-[0.16em] uppercase">Record 4471-C &middot; simulated</span>
-      </div>
-      <div class="px-6 py-2">
-        <div class="grid grid-cols-[1fr_1fr] gap-4 py-3 border-b border-white/10">
-          <span class="text-white/50 text-[10px] font-medium tracking-[0.16em] uppercase">Source</span>
-          <span class="text-white/50 text-[10px] font-medium tracking-[0.16em] uppercase">Working value</span>
-        </div>
-        <div class="vrow grid grid-cols-[1fr_1fr] gap-4 items-center py-4 border-b border-white/[0.07]" data-ok="0">
-          <p class="text-white/85 text-sm">Muhammad Ahmed</p>
-          <p class="text-sm flex items-center gap-2 justify-between"><span class="val rounded px-1.5 py-0.5 text-red-200/90">Mohammad</span><span class="tick text-emerald-300"><i data-lucide="check" style="width:16px;height:16px"></i></span></p>
-        </div>
-        <div class="vrow grid grid-cols-[1fr_1fr] gap-4 items-center py-4 border-b border-white/[0.07]" data-ok="0">
-          <p class="text-white/85 text-sm">04/09/2026</p>
-          <p class="text-sm flex items-center gap-2 justify-between"><span class="val rounded px-1.5 py-0.5 text-red-200/90">05/09/2026</span><span class="tick text-emerald-300"><i data-lucide="check" style="width:16px;height:16px"></i></span></p>
-        </div>
-        <div class="vrow grid grid-cols-[1fr_1fr] gap-4 items-center py-4 border-b border-white/[0.07]" data-ok="0">
-          <p class="text-white/85 text-sm">12,500</p>
-          <p class="text-sm flex items-center gap-2 justify-between"><span class="val rounded px-1.5 py-0.5 text-red-200/90">12,050</span><span class="tick text-emerald-300"><i data-lucide="check" style="width:16px;height:16px"></i></span></p>
-        </div>
-        <div class="vrow grid grid-cols-[1fr_1fr] gap-4 items-center py-4" data-ok="0">
-          <p class="text-white/85 text-sm">Annex C issued</p>
-          <p class="text-sm flex items-center gap-2 justify-between"><span class="val rounded px-1.5 py-0.5 text-red-200/90">Not attached</span><span class="tick text-emerald-300"><i data-lucide="check" style="width:16px;height:16px"></i></span></p>
-        </div>
-      </div>
-      <div class="flex flex-wrap items-center justify-between gap-4 px-6 py-4 border-t border-white/10 bg-white/[0.02]">
-        <p id="deskStat" class="text-[11px] font-medium tracking-[0.16em] uppercase text-red-200/80">4 fields require review</p>
-        <button id="runPass" type="button" class="rounded-full bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors hover:bg-gray-200">Run verification pass</button>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════ ANATOMY ══════════════════════ -->
-<section id="anatomy" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
-  <div class="max-w-6xl mx-auto">
-    <div class="rv mb-12 sm:mb-16 text-center">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Anatomy</p>
-      <h2 data-hanim="blur" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">One file, opened up.</h2>
-      <p class="text-white/55 text-sm leading-relaxed max-w-xl mx-auto mt-4">Five layers of one file, stacking as you scroll &mdash; the exact order nothing leaves the desk without. <span class="text-white/50">Illustrated.</span></p>
-    </div>
-  </div>
-  <div class="xstack max-w-3xl mx-auto">
-    <article class="xcard" style="--i:0">
-      <div class="xcard-top"><span class="xnum">01</span><span class="xtag">As received</span></div>
-      <h3>Raw scans</h3>
-      <p>Pages land exactly as they exist &mdash; mixed order, skewed, unrenamed.</p>
-    </article>
-    <article class="xcard" style="--i:1">
-      <div class="xcard-top"><span class="xnum">02</span><span class="xtag">Structured</span></div>
-      <h3>Extracted fields</h3>
-      <p>Names, dates, amounts and references lifted into one working sheet.</p>
-    </article>
-    <article class="xcard" style="--i:2">
-      <div class="xcard-top"><span class="xnum">03</span><span class="xtag">Flagged</span></div>
-      <h3>Exception flags</h3>
-      <p>Every mismatch, blur and missing page logged up front &mdash; nothing buried.</p>
-    </article>
-    <article class="xcard" style="--i:3">
-      <div class="xcard-top"><span class="xnum">04</span><span class="xtag">Verified by hand</span></div>
-      <h3>Human verification</h3>
-      <p>Each value read back against the source. Character by character.</p>
-    </article>
-    <article class="xcard xcard-final" style="--i:4">
-      <div class="xcard-top"><span class="xnum">05</span><span class="xtag">Ready to submit</span></div>
-      <h3>Final package</h3>
-      <p>One indexed dossier. Open questions at the front, not the back.</p>
-      <p class="mt-6"><span class="inline-flex items-center gap-2 rounded-full border border-emerald-300/40 bg-emerald-300/[0.08] px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.12em] text-emerald-200"><i data-lucide="check" style="width:14px;height:14px"></i>Verified &mdash; Ghulam Mustafa</span></p>
-    </article>
-  </div>
-  <p class="text-center text-white/40 text-xs tracking-[0.2em] uppercase font-medium mt-14">Locked. Ready to submit.</p>
-</section>
-
-<!-- ══════════════════════ PRINCIPLES ══════════════════════ -->
-<!-- ══════════════════════ TRUST — verification, not vibes ══════════════════════ -->
-<section id="trust" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
-  <div class="max-w-6xl mx-auto">
-    <div class="rv mb-14 sm:mb-20">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Auditability</p>
-      <h2 data-hanim="scale" class="cinematic-heading text-white text-3xl sm:text-5xl font-normal tracking-[-0.03em] leading-[1.05] max-w-3xl">Every number<br><span class="text-white/60">earns its place.</span></h2>
-      <p class="text-white/55 text-sm sm:text-base leading-relaxed max-w-xl mt-6">A dossier you can defend. Nothing in your file is taken on faith &mdash; each figure carries its proof.</p>
-    </div>
-    <div class="grid sm:grid-cols-2 gap-4 sm:gap-5">
-      <div class="rv rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-8">
-        <i data-lucide="book-open-check" class="text-emerald-300 mb-5" style="width:22px;height:22px"></i>
-        <h3 class="text-white text-lg font-medium tracking-tight mb-2">Read back by hand</h3>
-        <p class="text-white/55 text-sm leading-relaxed">Each extracted value is checked against the source document &mdash; character by character, not sampled.</p>
-      </div>
-      <div class="rv rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-8" style="--d:120ms">
-        <i data-lucide="flag" class="text-emerald-300 mb-5" style="width:22px;height:22px"></i>
-        <h3 class="text-white text-lg font-medium tracking-tight mb-2">Exception log up front</h3>
-        <p class="text-white/55 text-sm leading-relaxed">Mismatches, blurs and missing pages are listed at the front of the dossier &mdash; never buried in an appendix.</p>
-      </div>
-      <div class="rv rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-8" style="--d:200ms">
-        <i data-lucide="list-ordered" class="text-emerald-300 mb-5" style="width:22px;height:22px"></i>
-        <h3 class="text-white text-lg font-medium tracking-tight mb-2">Indexed and traceable</h3>
-        <p class="text-white/55 text-sm leading-relaxed">Every page numbered, every field traceable to its source page. Ask &ldquo;where did this come from?&rdquo; and get an answer in seconds.</p>
-      </div>
-      <div class="rv rounded-2xl border border-white/10 bg-white/[0.02] p-7 sm:p-8" style="--d:280ms">
-        <i data-lucide="user-check" class="text-emerald-300 mb-5" style="width:22px;height:22px"></i>
-        <h3 class="text-white text-lg font-medium tracking-tight mb-2">One desk, one owner</h3>
-        <p class="text-white/55 text-sm leading-relaxed">Your file is handled directly &mdash; no hand-offs, no ticket queues, no strangers. You always know whose eyes were on it.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section id="principles" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
-  <div class="max-w-4xl mx-auto">
-    <div class="rv mb-12">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Principles</p>
-      <h2 data-hanim="words-blur" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">The operating rules, <span class="text-white/65">in plain words.</span></h2>
-    </div>
-    <div class="space-y-3">
-      <div class="rv liquid-glass rounded-2xl px-6 py-5 flex items-start gap-4"><i data-lucide="search-check" class="text-white/60 mt-0.5 shrink-0"></i><p class="text-white/75 text-sm sm:text-[15px] leading-relaxed"><span class="text-white font-medium">Source first.</span> No value enters the working file unless it can be traced to a document you actually hold. If it cannot be traced, it is reported as a gap &mdash; never filled in.</p></div>
-      <div class="rv liquid-glass rounded-2xl px-6 py-5 flex items-start gap-4" style="--d:.06s"><i data-lucide="eye" class="text-white/60 mt-0.5 shrink-0"></i><p class="text-white/75 text-sm sm:text-[15px] leading-relaxed"><span class="text-white font-medium">Exceptions are visible.</span> Problems are listed at the front of the package, source attached to each one. Nothing is buried where nobody reads.</p></div>
-      <div class="rv liquid-glass rounded-2xl px-6 py-5 flex items-start gap-4" style="--d:.12s"><i data-lucide="scroll-text" class="text-white/60 mt-0.5 shrink-0"></i><p class="text-white/75 text-sm sm:text-[15px] leading-relaxed"><span class="text-white font-medium">Verify against the record.</span> A person reads each extracted value back against the original before anything is marked verified.</p></div>
-      <div class="rv liquid-glass rounded-2xl px-6 py-5 flex items-start gap-4" style="--d:.18s"><i data-lucide="shield-off" class="text-white/60 mt-0.5 shrink-0"></i><p class="text-white/75 text-sm sm:text-[15px] leading-relaxed"><span class="text-white font-medium">No invented facts. No fake proof.</span> No fabricated records, no borrowed logos, no numbers we cannot stand behind.</p></div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════ ABOUT / TEAM + FAQ ══════════════════════ -->
-<section id="about" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
-  <div class="max-w-6xl mx-auto grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
-    <div class="rv">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Our Team</p>
-      <h2 data-hanim="chars-down" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight mb-6">One desk. <span class="hl">One pair of eyes.<svg class="hl-svg" viewBox="0 0 200 12" preserveAspectRatio="none" aria-hidden="true"><path d="M3 9 C 55 3, 145 3, 197 8" pathLength="1"/></svg></span> <span class="text-white/65">Yours, first.</span></h2>
-      <p class="text-white/55 text-sm leading-relaxed max-w-md mb-8">Daftrify is run by Ghulam Mustafa from Faisalabad, Pakistan. Every file crosses one screen, and one person signs the verification pass &mdash; which is precisely why nothing leaves on assumption.</p>
-
-      <div class="liquid-glass group rounded-2xl p-5 flex items-center gap-4 mb-4">
-        <div class="w-14 h-14 rounded-full overflow-hidden border border-white/15 shrink-0">
-          <img src="/public/founder.png" alt="Ghulam Mustafa — founder of Daftrify" class="founder-photo h-full w-full object-cover" loading="lazy" />
-        </div>
-        <div>
-          <p class="text-white text-sm font-medium">Ghulam Mustafa</p>
-          <p class="text-white/40 text-xs font-medium tracking-[0.16em] uppercase mt-1">Founder &middot; Reviewer</p>
-        </div>
-        <div class="ml-auto text-right">
-          <p class="text-white/40 text-[10px] font-medium tracking-[0.16em] uppercase">Faisalabad</p>
-          <p class="text-white text-base font-medium mt-1" id="clock">--:--:--</p>
-        </div>
-      </div>
-
-      <div class="liquid-glass rounded-2xl px-5 py-4">
-        <p class="text-white/40 text-[10px] font-medium tracking-[0.16em] uppercase mb-2">What we don't handle</p>
-        <p class="text-white/55 text-[13px] leading-relaxed">No legal, financial, medical or immigration advice. No representation before any authority. No outcome claims &mdash; you keep the decisions, we do the document work.</p>
-      </div>
-    </div>
-
-    <div class="rv" style="--d:.08s">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Common questions</p>
-      <div class="liquid-glass rounded-2xl divide-y divide-white/10 overflow-hidden">
-        <!-- Question 1: Document Types & Intake -->
-        <div class="faq open">
-          <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="true">
-            <span class="text-white text-sm font-medium">1. What kinds of messy document stacks can I send to Daftrify?</span>
-            <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
-          </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Anything document-heavy where accuracy is non-negotiable: multi-page PDF stacks, dense financial ledgers, contractor invoices, Excel tables, handwritten receipts, architectural drawing sets, tax bundles, compliance files, and recurring back-office documentation. You can send the material exactly as it exists &mdash; no renaming, no sorting, and no tidying required.</p></div></div>
-        </div>
-
-        <!-- Question 2: Engine Stack & Human Verification -->
-        <div class="faq">
-          <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
-            <span class="text-white text-sm font-medium">2. How does the verification process work?</span>
-            <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
-          </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Your stack is triaged, extracted and cross-checked file by file. Before anything leaves the desk, Ghulam Mustafa personally reviews the output against your originals &mdash; every value checked back against its source. Nothing is invented or hallucinated.</p></div></div>
-        </div>
-
-        <!-- Question 3: Security & NDA -->
-        <div class="faq">
-          <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
-            <span class="text-white text-sm font-medium">3. How is my firm&rsquo;s confidentiality protected?</span>
-            <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
-          </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Your material is treated as strictly confidential and used only for your file &mdash; never published, resold or shared. One person handles it from receipt to delivery, and once you&rsquo;ve accepted the dossier, the working files are removed on your confirmation.</p></div></div>
-        </div>
-
-        <!-- Question 4: Pricing & Turnaround -->
-        <div class="faq">
-          <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
-            <span class="text-white text-sm font-medium">4. How are project turnaround times and pricing scoped?</span>
-            <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
-          </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">Initial triage readouts are returned promptly, most within a day. Pricing is scoped transparently by the actual set: volume of sheets, source material clarity, cross-reference density, and deadline urgency. There are no surprise retainers or generic inflated cards &mdash; you receive an honest fixed quotation after we inspect the stack.</p></div></div>
-        </div>
-
-        <!-- Question 5: Final Deliverables -->
-        <div class="faq">
-          <button class="faq-q w-full flex items-center justify-between gap-4 text-left px-5 py-4 hover:bg-white/[0.03] transition-colors" aria-expanded="false">
-            <span class="text-white text-sm font-medium">5. What exact final deliverables do I receive upon completion?</span>
-            <i data-lucide="chevron-down" style="width:16px;height:16px" class="pm text-white/50 shrink-0"></i>
-          </button>
-          <div class="faq-a"><div><p class="px-5 pb-5 text-white/55 text-sm leading-relaxed">You receive one structured, indexed package: an upfront Exception Register itemizing every variance or missing gap, reconciled cross-tables, highlighted PDF callouts, and clean export sheets. Everything is audit-ready and pre-formatted for direct submission to legal counsel, banks, or regulatory authorities.</p></div></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ══════════════════════ START ══════════════════════ -->
-<!-- ══════════════════════ FAQ ══════════════════════ -->
-<section id="faq" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800">
-  <div class="max-w-3xl mx-auto">
-    <div class="rv mb-12 sm:mb-16">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">FAQ</p>
-      <h2 data-hanim="skew" class="cinematic-heading text-white text-3xl sm:text-4xl font-normal tracking-[-0.03em] leading-tight">Asked, answered.</h2>
-    </div>
-    <div class="rv divide-y divide-white/10 border-y border-white/10">
-      <details class="group py-6">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">What kinds of documents do you handle?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
-        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Multi-page PDFs, scanned contracts, invoices, financial ledgers, Excel tables, technical drawings, forms and correspondence. If it lives on paper or on a drive, we can work with it.</p>
-      </details>
-      <details class="group py-6">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">How fast is the turnaround?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
-        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Most stacks are returned quickly. Larger or unusually tangled sets get a firm time estimate before we begin &mdash; agreed up front, not discovered later.</p>
-      </details>
-      <details class="group py-6">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">How do I send my files?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
-        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Through the intake form below, by email at contact@daftrify.info, or over WhatsApp. No account, no login, no portal to learn.</p>
-      </details>
-      <details class="group py-6">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">How is pricing decided?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
-        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Every stack is different, so pricing is per project. Send your files and you get one fixed quote before anything starts &mdash; no hourly meters, no surprises.</p>
-      </details>
-      <details class="group py-6">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">Is my information kept confidential?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
-        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Yes. Every file is handled under strict confidentiality and reviewed directly at the desk &mdash; never resold, never shared, never used for anything but your file.</p>
-      </details>
-      <details class="group py-6">
-        <summary class="flex cursor-pointer items-center justify-between gap-4 text-white text-base sm:text-lg font-medium tracking-tight list-none">Do you use AI to process documents?<span class="text-white/40 text-2xl font-light transition-transform group-open:rotate-45">+</span></summary>
-        <p class="text-white/55 text-sm leading-relaxed mt-3 max-w-2xl">Software assists with extraction, but every value is read back against the source by a human. Nothing leaves the desk unverified.</p>
-      </details>
-    </div>
-  </div>
-</section>
-
-<section id="start" class="bg-black px-6 sm:px-12 py-24 sm:py-32 border-t border-gray-800 relative overflow-hidden">
-  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[420px] bg-white/5 rounded-full blur-[130px] pointer-events-none" aria-hidden="true"></div>
-  <div class="max-w-2xl mx-auto relative">
-    <div class="rv text-center mb-10">
-      <p class="text-white/40 text-xs font-medium tracking-[0.2em] uppercase mb-4">Start</p>
-      <h2 id="pressureHead" class="pressure-head text-white text-3xl sm:text-5xl mb-4" data-pressure>Put the mess on the table.</h2>
-      <p class="text-white/55 text-sm leading-relaxed max-w-md mx-auto">Describe the documents, the rough volume, and what usually goes wrong. No files needed yet &mdash; an honest read comes back within twenty-four hours.</p>
-    </div>
-
-    <form id="intakeForm" class="rv liquid-glass rounded-2xl p-6 sm:p-7" style="--d:.08s" novalidate>
-      <div class="grid sm:grid-cols-2 gap-5 mb-5">
-        <div>
-          <label for="fn" class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">Name <span class="text-red-200/70">*</span></label>
-          <input id="fn" type="text" autocomplete="name" placeholder="Your name" class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-white/45 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors" />
-          <p class="ferr hidden text-red-200/80 text-[11px] mt-2 tracking-wide">Please add your name.</p>
-        </div>
-        <div>
-          <label for="fe" class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">Email <span class="text-red-200/70">*</span></label>
-          <input id="fe" type="email" autocomplete="email" placeholder="you@work.com" class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-white/45 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors" />
-          <p class="ferr hidden text-red-200/80 text-[11px] mt-2 tracking-wide">That email does not look right.</p>
-        </div>
-      </div>
-      <div class="mb-5">
-        <label for="fd" class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">What are the documents? <span class="text-red-200/70">*</span></label>
-        <input id="fd" type="text" placeholder="Contracts, records, application pack, invoices" class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm text-white placeholder:text-white/45 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors" />
-        <p class="ferr hidden text-red-200/80 text-[11px] mt-2 tracking-wide">Tell us what kind of set it is.</p>
-      </div>
-      <div class="mb-5">
-        <label for="fm" class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">What usually goes wrong?</label>
-        <textarea id="fm" rows="3" placeholder="Volume, who uses the set, what breaks, and when it is needed by." class="w-full rounded-xl bg-white/[0.04] border border-white/15 px-4 py-3 text-sm leading-relaxed text-white placeholder:text-white/45 outline-none focus:border-white/50 focus:bg-white/[0.07] transition-colors resize-y"></textarea>
-      </div>
-
-      <!-- File Attachment Upload Box -->
-      <div class="mb-6">
-        <label class="block text-white/50 text-xs font-medium tracking-[0.14em] uppercase mb-2">
-          Attach sample document or stack <span class="text-white/50 lowercase">(optional · max 10MB)</span>
-        </label>
-        <div id="dropZone" class="group relative rounded-xl border border-dashed border-white/20 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/40 transition-all p-5 text-center cursor-pointer">
-          <input id="fattach" type="file" class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.png,.jpg,.jpeg" />
-          <div id="uploadPrompt" class="flex flex-col items-center justify-center gap-2">
-            <div class="w-10 h-10 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-105 transition-transform text-white/70">
-              <i data-lucide="upload-cloud" class="w-5 h-5"></i>
-            </div>
-            <p class="text-xs text-white/80 font-medium"><span class="text-white underline underline-offset-2">Click to browse</span> or drag &amp; drop document</p>
-            <p class="text-[11px] text-white/40">PDF, DOCX, ZIP, XLSX or Scans up to 10MB</p>
+          <div class="mt-5">
+            <label for="fm" class="mb-2 block text-xs font-medium uppercase tracking-[0.14em] text-white/45">What usually goes wrong?</label>
+            <textarea id="fm" rows="3" placeholder="Volume, who uses the set, what breaks, and when it is needed by." class="field w-full resize-y rounded-lg border border-white/15 bg-white/[0.03] px-4 py-3 text-sm leading-relaxed text-white placeholder:text-white/35"></textarea>
           </div>
-          <div id="filePreview" class="hidden flex items-center justify-between bg-white/[0.06] border border-white/10 rounded-lg p-3 text-left">
-            <div class="flex items-center gap-3 overflow-hidden">
-              <i data-lucide="file-check" class="w-5 h-5 text-emerald-400 shrink-0"></i>
-              <div class="min-w-0">
-                <p id="fileName" class="text-xs text-white font-medium truncate max-w-[200px] sm:max-w-[320px]"></p>
-                <p id="fileSize" class="text-[10px] text-white/40"></p>
+          <div class="mt-5">
+            <label class="mb-2 block text-xs font-medium uppercase tracking-[0.14em] text-white/45">Attach a sample <span class="lowercase text-white/35">(optional, max 10MB)</span></label>
+            <div id="dropZone" class="cursor-pointer rounded-lg border border-dashed border-white/20 bg-white/[0.02] p-5 text-center hover:border-white/40">
+              <input id="fattach" type="file" class="hidden" accept=".pdf,.doc,.docx,.xls,.xlsx,.zip,.png,.jpg,.jpeg" />
+              <div id="uploadPrompt" class="flex flex-col items-center justify-center gap-2">
+                <i data-lucide="upload-cloud" style="width:20px;height:20px" class="text-white/50"></i>
+                <p class="text-xs text-white/70"><span class="underline underline-offset-2">Click to browse</span> or drag and drop</p>
+                <p class="text-[11px] text-white/35">PDF, DOCX, ZIP, XLSX or scans up to 10MB</p>
+              </div>
+              <div id="filePreview" class="hidden items-center justify-between rounded-lg border border-white/10 bg-white/[0.04] p-3 text-left">
+                <div class="flex min-w-0 items-center gap-3">
+                  <i data-lucide="file-check" style="width:18px;height:18px" class="shrink-0 text-emerald-400"></i>
+                  <div class="min-w-0">
+                    <p id="fileName" class="max-w-[200px] truncate text-xs font-medium text-white sm:max-w-[320px]"></p>
+                    <p id="fileSize" class="text-[10px] text-white/40"></p>
+                  </div>
+                </div>
+                <button type="button" id="removeFile" class="p-1 text-white/40 hover:text-white" title="Remove file">
+                  <i data-lucide="x" style="width:16px;height:16px"></i>
+                </button>
               </div>
             </div>
-            <button type="button" id="removeFile" class="text-white/40 hover:text-white p-1 transition-colors" title="Remove file">
-              <i data-lucide="x" class="w-4 h-4"></i>
-            </button>
+            <p id="fileWarn" class="mt-3 hidden text-[11px] leading-relaxed text-amber-200/90">This file is over 10MB and cannot go through the form. Please share a Drive or Dropbox link in the message box above, or send it via WhatsApp instead.</p>
           </div>
-        </div>
-        <p id="fileWarn" class="hidden mt-3 text-left text-[11px] leading-relaxed text-amber-200/90">This file is over 10MB and can't go through the form &mdash; please share a Drive/Dropbox link in the message box above, or send it via WhatsApp instead.</p>
+          <div class="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t rule pt-4 text-[11px] text-white/40">
+            <span class="inline-flex items-center gap-1.5"><i data-lucide="user-check" style="width:14px;height:14px"></i> One reviewer, start to finish</span>
+            <span class="inline-flex items-center gap-1.5"><i data-lucide="key-round" style="width:14px;height:14px"></i> No account needed</span>
+          </div>
+          <button type="submit" id="submitBtn" class="mt-6 flex w-full cursor-pointer items-center justify-center gap-2 rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black hover:bg-zinc-200">
+            <span id="btnText">Start a file</span>
+          </button>
+          <div id="statusBox" class="mt-4 hidden"></div>
+        </form>
       </div>
-
-      <!-- Trust & Security Signals -->
-      <div class="mb-6 flex flex-wrap items-center justify-center sm:justify-start gap-4 text-[11px] text-white/45 border-t border-white/10 pt-4">
-        <span class="inline-flex items-center gap-1.5"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400"></i> Confidential handling</span>
-        <span class="inline-flex items-center gap-1.5"><i data-lucide="user-check" class="w-3.5 h-3.5 text-white/60"></i> One reviewer, start to finish</span>
-        <span class="inline-flex items-center gap-1.5"><i data-lucide="key-round" class="w-3.5 h-3.5 text-white/60"></i> No account needed</span>
-      </div>
-
-      <button type="submit" id="submitBtn" class="w-full rounded-full bg-white px-6 py-3.5 text-sm font-medium text-black transition-colors hover:bg-gray-200 cursor-pointer flex items-center justify-center gap-2">
-        <span id="btnText">Start a file</span>
-      </button>
-
-      <!-- Prominent Feedback Area -->
-      <div id="statusBox" class="hidden mt-4"></div>
-    </form>
-
-    <div class="rv mt-5 grid sm:grid-cols-2 gap-3" style="--d:.14s">
-      <a href="https://wa.me/923187668851?text=Hi%20Daftrify%2C%20I%20have%20documents%20that%20need%20pre-submission%20auditing%20and%20verification." target="_blank" rel="noopener noreferrer" class="liquid-glass rounded-2xl px-5 py-4 flex items-center justify-between gap-3 group hover:border-emerald-500/30 transition-all">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
-            <i data-lucide="message-square" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <p class="text-[11px] text-white/40 uppercase tracking-wider font-semibold">Direct Desk WhatsApp</p>
-            <p class="text-white text-sm font-medium group-hover:text-emerald-300 transition-colors">+92 318 7668851</p>
-          </div>
-        </div>
-        <i data-lucide="arrow-up-right" class="w-4 h-4 text-white/40 group-hover:text-white transition-colors"></i>
-      </a>
-
-      <a href="mailto:contact@daftrify.info" class="liquid-glass rounded-2xl px-5 py-4 flex items-center justify-between gap-3 group transition-all">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-full bg-white/10 text-white/80 flex items-center justify-center">
-            <i data-lucide="mail" class="w-4 h-4"></i>
-          </div>
-          <div>
-            <p class="text-[11px] text-white/40 uppercase tracking-wider font-semibold">Direct Desk Email</p>
-            <p class="text-white text-sm font-medium group-hover:underline transition-colors break-all">contact@daftrify.info</p>
-          </div>
-        </div>
-        <i data-lucide="arrow-up-right" class="w-4 h-4 text-white/40 group-hover:text-white transition-colors"></i>
-      </a>
     </div>
   </div>
 </section>
+</main>
 
-<!-- Floating Desk Connect Badge -->
-<a id="waFloat" href="https://wa.me/923187668851?text=Hi%20Daftrify%2C%20I%20have%20documents%20that%20need%20pre-submission%20auditing%20and%20verification." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-40 liquid-glass rounded-full px-4 py-2.5 flex items-center gap-2.5 shadow-2xl border border-white/20 hover:border-emerald-400/50 bg-black/80 backdrop-blur-md transition-all hover:scale-105 active:scale-95 group" aria-label="Chat with Daftrify Desk on WhatsApp">
-  <span class="relative flex h-2.5 w-2.5">
-    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-    <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-  </span>
-  <span class="text-xs font-medium text-white/90 group-hover:text-white tracking-wide">Desk WhatsApp</span>
-</a>
-
-<!-- ══════════════════════ FOOTER ══════════════════════ -->
-<footer class="bg-black px-6 sm:px-12 py-10 border-t border-gray-800">
-  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
-    <a href="#top" class="flex items-center gap-2.5 text-white font-light tracking-[0.3em] text-lg" aria-label="DAFTRIFY home"><img src="/public/assets/brand/daftrify-fold-d.svg" alt="" width="28" height="31" class="h-7 w-auto" />DAFTRI<span class="font-semibold">FY</span></a>
-    <nav class="flex flex-wrap justify-center gap-6 text-white/50 text-sm" aria-label="Footer">
-      <a href="#services" class="hover:text-white transition-colors">Services</a>
-      <a href="#process" class="hover:text-white transition-colors">Process</a>
-      <a href="#about" class="hover:text-white transition-colors">Our Team</a>
-      <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
-      <button type="button" data-cookie-policy class="hover:text-white transition-colors">Cookie Policy</button>
-      <a href="#start" class="hover:text-white transition-colors">Start a file</a>
+<!-- ══════════ FOOTER ══════════ -->
+<footer class="border-t rule">
+  <div class="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-5 py-10 sm:px-8 md:flex-row">
+    <a href="#top" class="flex items-center gap-2.5" aria-label="DAFTRIFY home">
+      <img src="/public/assets/brand/daftrify-fold-d.svg" alt="" width="26" height="29" class="h-6 w-auto" />
+      <span class="text-sm font-light tracking-[0.3em] text-white">DAFTRI<span class="font-semibold">FY</span></span>
+    </a>
+    <nav class="flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-white/45" aria-label="Footer">
+      <a href="#how" class="hover:text-white">How it works</a>
+      <a href="#scope" class="hover:text-white">Scope</a>
+      <a href="#desk" class="hover:text-white">The desk</a>
+      <a href="#faq" class="hover:text-white">FAQ</a>
+      <button type="button" data-cookie-policy class="hover:text-white">Cookie Policy</button>
+      <a href="#start" class="hover:text-white">Start a file</a>
     </nav>
     <div class="flex items-center gap-3">
-      <a href="https://wa.me/923187668851" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/60 transition-colors hover:border-emerald-400/50 hover:text-emerald-300"><i data-lucide="message-circle" style="width:16px;height:16px"></i></a>
-      <a href="mailto:contact@daftrify.info" aria-label="Email" class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/60 transition-colors hover:border-white/40 hover:text-white"><i data-lucide="mail" style="width:16px;height:16px"></i></a>
+      <a href="https://wa.me/923187668851" target="_blank" rel="noopener noreferrer" aria-label="WhatsApp" class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/55 hover:border-white/40 hover:text-white"><i data-lucide="message-circle" style="width:16px;height:16px"></i></a>
+      <a href="mailto:contact@daftrify.info" aria-label="Email" class="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/55 hover:border-white/40 hover:text-white"><i data-lucide="mail" style="width:16px;height:16px"></i></a>
     </div>
-    <p class="text-white/50 text-xs tracking-[0.14em] uppercase">&copy; 2026 Daftrify &middot; Faisalabad, Pakistan</p>
+  </div>
+  <div class="border-t rule">
+    <p class="mx-auto max-w-6xl px-5 py-5 text-center text-xs text-white/35 sm:px-8 md:text-left">&copy; 2026 Daftrify &middot; Faisalabad, Pakistan</p>
   </div>
 </footer>
 
-<!-- ══════════════════════ COOKIE CONSENT + POLICY ══════════════════════ -->
-<div id="cookieBar" class="fixed bottom-4 inset-x-4 sm:inset-x-auto sm:right-6 sm:max-w-sm z-[150] hidden" role="region" aria-label="Cookie consent">
-  <div class="rounded-2xl border border-white/10 bg-[#101013]/95 backdrop-blur-xl p-5 shadow-2xl shadow-black/60">
-    <p class="text-sm text-white font-medium mb-1">A quick word on cookies</p>
-    <p class="text-[13px] text-white/55 leading-relaxed mb-4">Daftrify sets no tracking or advertising cookies &mdash; this notice only remembers your choice on your device. <button type="button" class="underline underline-offset-2 text-white/75 hover:text-white" data-cookie-policy>Cookie policy</button></p>
+<!-- WhatsApp float -->
+<a href="https://wa.me/923187668851?text=Hi%20Daftrify%2C%20I%20have%20documents%20that%20need%20review." target="_blank" rel="noopener noreferrer" class="fixed bottom-6 right-6 z-40 flex items-center gap-2 rounded-full border border-white/15 bg-black/85 px-4 py-2.5 backdrop-blur-md hover:border-white/40" aria-label="Chat with Daftrify Desk on WhatsApp">
+  <span class="inline-block h-2 w-2 rounded-full bg-emerald-400"></span>
+  <span class="text-xs font-medium text-white/85">Desk WhatsApp</span>
+</a>
+
+<!-- ══════════ COOKIE CONSENT + POLICY ══════════ -->
+<div id="cookieBar" class="fixed bottom-4 inset-x-4 z-[150] hidden sm:inset-x-auto sm:right-6 sm:max-w-sm" role="region" aria-label="Cookie consent">
+  <div class="rounded-xl border border-white/10 bg-[#101013]/95 p-5 shadow-2xl shadow-black/60 backdrop-blur-xl">
+    <p class="mb-1 text-sm font-medium text-white">A quick word on cookies</p>
+    <p class="mb-4 text-[13px] leading-relaxed text-white/55">This site stores only a cookie-preference flag in your browser. Nothing else. <button type="button" class="text-white/75 underline underline-offset-2 hover:text-white" data-cookie-policy>Cookie policy</button></p>
     <div class="flex gap-2">
-      <button id="cookieAccept" type="button" class="flex-1 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200">Accept</button>
-      <button id="cookieDecline" type="button" class="flex-1 rounded-full border border-white/15 px-4 py-2.5 text-sm font-medium text-white/80 transition-colors hover:bg-white/10">Decline</button>
+      <button id="cookieAccept" type="button" class="flex-1 rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black hover:bg-zinc-200">Accept</button>
+      <button id="cookieDecline" type="button" class="flex-1 rounded-full border border-white/15 px-4 py-2.5 text-sm font-medium text-white/80 hover:bg-white/10">Decline</button>
     </div>
   </div>
 </div>
 <div id="cookiePolicy" class="fixed inset-0 z-[160] hidden items-center justify-center p-4" role="dialog" aria-modal="true" aria-labelledby="cookiePolicyTitle">
   <div class="absolute inset-0 bg-black/70" data-cookie-close></div>
-  <div class="relative w-full max-w-lg rounded-2xl border border-white/10 bg-[#101013] p-6 sm:p-8 max-h-[85vh] overflow-y-auto">
-    <h3 id="cookiePolicyTitle" class="text-white text-xl font-medium tracking-tight mb-4">Cookie Policy</h3>
-    <div class="text-white/60 text-sm leading-relaxed space-y-4">
-      <p><strong class="text-white/85 font-medium">No tracking cookies.</strong> Daftrify sets no analytics, advertising, or cross-site tracking cookies. We do not follow you around the internet, and we do not sell or share browsing data &mdash; because we do not collect it.</p>
-      <p><strong class="text-white/85 font-medium">Your choice, on your device.</strong> When you answer the cookie notice, your choice (accepted or declined) is saved in your browser&rsquo;s local storage &mdash; on your device only. Nothing about that choice is sent to us.</p>
-      <p><strong class="text-white/85 font-medium">The intake form.</strong> Anything you type into the contact form is sent only to our intake endpoint and our email so we can reply. It is never used for advertising or profiling.</p>
-      <p><strong class="text-white/85 font-medium">Questions?</strong> Write to contact@daftrify.info.</p>
-      <p class="text-white/40 text-xs">Last updated: September 2026.</p>
+  <div class="relative max-h-[85vh] w-full max-w-lg overflow-y-auto rounded-xl border border-white/10 bg-[#101013] p-6 sm:p-8">
+    <h3 id="cookiePolicyTitle" class="mb-4 text-xl font-medium tracking-tight text-white">Cookie Policy</h3>
+    <div class="space-y-4 text-sm leading-relaxed text-white/60">
+      <p><strong class="font-medium text-white/85">Your choice, on your device.</strong> When you answer the cookie notice, your choice (accepted or declined) is saved in your browser&rsquo;s local storage, on your device only. Nothing about that choice is sent to us.</p>
+      <p><strong class="font-medium text-white/85">The intake form.</strong> Anything you type into the contact form is sent only to our intake endpoint and our email so we can reply. It is never used for advertising or profiling.</p>
+      <p><strong class="font-medium text-white/85">Questions?</strong> Write to contact@daftrify.info.</p>
+      <p class="text-xs text-white/40">Last updated: September 2026.</p>
     </div>
-    <button type="button" data-cookie-close class="mt-6 w-full rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200">Close</button>
+    <button type="button" data-cookie-close class="mt-6 w-full rounded-full bg-white px-4 py-2.5 text-sm font-semibold text-black hover:bg-zinc-200">Close</button>
   </div>
 </div>
-<script>
-(function () {
-  'use strict';
-  var KEY = 'daftrify-cookie-choice';
-  var bar = document.getElementById('cookieBar');
-  var policy = document.getElementById('cookiePolicy');
-  function openPolicy() {
-    if (!policy) return;
-    policy.classList.remove('hidden'); policy.classList.add('flex');
-    document.body.style.overflow = 'hidden';
-  }
-  function closePolicy() {
-    if (!policy) return;
-    policy.classList.add('hidden'); policy.classList.remove('flex');
-    document.body.style.overflow = '';
-  }
-  function showBar() { if (bar) bar.classList.remove('hidden'); }
-  try {
-    if (!localStorage.getItem(KEY)) setTimeout(showBar, 2600);
-  } catch (e) { setTimeout(showBar, 2600); }
-  function choose(v) { try { localStorage.setItem(KEY, v); } catch (e) {} if (bar) bar.classList.add('hidden'); }
-  var acc = document.getElementById('cookieAccept'), dec = document.getElementById('cookieDecline');
-  if (acc) acc.addEventListener('click', function () { choose('accepted'); });
-  if (dec) dec.addEventListener('click', function () { choose('declined'); });
-  Array.prototype.forEach.call(document.querySelectorAll('[data-cookie-policy]'), function (b) { b.addEventListener('click', openPolicy); });
-  Array.prototype.forEach.call(document.querySelectorAll('[data-cookie-close]'), function (b) { b.addEventListener('click', closePolicy); });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePolicy(); });
-})();
-</script>
 
 <script>
 (function () {
@@ -1325,494 +479,50 @@
   if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ── Background Video Seamless Loop & Scroll Up/Down Parallax ── */
-  var bgVideo = document.getElementById('bgVideo');
-  if (bgVideo) {
-    bgVideo.playbackRate = 0.5; /* slow cinematic drift — kills the frantic restart feel */
-    /* seamless loop: fade out just before the end, restart, fade back in — hides the seek jump */
-    var loopFading = false;
-    bgVideo.addEventListener('timeupdate', function () {
-      if (loopFading || !bgVideo.duration) return;
-      if (bgVideo.duration - bgVideo.currentTime < 0.65) {
-        loopFading = true;
-        bgVideo.style.opacity = '0';
-      }
-    });
-    bgVideo.addEventListener('seeked', function () {
-      if (loopFading) { loopFading = false; bgVideo.style.opacity = ''; }
-    });
-    bgVideo.addEventListener('ended', function () {
-      try { bgVideo.currentTime = 0; } catch (e) {}
-      var pr = bgVideo.play();
-      if (pr && pr.catch) pr.catch(function () {});
-    });
-
-    if (!reduce) {
-      var isTicking = false;
-      var lastY = 0;
-      window.addEventListener('scroll', function () {
-        lastY = window.pageYOffset || document.documentElement.scrollTop;
-        if (!isTicking) {
-          window.requestAnimationFrame(function () {
-            if (lastY < window.innerHeight * 1.4) {
-              var translateY = lastY * 0.32;
-              var scale = 1.05 + Math.min(lastY * 0.0002, 0.06);
-              bgVideo.style.transform = 'translate3d(0, ' + translateY + 'px, 0) scale(' + scale + ')';
-            }
-            isTicking = false;
-          });
-          isTicking = true;
-        }
-      }, { passive: true });
-    }
+  /* ── mobile menu ── */
+  var menuBtn = document.getElementById('menuBtn');
+  var mobileMenu = document.getElementById('mobileMenu');
+  function setMenu(openState) {
+    mobileMenu.classList.toggle('hidden', !openState);
+    menuBtn.setAttribute('aria-expanded', String(openState));
+    menuBtn.setAttribute('aria-label', openState ? 'Close menu' : 'Open menu');
+    menuBtn.innerHTML = '<i data-lucide="' + (openState ? 'x' : 'menu') + '" style="width:18px;height:18px"></i>';
+    if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
   }
-
-  /* ── Scroll-driven headlines: bidirectional, one motion per section ── */
-  (function () {
-    var heads = Array.prototype.slice.call(document.querySelectorAll('.cinematic-heading'));
-    var TYPES = { 'chars-up': 1, 'chars-down': 1, 'scale': 1, 'words-mask': 1, 'words-blur': 1, 'reveal-x': 1, 'blur': 1, 'lines': 1, 'skew': 1 };
-
-    function walk(el, fn) {
-      Array.prototype.slice.call(el.childNodes).forEach(function (node) {
-        if (node.nodeType === 3) {
-          var res = fn(node.data);
-          if (res) el.replaceChild(res, node);
-        } else if (node.nodeType === 1) {
-          if (node.tagName === 'SVG' || node.tagName === 'BR') return;
-          var c = node.classList;
-          if (c && (c.contains('hchar') || c.contains('hword') || c.contains('hline') || c.contains('hb') || c.contains('hs') || c.contains('hx'))) return;
-          walk(node, fn);
-        }
-      });
-    }
-
-    var ci = 0;
-    function splitChars(el) {
-      ci = 0; /* per-heading index: a shared counter would push later headings' stagger out of range */
-      walk(el, function (text) {
-        var frag = document.createDocumentFragment();
-        text.split(/(\s+)/).forEach(function (part) {
-          if (!part) return;
-          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
-          var w = document.createElement('span');
-          w.style.display = 'inline-block'; w.style.whiteSpace = 'nowrap';
-          for (var k = 0; k < part.length; k++) {
-            var ch = document.createElement('span');
-            ch.className = 'hchar'; ch.textContent = part[k];
-            ch.style.setProperty('--i', ci++);
-            w.appendChild(ch);
-          }
-          frag.appendChild(w);
-        });
-        return frag;
-      });
-      el.style.setProperty('--n', ci);
-    }
-
-    function splitWords(el, masked) {
-      var wi = 0;
-      walk(el, function (text) {
-        var frag = document.createDocumentFragment();
-        text.split(/(\s+)/).forEach(function (part) {
-          if (!part) return;
-          if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(' ')); return; }
-          var w = document.createElement('span');
-          w.className = 'hword'; w.style.setProperty('--i', wi++);
-          if (masked) {
-            var inner = document.createElement('span');
-            inner.className = 'hword-in'; inner.textContent = part;
-            w.appendChild(inner);
-          } else { w.textContent = part; }
-          frag.appendChild(w);
-        });
-        return frag;
-      });
-      el.style.setProperty('--n', wi);
-    }
-
-    function splitLines(el) {
-      var segs = [], buf = [];
-      function flush() {
-        var has = buf.some(function (n) { return (n.nodeType === 3 && /\S/.test(n.data)) || n.nodeType === 1; });
-        if (has) segs.push(buf);
-        buf = [];
-      }
-      Array.prototype.slice.call(el.childNodes).forEach(function (n) {
-        if (n.nodeType === 1 && n.tagName === 'BR') { flush(); }
-        else if (n.nodeType === 1) { flush(); segs.push([n]); }
-        else buf.push(n);
-      });
-      flush();
-      el.innerHTML = '';
-      segs.forEach(function (nodes, i) {
-        var line = document.createElement('span'); line.className = 'hline';
-        var inner = document.createElement('span'); inner.className = 'hline-in';
-        inner.style.setProperty('--i', i);
-        inner.style.setProperty('--dir', (i % 2 ? '-' : '') + '70px');
-        nodes.forEach(function (n) { inner.appendChild(n); });
-        line.appendChild(inner); el.appendChild(line);
-      });
-      el.style.setProperty('--n', segs.length);
-    }
-
-    function wrapAll(el, cls) {
-      var w = document.createElement('span'); w.className = cls;
-      while (el.firstChild) w.appendChild(el.firstChild);
-      el.appendChild(w);
-    }
-
-    heads.forEach(function (h) {
-      try {
-        var t = h.getAttribute('data-hanim') || 'chars-up';
-        if (!TYPES[t]) t = 'chars-up';
-        if (t === 'chars-up' || t === 'chars-down' || t === 'scale') splitChars(h);
-        else if (t === 'words-mask') splitWords(h, true);
-        else if (t === 'words-blur') splitWords(h, false);
-        else if (t === 'lines') splitLines(h);
-        else if (t === 'blur') wrapAll(h, 'hb');
-        else if (t === 'skew') wrapAll(h, 'hs');
-        else if (t === 'reveal-x') wrapAll(h, 'hx');
-        h.classList.add('hanim', 'hanim-' + t);
-      } catch (e) { h.style.setProperty('--p', 1); }
+  if (menuBtn && mobileMenu) {
+    menuBtn.addEventListener('click', function () {
+      setMenu(mobileMenu.classList.contains('hidden'));
     });
-
-    /* unified scroll driver: headlines + .rv — forward on scroll down, reverse on scroll up */
-    var rvs = Array.prototype.slice.call(document.querySelectorAll('.rv'));
-    var ticking = false;
-    function update() {
-      ticking = false;
-      if (document.hidden) return;
-      var vh = window.innerHeight || 800, i, el, r, raw, pd, p;
-      for (i = 0; i < heads.length; i++) {
-        el = heads[i]; r = el.getBoundingClientRect();
-        if (r.bottom < -vh * 0.4 || r.top > vh * 1.4) continue;
-        raw = (vh * 0.94 - r.top) / (vh * 0.44);
-        el.style.setProperty('--p', Math.max(0, Math.min(1, raw)).toFixed(3));
-      }
-      for (i = 0; i < rvs.length; i++) {
-        el = rvs[i]; r = el.getBoundingClientRect();
-        if (r.bottom < -vh * 0.4 || r.top > vh * 1.4) continue;
-        raw = Math.max(0, Math.min(1, (vh * 0.94 - r.top) / (vh * 0.44)));
-        pd = parseFloat(el.style.getPropertyValue('--d')) || 0;
-        pd = Math.min(0.45, pd * 1.2);
-        p = pd > 0 ? Math.max(0, Math.min(1, (raw - pd) / (1 - pd))) : raw;
-        el.style.setProperty('--p', p.toFixed(3));
-      }
-      window.__hanimOk = true;
-    }
-    function kick() { if (!ticking) { ticking = true; requestAnimationFrame(update); } }
-    if (reduce) {
-      heads.concat(rvs).forEach(function (el) { el.style.setProperty('--p', 1); });
-    } else {
-      window.addEventListener('scroll', kick, { passive: true });
-      window.addEventListener('resize', kick);
-      window.addEventListener('load', kick);
-      kick();
-    }
-  })();
-
-/* ── Prompt 1: typewriter headline (50ms per character) ── */
-    /* ── Orchestrated intro (Ochi/Lusion-style): preloader hands off into the hero ── */
-    var introDone = false;
-    function liftIntro() {
-      if (introDone) return; introDone = true;
-      document.body.classList.add('is-ready');
-      var loader = document.getElementById('introLoader');
-      if (loader) {
-        loader.classList.add('done');
-        setTimeout(function () { if (loader.parentNode) loader.parentNode.removeChild(loader); }, 750);
-      }
-    }
-    var minIntro = new Promise(function (res) { setTimeout(res, reduce ? 150 : 900); });
-    var fontsOk = (document.fonts && document.fonts.ready) ? document.fonts.ready : Promise.resolve();
-    var maxIntro = new Promise(function (res) { setTimeout(res, 3200); });
-    Promise.race([Promise.all([minIntro, fontsOk]).then(function () {}), maxIntro]).then(liftIntro);
-
-    /* ── Prompt 2: hand-drawn underline draws when scrolled into view ── */
-    if ('IntersectionObserver' in window) {
-      var hlObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) {
-            entry.target.classList.add('drawn');
-            hlObserver.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.6 });
-      document.querySelectorAll('.hl').forEach(function (el) { hlObserver.observe(el); });
-    } else {
-      document.querySelectorAll('.hl').forEach(function (el) { el.classList.add('drawn'); });
-    }
-
-    /* ── Prompt 3: TextPressure — variable-font proximity effect ── */
-    (function initPressure() {
-      var head = document.getElementById('pressureHead');
-      if (!head || reduce) return;
-      if (window.matchMedia && !window.matchMedia('(pointer: fine)').matches) return;
-      var text = head.textContent;
-      head.setAttribute('aria-label', text);
-      head.innerHTML = '';
-      var chars = [];
-      Array.prototype.forEach.call(text, function (c) {
-        var sp = document.createElement('span');
-        if (c === ' ') { sp.className = 'p-space'; sp.textContent = '\u00A0'; }
-        else { sp.className = 'p-char'; sp.textContent = c; chars.push(sp); }
-        head.appendChild(sp);
-      });
-      var mx = -9999, my = -9999, running = false, inView = true;
-      var MAXD = 140;
-      window.addEventListener('mousemove', function (e) { mx = e.clientX; my = e.clientY; }, { passive: true });
-      document.addEventListener('mouseleave', function () { mx = -9999; my = -9999; });
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver(function (es) { inView = es[0].isIntersecting; }, { threshold: 0 }).observe(head);
-      }
-      function frame() {
-        running = true;
-        if (inView) {
-          for (var i = 0; i < chars.length; i++) {
-            var r = chars[i].getBoundingClientRect();
-            var dx = mx - (r.left + r.width / 2), dy = my - (r.top + r.height / 2);
-            var d = Math.sqrt(dx * dx + dy * dy);
-            var t = Math.max(0, 1 - d / MAXD);
-            var eased = t * t * (3 - 2 * t);
-            var wght = Math.round(800 + eased * 100);
-            var wdth = Math.round(100 + eased * 25);
-            var ital = (eased * 0.9).toFixed(2);
-            chars[i].style.fontVariationSettings = "'wght' " + wght + ", 'wdth' " + wdth + ", 'ital' " + ital;
-          }
-        }
-        requestAnimationFrame(frame);
-      }
-      if (!running) requestAnimationFrame(frame);
-    })();
-
-    /* ── Prompt 4: rolodex word flipper (inline, left-aligned) ── */
-    (function initRolodex() {
-      var rolo = document.getElementById('rolo');
-      if (!rolo) return;
-      var words = Array.prototype.slice.call(rolo.querySelectorAll('.rolo-word'));
-      if (words.length < 2) return;
-      function sizeRolo() {
-        var w = 0;
-        words.forEach(function (wd) {
-          var prev = wd.style.position;
-          wd.style.position = 'static'; wd.style.visibility = 'hidden'; wd.style.opacity = '0';
-          w = Math.max(w, wd.offsetWidth);
-          wd.style.position = prev; wd.style.visibility = ''; wd.style.opacity = '';
-        });
-        rolo.style.width = w + 'px';
-      }
-      sizeRolo();
-      window.addEventListener('resize', sizeRolo);
-      if (document.fonts && document.fonts.ready) document.fonts.ready.then(sizeRolo); /* re-measure after font swap — keeps words flush */
-      if (reduce) return;
-      var idx = 0;
-      setInterval(function () {
-        var cur = words[idx];
-        idx = (idx + 1) % words.length;
-        var nxt = words[idx];
-        cur.className = 'rolo-word off text-emerald-300 font-semibold';
-        nxt.className = 'rolo-word on text-emerald-300 font-semibold';
-      }, 2600);
-    })();
-
-  /* stack train: duplicate the logo set for a seamless -50% loop */
-  (function () {
-    var track = document.querySelector('#pipeline .stack-track');
-    if (!track || track.children.length !== 1) return;
-    var clone = track.children[0].cloneNode(true);
-    clone.setAttribute('aria-hidden', 'true');
-    track.appendChild(clone);
-  })();
-
-  /* hero video: hold invisible until first frame is ready, then soft fade */
-  (function () {
-    var v = document.getElementById('bgVideo');
-    if (!v) return;
-    v.style.opacity = '0';
-    var show = function () { v.style.opacity = '0.8'; };
-    if (v.readyState >= 3) show();
-    else v.addEventListener('canplay', show, { once: true });
-  })();
-
-  /* ── Pipeline walkthrough: 4 honest stages, no fake-live chrome ── */
-  var stages = [
-    {
-      kick: '01 \u00B7 Intake',
-      title: 'Multi-source file ingestion',
-      desc: 'Scanned PDFs, contractor invoices, Excel tables and architectural drawings \u2014 received as one raw stack, triaged in a single pass.'
-    },
-    {
-      kick: '02 \u00B7 Extraction',
-      title: 'Handwriting & table OCR',
-      desc: 'Multimodal parsing pulls unstructured handwriting, faint stamps and chaotic layouts into clean, structured data.'
-    },
-    {
-      kick: '03 \u00B7 Reconciliation',
-      title: 'Bi-directional ledger cross-check',
-      desc: 'Every invoice cross-referenced against bank ledgers, purchase orders and tax IDs \u2014 fuzzy-matched, exception-flagged.'
-    },
-    {
-      kick: '04 \u00B7 Markup & audit',
-      title: 'Vector stamping & verification',
-      desc: 'Standardized QA markups and vector-precision callouts, compiled into a final audit-ready package.'
-    }
-  ];
-
-  var currentStage = 0;
-  var stageNum = document.getElementById('stageNum');
-  var stageKicker = document.getElementById('stageKicker');
-  var stageTitle = document.getElementById('stageTitle');
-  var stageDesc = document.getElementById('stageDesc');
-  var stageDots = Array.prototype.slice.call(document.querySelectorAll('.stage-dot'));
-  var stageTypeTimer = null;
-
-  function typeConsoleDesc(element, fullText, speed) {
-    if (!element) return;
-    if (stageTypeTimer) clearInterval(stageTypeTimer);
-    if (reduce) {
-      element.textContent = fullText;
-      return;
-    }
-    element.textContent = '';
-    var charIdx = 0;
-    stageTypeTimer = setInterval(function () {
-      if (charIdx < fullText.length) {
-        element.textContent += fullText.charAt(charIdx);
-        charIdx++;
-      } else {
-        clearInterval(stageTypeTimer);
-      }
-    }, speed || 15);
-  }
-
-  function renderStage(idx, shouldType) {
-    currentStage = (idx + stages.length) % stages.length;
-    var s = stages[currentStage];
-    var num = ('0' + (currentStage + 1)).slice(-2);
-    if (stageNum) stageNum.textContent = num;
-    if (stageKicker) stageKicker.textContent = s.kick;
-    if (stageTitle) stageTitle.textContent = s.title;
-    stageDots.forEach(function (d, i) {
-      var on = i === currentStage;
-      d.className = 'stage-dot h-1 rounded-full transition-all duration-300 ' + (on ? 'w-8 bg-white/80' : 'w-4 bg-white/20 hover:bg-white/40');
-      d.setAttribute('aria-selected', on ? 'true' : 'false');
-    });
-    if (shouldType && stageDesc) {
-      typeConsoleDesc(stageDesc, s.desc, 14);
-    } else if (stageDesc) {
-      stageDesc.textContent = s.desc;
-    }
-  }
-
-  var prevBtn = document.getElementById('prevBtn');
-  var nextBtn = document.getElementById('nextBtn');
-  if (prevBtn) prevBtn.addEventListener('click', function () { renderStage(currentStage - 1, true); });
-  if (nextBtn) nextBtn.addEventListener('click', function () { renderStage(currentStage + 1, true); });
-
-  // Tool Chips Quick Inspection
-  stageDots.forEach(function (d) {
-    d.addEventListener('click', function () { renderStage(parseInt(d.getAttribute('data-dot'), 10), true); });
-  });
-
-  /* ── mobile menu with icon crossfade ── */
-  var btn = document.getElementById('menuBtn');
-  var menu = document.getElementById('mobile-menu');
-  var open = false;
-  var hicon = btn ? btn.querySelector('.hicon') : null;
-  var xicon = btn ? btn.querySelector('.xicon') : null;
-  function setMenu(on) {
-    open = on;
-    if (!btn || !menu) return;
-    btn.setAttribute('aria-expanded', on ? 'true' : 'false');
-    btn.setAttribute('aria-label', on ? 'Close menu' : 'Open menu');
-    if (hicon) hicon.className = hicon.className.replace(/(rotate-0 scale-100 opacity-100|rotate-180 scale-50 opacity-0|-rotate-180 scale-50 opacity-0)/g, '') + (on ? ' -rotate-180 scale-50 opacity-0' : ' rotate-0 scale-100 opacity-100');
-    if (xicon) xicon.className = xicon.className.replace(/(rotate-0 scale-100 opacity-100|-rotate-180 scale-50 opacity-0|rotate-180 scale-50 opacity-0)/g, '') + (on ? ' rotate-0 scale-100 opacity-100' : ' -rotate-180 scale-50 opacity-0');
-    menu.classList.toggle('pointer-events-none', !on);
-    menu.classList.toggle('-translate-y-4', !on);
-    menu.classList.toggle('opacity-0', !on);
-    menu.classList.toggle('translate-y-0', on);
-    menu.classList.toggle('opacity-100', on);
-    menu.querySelectorAll('.mmob').forEach(function (a, i) {
-      a.style.transitionDelay = on ? (i * 50) + 'ms' : '0ms';
-      a.classList.toggle('translate-x-0', on);
-      a.classList.toggle('opacity-100', on);
-      a.classList.toggle('-translate-x-4', !on);
-      a.classList.toggle('opacity-0', !on);
-    });
-  }
-  if (btn) btn.addEventListener('click', function () { setMenu(!open); });
-  if (menu) Array.prototype.forEach.call(menu.querySelectorAll('.mmob'), function (a) {
-    a.addEventListener('click', function () { setMenu(false); });
-  });
-  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && open) setMenu(false); });
-
-
-  /* hide floating WhatsApp while the contact section (with its own WhatsApp card) is on screen */
-  (function () {
-    var wa = document.getElementById('waFloat');
-    var start = document.getElementById('start');
-    if (!wa || !start || !('IntersectionObserver' in window)) return;
-    new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) { wa.classList.toggle('wa-hidden', en.isIntersecting); });
-    }, { threshold: 0.12 }).observe(start);
-  })();
-
-  /* ── live desk readout (simulated) ── */
-  var roFields = document.getElementById('roFields'), roFlags = document.getElementById('roFlags'), roStatus = document.getElementById('roStatus');
-  if (roFields) {
-    var seq = [
-      { f: 0, g: 0, s: 'Received' }, { f: 96, g: 0, s: 'Extracting' },
-      { f: 214, g: 0, s: 'Reconciling' }, { f: 214, g: 3, s: '3 exceptions raised' },
-      { f: 214, g: 3, s: 'Human verification' }, { f: 214, g: 0, s: 'Verified · packaged' }
-    ];
-    var i = 0;
-    var cycle = function () {
-      if (document.hidden) { setTimeout(cycle, 900); return; }
-      var s = seq[i % seq.length];
-      var from = parseInt(roFields.textContent, 10) || 0;
-      var t0 = performance.now(), dur = 520;
-      (function tick(now) {
-        var k = Math.min(1, (now - t0) / dur);
-        roFields.textContent = String(Math.round(from + (s.f - from) * k)).padStart(3, '0');
-        if (k < 1) requestAnimationFrame(tick);
-      })(t0);
-      if (roFlags) roFlags.textContent = String(s.g);
-      if (roStatus) roStatus.textContent = s.s;
-      i += 1;
-      setTimeout(cycle, 1500);
-    };
-    if (reduce) { roFields.textContent = '214'; if (roFlags) roFlags.textContent = '3'; if (roStatus) roStatus.textContent = 'Verified · packaged'; }
-    else cycle();
-  }
-
-  /* ── verifier pass ── */
-  var run = document.getElementById('runPass');
-  if (run) {
-    var rows = Array.prototype.slice.call(document.querySelectorAll('.vrow'));
-    var bad = ['Mohammad', '05/09/2026', '12,050', 'Not attached'];
-    var good = ['Muhammad', '04/09/2026', '12,500', 'Requested from holder'];
-    var passed = false, timeouts = [];
-    run.addEventListener('click', function () {
-      timeouts.forEach(clearTimeout); timeouts = [];
-      passed = !passed;
-      rows.forEach(function (row, i) {
-        var mark = function () {
-          row.setAttribute('data-ok', passed ? '1' : '0');
-          var val = row.querySelector('.val');
-          if (val) val.textContent = passed ? good[i] : bad[i];
-        };
-        if (reduce) mark(); else timeouts.push(setTimeout(mark, i * 150));
-      });
-      timeouts.push(setTimeout(function () {
-        var st = document.getElementById('deskStat');
-        st.textContent = passed ? '4 fields verified against source' : '4 fields require review';
-        st.className = 'text-[11px] font-medium tracking-[0.16em] uppercase ' + (passed ? 'text-emerald-300/90' : 'text-red-200/80');
-        run.textContent = passed ? 'Reset comparison' : 'Run verification pass';
-      }, reduce ? 0 : 650));
+    mobileMenu.querySelectorAll('a').forEach(function (a) {
+      a.addEventListener('click', function () { setMenu(false); });
     });
   }
 
-  /* ── faq ── */
+  /* ── the one motion system: reveal-once ── */
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('.rv'));
+  function revealInView() {
+    var vh = window.innerHeight || 800;
+    revealEls.forEach(function (el) {
+      if (el.classList.contains('in')) return;
+      var r = el.getBoundingClientRect();
+      if (r.top < vh * 0.92 && r.bottom > 0) el.classList.add('in');
+    });
+  }
+  if (reduce || !('IntersectionObserver' in window)) {
+    revealEls.forEach(function (el) { el.classList.add('in'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -4% 0px' });
+    revealEls.forEach(function (el) { io.observe(el); });
+    /* safety net: never leave content hidden */
+    setTimeout(revealInView, 2500);
+    window.addEventListener('load', revealInView);
+  }
+
+  /* ── faq accordion ── */
   Array.prototype.slice.call(document.querySelectorAll('.faq')).forEach(function (item) {
     var q = item.querySelector('.faq-q');
     q.addEventListener('click', function () {
@@ -1825,14 +535,14 @@
     });
   });
 
-  /* ── desk clock ── */
+  /* ── desk clock (Asia/Karachi) ── */
   var clock = document.getElementById('clock');
   if (clock) {
-    var tickClock = function () {
+    var tick = function () {
       try { clock.textContent = new Date().toLocaleTimeString('en-GB', { timeZone: 'Asia/Karachi', hour12: false }); }
       catch (e) { clock.textContent = new Date().toLocaleTimeString('en-GB', { hour12: false }); }
     };
-    tickClock(); setInterval(tickClock, 1000);
+    tick(); setInterval(tick, 1000);
   }
 
   /* ── intake form & file dropzone ── */
@@ -1858,12 +568,14 @@
       if (fileSizeEl) fileSizeEl.textContent = formatSize(file.size);
       if (uploadPrompt) uploadPrompt.classList.add('hidden');
       if (filePreview) filePreview.classList.remove('hidden');
+      if (filePreview) filePreview.classList.add('flex');
       if (fileWarnEl) fileWarnEl.classList.toggle('hidden', file.size <= 10 * 1024 * 1024);
       if (window.lucide && typeof lucide.createIcons === 'function') lucide.createIcons();
     } else {
       if (fattach) fattach.value = '';
       if (uploadPrompt) uploadPrompt.classList.remove('hidden');
       if (filePreview) filePreview.classList.add('hidden');
+      if (filePreview) filePreview.classList.remove('flex');
       if (fileWarnEl) fileWarnEl.classList.add('hidden');
     }
   };
@@ -1877,15 +589,13 @@
       if (fattach.files && fattach.files[0]) updateFileState(fattach.files[0]);
     });
     ['dragenter', 'dragover'].forEach(function (ev) {
-      dropZone.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); dropZone.classList.add('border-white/60', 'bg-white/[0.08]'); });
+      dropZone.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); dropZone.classList.add('border-white/60'); });
     });
     ['dragleave', 'drop'].forEach(function (ev) {
-      dropZone.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('border-white/60', 'bg-white/[0.08]'); });
+      dropZone.addEventListener(ev, function (e) { e.preventDefault(); e.stopPropagation(); dropZone.classList.remove('border-white/60'); });
     });
     dropZone.addEventListener('drop', function (e) {
-      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) {
-        updateFileState(e.dataTransfer.files[0]);
-      }
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) updateFileState(e.dataTransfer.files[0]);
     });
     if (removeFileBtn) {
       removeFileBtn.addEventListener('click', function (e) {
@@ -1927,11 +637,11 @@
 
       if (btn) {
         btn.disabled = true;
-        if (btnText) btnText.textContent = 'Sending…';
+        if (btnText) btnText.textContent = 'Sending\u2026';
         btn.classList.add('opacity-70', 'cursor-not-allowed');
       }
       if (statusBox) {
-        statusBox.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-center text-xs text-white/70 flex items-center justify-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span> Sending to desk…</div>';
+        statusBox.innerHTML = '<div class="rounded-xl border border-white/10 bg-white/[0.04] p-3 text-center text-xs text-white/70">Sending to desk\u2026</div>';
         statusBox.classList.remove('hidden');
       }
 
@@ -1940,12 +650,7 @@
         attachmentPayload = await new Promise(function (resolve) {
           var reader = new FileReader();
           reader.onload = function () {
-            resolve({
-              name: selectedFile.name,
-              type: selectedFile.type || 'application/octet-stream',
-              size: selectedFile.size,
-              data: reader.result
-            });
+            resolve({ name: selectedFile.name, type: selectedFile.type || 'application/octet-stream', size: selectedFile.size, data: reader.result });
           };
           reader.onerror = function () { resolve(null); };
           reader.readAsDataURL(selectedFile);
@@ -1953,30 +658,16 @@
       }
 
       var sentSuccessfully = false;
-
-      // 1. Primary Intake Engine (/api/intake -> Resend & Desk)
       try {
         var res = await fetch('/api/intake', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            name: n.value.trim(),
-            email: em.value.trim(),
-            documents: d.value.trim(),
-            issue: m ? m.value.trim() : '',
-            attachment: attachmentPayload
-          })
+          body: JSON.stringify({ name: n.value.trim(), email: em.value.trim(), documents: d.value.trim(), issue: m ? m.value.trim() : '', attachment: attachmentPayload })
         });
         var data = await res.json().catch(function () { return {}; });
-        if (res.ok && data.ok) {
-          sentSuccessfully = true;
-        }
-      } catch (e) {
-        sentSuccessfully = false;
-        console.warn('Primary intake endpoint unavailable, activating direct desk route...', e);
-      }
+        if (res.ok && data.ok) sentSuccessfully = true;
+      } catch (e2) { sentSuccessfully = false; }
 
-      // 2. Direct Desk Pipe (Silent background delivery directly to primary inbox)
       if (!sentSuccessfully) {
         try {
           var fd = new FormData();
@@ -1989,41 +680,30 @@
           fd.append('what_goes_wrong', m && m.value.trim() ? m.value.trim() : 'Not provided');
           fd.append('_template', 'table');
           fd.append('_captcha', 'false');
-          if (selectedFile) {
-            fd.append('attachment', selectedFile);
-          }
-
+          if (selectedFile) fd.append('attachment', selectedFile);
           var fsRes = await fetch('https://formsubmit.co/ajax/daftrify.services@gmail.com', {
-            method: 'POST',
-            headers: { 'Accept': 'application/json' },
-            body: fd
+            method: 'POST', headers: { 'Accept': 'application/json' }, body: fd
           });
           var fsData = await fsRes.json().catch(function () { return {}; });
-          if (fsRes.ok || fsData.success === "true") {
-            sentSuccessfully = true;
-          }
-        } catch (err2) {
-          console.error('Direct delivery fallback error:', err2);
-        }
+          if (fsRes.ok || fsData.success === "true") sentSuccessfully = true;
+        } catch (err2) { /* fall through to honest failure state */ }
       }
 
       if (sentSuccessfully) {
         if (statusBox) {
           statusBox.innerHTML = '<div class="rounded-xl border border-emerald-500/40 bg-emerald-500/10 p-5 text-center">' +
-            '<div class="w-10 h-10 rounded-full bg-emerald-500/20 text-emerald-400 mx-auto flex items-center justify-center mb-3 text-lg font-bold">✓</div>' +
-            '<p class="text-sm font-semibold text-emerald-300">File &amp; Details Sent Directly to Desk</p>' +
-            '<p class="text-xs text-white/70 mt-1.5 leading-relaxed">Your documents and details have been sent to our intake desk (<span class="text-emerald-300 font-mono">contact@daftrify.info</span>). We will review and reply to <span class="text-white font-medium">' + em.value.trim() + '</span> as soon as your file is reviewed.</p>' +
+            '<p class="text-sm font-semibold text-emerald-300">Sent to the desk</p>' +
+            '<p class="mt-1.5 text-xs leading-relaxed text-white/70">Your details have been sent to <span class="text-emerald-300">contact@daftrify.info</span>. You will get a reply at <span class="font-medium text-white">' + em.value.trim().replace(/</g, '&lt;') + '</span> after a first look.</p>' +
             '</div>';
           statusBox.classList.remove('hidden');
         }
         form.reset();
         updateFileState(null);
       } else {
-        // Both routes failed: be honest, keep the user's input, offer direct alternatives
         if (statusBox) {
           statusBox.innerHTML = '<div class="rounded-xl border border-amber-500/30 bg-amber-500/10 p-5 text-center">' +
             '<p class="text-sm font-semibold text-amber-300">Couldn&rsquo;t send just now</p>' +
-            '<p class="text-xs text-white/70 mt-1.5 mb-3 leading-relaxed">The form couldn&rsquo;t reach the desk. Your details are still here &mdash; please try again, or send directly via <a href="https://wa.me/923187668851?text=' + encodeURIComponent('Hi Daftrify, I would like to start a file.') + '" target="_blank" class="underline font-semibold text-white">WhatsApp</a> or <a href="mailto:contact@daftrify.info" class="underline font-semibold text-white">contact@daftrify.info</a>.</p>' +
+            '<p class="mb-3 mt-1.5 text-xs leading-relaxed text-white/70">The form couldn&rsquo;t reach the desk. Your details are still here. Please try again, or send directly via <a href="https://wa.me/923187668851?text=' + encodeURIComponent('Hi Daftrify, I would like to start a file.') + '" target="_blank" class="font-semibold text-white underline">WhatsApp</a> or <a href="mailto:contact@daftrify.info" class="font-semibold text-white underline">contact@daftrify.info</a>.</p>' +
             '</div>';
           statusBox.classList.remove('hidden');
         }
@@ -2036,97 +716,35 @@
       }
     });
   }
-
-  /* ── Motion+ : magnetic actions, 3D card tilt, hero drift (vanilla spring physics) ── */
-  if (!reduce) {
-    var finePointer = window.matchMedia('(pointer: fine)').matches;
-
-    if (finePointer) {
-      /* magnetic pull on key actions */
-      var magnets = document.querySelectorAll('main a[href="#start"], #submitBtn, a[aria-label="Chat with Daftrify Desk on WhatsApp"]');
-      Array.prototype.forEach.call(magnets, function (el) {
-        var x = 0, y = 0, tx = 0, ty = 0, raf = null;
-        var render = function () {
-          x += (tx - x) * 0.18;
-          y += (ty - y) * 0.18;
-          if (Math.abs(tx - x) < 0.05) x = tx;
-          if (Math.abs(ty - y) < 0.05) y = ty;
-          el.style.translate = x.toFixed(1) + 'px ' + y.toFixed(1) + 'px';
-          raf = (x !== tx || y !== ty) ? requestAnimationFrame(render) : null;
-        };
-        var kick = function () { if (!raf) raf = requestAnimationFrame(render); };
-        el.addEventListener('pointermove', function (e) {
-          var r = el.getBoundingClientRect();
-          tx = Math.max(-9, Math.min(9, (e.clientX - (r.left + r.width / 2)) * 0.22));
-          ty = Math.max(-8, Math.min(8, (e.clientY - (r.top + r.height / 2)) * 0.22));
-          kick();
-        });
-        el.addEventListener('pointerleave', function () { tx = 0; ty = 0; kick(); });
-      });
-
-      /* subtle 3D tilt on service + process cards */
-      var tiltCards = document.querySelectorAll('#services .liquid-glass, #process .liquid-glass');
-      Array.prototype.forEach.call(tiltCards, function (card) {
-        var armed = false;
-        card.addEventListener('pointermove', function (e) {
-          if (!card.classList.contains('in')) return;
-          if (window.getComputedStyle(card).opacity !== '1') return;
-          if (!armed) { card.style.transition = 'transform .12s linear'; armed = true; }
-          var r = card.getBoundingClientRect();
-          var px = (e.clientX - r.left) / r.width - 0.5;
-          var py = (e.clientY - r.top) / r.height - 0.5;
-          card.style.transform = 'perspective(900px) rotateX(' + (-py * 5).toFixed(2) + 'deg) rotateY(' + (px * 5).toFixed(2) + 'deg) translateY(-3px)';
-        });
-        card.addEventListener('pointerleave', function () {
-          if (!armed) return;
-          card.style.transition = 'transform .5s cubic-bezier(.2,.8,.25,1)';
-          card.style.transform = '';
-        });
-      });
-    }
-
-    /* hero content drift, complements the video parallax */
-    var heroGrid = document.querySelector('main > div');
-    if (heroGrid) {
-      var driftTicking = false, driftY = 0;
-      window.addEventListener('scroll', function () {
-        driftY = window.pageYOffset || document.documentElement.scrollTop;
-        if (!driftTicking) {
-          window.requestAnimationFrame(function () {
-            if (driftY < window.innerHeight * 1.2) {
-              heroGrid.style.transform = 'translate3d(0,' + (-driftY * 0.08).toFixed(1) + 'px,0)';
-            }
-            driftTicking = false;
-          });
-          driftTicking = true;
-        }
-      }, { passive: true });
-    }
-
-      }
 })();
-</script>
-<script>
-/* reveal safety net: never leave content hidden or blurred if the intro or observers stall */
+
+/* cookie consent */
 (function () {
-  function inView(el) {
-    var r = el.getBoundingClientRect();
-    return r.bottom > 0 && r.top < (window.innerHeight || 800);
+  'use strict';
+  var KEY = 'daftrify-cookie-choice';
+  var bar = document.getElementById('cookieBar');
+  var policy = document.getElementById('cookiePolicy');
+  function openPolicy() {
+    if (!policy) return;
+    policy.classList.remove('hidden'); policy.classList.add('flex');
+    document.body.style.overflow = 'hidden';
   }
-  function force() {
-    if (!document.body.classList.contains('is-ready')) document.body.classList.add('is-ready');
-    if (!window.__hanimOk) {
-      Array.prototype.forEach.call(document.querySelectorAll('.hanim'), function (el) {
-        if (inView(el)) el.style.setProperty('--p', 1);
-      });
-      Array.prototype.forEach.call(document.querySelectorAll('.rv'), function (el) {
-        if (inView(el)) el.style.setProperty('--p', 1);
-      });
-    }
+  function closePolicy() {
+    if (!policy) return;
+    policy.classList.add('hidden'); policy.classList.remove('flex');
+    document.body.style.overflow = '';
   }
-  function arm() { setTimeout(force, 4000); setTimeout(force, 8000); }
-  if (document.readyState === 'complete') arm();
-  else window.addEventListener('load', arm);
+  function showBar() { if (bar) bar.classList.remove('hidden'); }
+  try {
+    if (!localStorage.getItem(KEY)) setTimeout(showBar, 2600);
+  } catch (e) { setTimeout(showBar, 2600); }
+  function choose(v) { try { localStorage.setItem(KEY, v); } catch (e) {} if (bar) bar.classList.add('hidden'); }
+  var acc = document.getElementById('cookieAccept'), dec = document.getElementById('cookieDecline');
+  if (acc) acc.addEventListener('click', function () { choose('accepted'); });
+  if (dec) dec.addEventListener('click', function () { choose('declined'); });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-cookie-policy]'), function (b) { b.addEventListener('click', openPolicy); });
+  Array.prototype.forEach.call(document.querySelectorAll('[data-cookie-close]'), function (b) { b.addEventListener('click', closePolicy); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closePolicy(); });
 })();
 </script>
 </body>
