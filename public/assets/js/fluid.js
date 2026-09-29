@@ -80,7 +80,7 @@
     vorticityShader = 'precision highp float;precision highp sampler2D;varying vec2 vUv;varying vec2 vL;varying vec2 vR;varying vec2 vT;varying vec2 vB;uniform sampler2D uVelocity;uniform sampler2D uCurl;uniform float curl;uniform float dt;void main(){float L=texture2D(uCurl,vL).x;float R=texture2D(uCurl,vR).x;float T=texture2D(uCurl,vT).x;float B=texture2D(uCurl,vB).x;float C=texture2D(uCurl,vUv).x;vec2 force=0.5*vec2(abs(T)-abs(B),abs(R)-abs(L));force/=length(force)+0.0001;force*=curl*C;force.y*=-1.0;vec2 velocity=texture2D(uVelocity,vUv).xy;velocity+=force*dt;velocity=min(max(velocity,-1000.0),1000.0);gl_FragColor=vec4(velocity,0.0,1.0);}',
     pressureShader = 'precision mediump float;precision mediump sampler2D;varying highp vec2 vUv;varying highp vec2 vL;varying highp vec2 vR;varying highp vec2 vT;varying highp vec2 vB;uniform sampler2D uPressure;uniform sampler2D uDivergence;void main(){float L=texture2D(uPressure,vL).x;float R=texture2D(uPressure,vR).x;float T=texture2D(uPressure,vT).x;float B=texture2D(uPressure,vB).x;float divergence=texture2D(uDivergence,vUv).x;float pressure=(L+R+B+T-divergence)*0.25;gl_FragColor=vec4(pressure,0.0,0.0,1.0);}',
     gradientSubtractShader = 'precision mediump float;precision mediump sampler2D;varying highp vec2 vUv;varying highp vec2 vL;varying highp vec2 vR;varying highp vec2 vT;varying highp vec2 vB;uniform sampler2D uPressure;uniform sampler2D uVelocity;void main(){float L=texture2D(uPressure,vL).x;float R=texture2D(uPressure,vR).x;float T=texture2D(uPressure,vT).x;float B=texture2D(uPressure,vB).x;vec2 velocity=texture2D(uVelocity,vUv).xy;velocity.xy-=vec2(R-L,T-B);gl_FragColor=vec4(velocity,0.0,1.0);}',
-    displayShader = 'precision highp float;precision highp sampler2D;varying vec2 vUv;uniform sampler2D uTexture;void main(){vec3 c=texture2D(uTexture,vUv).rgb;vec3 base=vec3(0.012,0.028,0.022);float l=dot(c,vec3(0.299,0.587,0.114));vec3 ink=mix(base,vec3(0.05,0.32,0.20),smoothstep(0.0,0.55,l));ink=mix(ink,vec3(0.42,0.88,0.62),smoothstep(0.55,1.4,l));vec3 vig=mix(vec3(1.0),vec3(0.72),dot(vUv-0.5,vUv-0.5)*2.2);gl_FragColor=vec4((base*(1.0-smoothstep(0.0,0.5,l))+ink)*vig,1.0);}';
+    displayShader = 'precision highp float;precision highp sampler2D;varying vec2 vUv;uniform sampler2D uTexture;void main(){vec3 c=texture2D(uTexture,vUv).rgb;vec3 base=vec3(0.008,0.020,0.016);float l=dot(c,vec3(0.299,0.587,0.114));vec3 ink=mix(base,vec3(0.03,0.22,0.13),smoothstep(0.03,0.7,l));ink=mix(ink,vec3(0.30,0.80,0.52),smoothstep(0.9,2.4,l));vec3 vig=mix(vec3(1.0),vec3(0.72),dot(vUv-0.5,vUv-0.5)*2.2);gl_FragColor=vec4((base*(1.0-smoothstep(0.0,0.5,l))+ink)*vig,1.0);}';
 
   var blit = (function () {
     gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
@@ -162,13 +162,13 @@
 
   /* ——— moods ——— */
   var MOODS = {
-    wild:   { interval: 2200, force: 5200, density: 0.22, velocity: 0.25, curl: 28 },
-    drift:  { interval: 4200, force: 3800, density: 0.18, velocity: 0.30, curl: 20 },
-    settle: { interval: 7000, force: 2600, density: 0.14, velocity: 0.35, curl: 12 },
-    simmer: { interval: 5200, force: 3200, density: 0.16, velocity: 0.30, curl: 18 },
-    still:  { interval: 0,    force: 1800, density: 0.12, velocity: 0.40, curl: 8  }
+    wild:   { interval: 3500, force: 5200, density: 0.50, velocity: 0.25, curl: 28 },
+    drift:  { interval: 6000, force: 3800, density: 0.42, velocity: 0.30, curl: 20 },
+    settle: { interval: 9000, force: 2600, density: 0.35, velocity: 0.35, curl: 12 },
+    simmer: { interval: 7500, force: 3200, density: 0.40, velocity: 0.30, curl: 18 },
+    still:  { interval: 0,    force: 1800, density: 0.30, velocity: 0.40, curl: 8  }
   };
-  var cur = { interval: 2200, force: 5200, density: 0.22, velocity: 0.25, curl: 28 };
+  var cur = { interval: 3500, force: 5200, density: 0.50, velocity: 0.25, curl: 28 };
   var tgt = MOODS.wild;
   window.DeskFluid = { setMood: function (n) { if (MOODS[n]) tgt = MOODS[n]; } };
 
@@ -179,7 +179,7 @@
   ];
   function inkColor() {
     var c = PALETTE[(Math.random() * PALETTE.length) | 0];
-    var v = 0.95 + Math.random() * 0.65;
+    var v = 0.55 + Math.random() * 0.35;
     return { r: c[0] * v, g: c[1] * v, b: c[2] * v };
   }
 
@@ -292,7 +292,7 @@
     if (pointer.moved) {
       pointer.moved = false;
       var c = inkColor();
-      var f = pointer.down ? cur.force * 1.6 : cur.force * 0.35;
+      var f = pointer.down ? cur.force * 1.6 : cur.force * 0.22;
       splat(pointer.x, pointer.y, pointer.dx * f / 5200, pointer.dy * f / 5200, c);
     }
     ambientSplat(now);
