@@ -162,13 +162,13 @@
 
   /* ——— moods ——— */
   var MOODS = {
-    wild:   { interval: 2600, force: 5200, density: 0.97,  velocity: 0.20, curl: 28 },
-    drift:  { interval: 5200, force: 3600, density: 0.965, velocity: 0.25, curl: 20 },
-    settle: { interval: 9000, force: 2400, density: 0.94,  velocity: 0.35, curl: 12 },
-    simmer: { interval: 6500, force: 3000, density: 0.96,  velocity: 0.28, curl: 18 },
-    still:  { interval: 0,    force: 1800, density: 0.93,  velocity: 0.40, curl: 8  }
+    wild:   { interval: 2200, force: 5200, density: 0.22, velocity: 0.25, curl: 28 },
+    drift:  { interval: 4200, force: 3800, density: 0.18, velocity: 0.30, curl: 20 },
+    settle: { interval: 7000, force: 2600, density: 0.14, velocity: 0.35, curl: 12 },
+    simmer: { interval: 5200, force: 3200, density: 0.16, velocity: 0.30, curl: 18 },
+    still:  { interval: 0,    force: 1800, density: 0.12, velocity: 0.40, curl: 8  }
   };
-  var cur = { interval: 2600, force: 5200, density: 0.97, velocity: 0.20, curl: 28 };
+  var cur = { interval: 2200, force: 5200, density: 0.22, velocity: 0.25, curl: 28 };
   var tgt = MOODS.wild;
   window.DeskFluid = { setMood: function (n) { if (MOODS[n]) tgt = MOODS[n]; } };
 
@@ -179,7 +179,7 @@
   ];
   function inkColor() {
     var c = PALETTE[(Math.random() * PALETTE.length) | 0];
-    var v = 0.75 + Math.random() * 0.45;
+    var v = 0.95 + Math.random() * 0.65;
     return { r: c[0] * v, g: c[1] * v, b: c[2] * v };
   }
 
@@ -249,6 +249,7 @@
     blit(velocity.write, false); velocity.swap();
     gl.useProgram(advectionProgram);
     gl.uniform2f(advectionU.texelSize, velocity.texelSizeX, velocity.texelSizeY);
+    gl.uniform2f(advectionU.dyeTexelSize, dye.texelSizeX, dye.texelSizeY);
     if (!ext.supportLinearFiltering)
       gl.uniform2f(advectionU.dyeTexelSize, velocity.texelSizeX, velocity.texelSizeY);
     var velocityId = velocity.read.attach(0);
